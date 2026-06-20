@@ -1,0 +1,4838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Derrick – DevOps Engineer & Linux Systems Administrator. Command Center Portfolio."/>
+  <meta name="author" content="Derrick"/>
+  <title>DERRICK-OPS // DevOps Command Center</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+/* ═══════════════════════════════════════════════════════════════
+   DERRICK-OPS  |  style.css
+   Theme: DevOps Command Center · Terminal-Industrial HUD
+   Fonts: Share Tech Mono + Orbitron + Rajdhani
+═══════════════════════════════════════════════════════════════ */
+
+/* ── CUSTOM PROPERTIES ────────────────────────────────────────── */
+:root {
+  --bg-0:       #050507;
+  --bg-1:       #090a0d;
+  --bg-2:       #0d0f14;
+  --bg-panel:   #0f1117;
+  --bg-panel-h: #141720;
+  --bg-nav:     rgba(5,5,7,0.94);
+
+  --red:        #e0231d;
+  --red-bright: #ff2e27;
+  --red-dim:    #8b1410;
+  --red-glow:   rgba(224,35,29,0.15);
+  --red-border: rgba(224,35,29,0.35);
+
+  --green:      #00e676;
+  --green-dim:  rgba(0,230,118,0.12);
+  --amber:      #ffab00;
+  --amber-dim:  rgba(255,171,0,0.12);
+  --blue:       #40c4ff;
+
+  --text-1:     #e8eaed;
+  --text-2:     #8a9ba8;
+  --text-3:     #4a5568;
+  --text-code:  #cfd8dc;
+
+  --border:     rgba(255,255,255,0.05);
+  --border-2:   rgba(255,255,255,0.09);
+  --corner:     rgba(224,35,29,0.6);
+
+  --font-mono:  'Share Tech Mono', monospace;
+  --font-hud:   'Orbitron', sans-serif;
+  --font-body:  'Rajdhani', sans-serif;
+
+  --r:          3px;
+  --r-lg:       6px;
+
+  --status-h:   28px;
+  --nav-h:      60px;
+  --top-offset: calc(var(--status-h) + var(--nav-h));
+
+  --t-fast:     0.15s ease;
+  --t-base:     0.28s ease;
+  --t-slow:     0.55s ease;
+
+  --section-py: 5.5rem;
+  --container:  1280px;
+}
+
+/* ── RESET ────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--top-offset);
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-0);
+  color: var(--text-1);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+img { display: block; max-width: 100%; }
+button { font-family: inherit; }
+
+/* ── GLOBAL BG CANVAS ─────────────────────────────────────────── */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+/* ── CRT OVERLAYS ─────────────────────────────────────────────── */
+.crt-scanlines {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.04) 3px,
+    rgba(0,0,0,0.04) 4px
+  );
+}
+
+.crt-vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.55) 100%);
+}
+
+/* ── UTILITIES ────────────────────────────────────────────────── */
+.container {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+  position: relative;
+  z-index: 1;
+}
+
+.section { padding-block: var(--section-py); position: relative; }
+
+.accent-text { color: var(--red); }
+.green-text  { color: var(--green); }
+.amber-text  { color: var(--amber); }
+
+/* ── DOTS / STATUS INDICATORS ─────────────────────────────────── */
+.dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot--green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.dot--red   { background: var(--red);   box-shadow: 0 0 6px var(--red);   }
+.dot--yellow{ background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+
+.pulse {
+  animation: pulse-dot 2.2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.85); }
+}
+
+/* ── SCROLL REVEAL ────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── PANEL COMPONENT ──────────────────────────────────────────── */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  position: relative;
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+}
+
+/* Corner brackets */
+.panel::before,
+.panel::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--corner);
+  border-style: solid;
+  transition: border-color var(--t-base);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.panel::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-radius: var(--r-lg) 0 0 0; }
+.panel::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-radius: 0 0 var(--r-lg) var(--r-lg); }
+
+.panel:hover {
+  border-color: var(--red-border);
+  box-shadow: 0 0 0 1px rgba(224,35,29,0.08), 0 16px 48px rgba(0,0,0,0.5);
+}
+
+.panel:hover::before,
+.panel:hover::after {
+  border-color: var(--red);
+}
+
+/* Panel title bar */
+.panel-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.85rem;
+  background: rgba(0,0,0,0.4);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+}
+
+.ptb-dots {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.ptb-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border-2);
+}
+
+.ptb-dots span:nth-child(1) { background: #ff5f57; }
+.ptb-dots span:nth-child(2) { background: #ffbd2e; }
+.ptb-dots span:nth-child(3) { background: #28c841; }
+
+.ptb-label {
+  flex: 1;
+  color: var(--text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ptb-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-3);
+  font-size: 0.68rem;
+  flex-shrink: 0;
+}
+
+.ptb-right {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+}
+
+.panel-body { padding: 1.25rem; }
+
+/* ── BUTTONS ──────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.62rem 1.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: var(--r);
+  cursor: pointer;
+  border: none;
+  transition: all var(--t-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--red);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--red-bright);
+  box-shadow: 0 0 20px var(--red-glow), 0 0 40px var(--red-glow);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--red);
+  border: 1px solid var(--red-border);
+}
+
+.btn-outline:hover {
+  background: var(--red-glow);
+  border-color: var(--red);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: rgba(255,255,255,0.04);
+  color: var(--text-2);
+  border: 1px solid var(--border-2);
+}
+
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.07);
+  color: var(--text-1);
+  transform: translateY(-2px);
+}
+
+.btn-full { width: 100%; justify-content: center; }
+
+/* ── STATUS BAR ───────────────────────────────────────────────── */
+.status-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  height: var(--status-h);
+  background: rgba(0,0,0,0.85);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: clamp(0.75rem, 3vw, 1.5rem);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  backdrop-filter: blur(8px);
+}
+
+.status-bar-left, .status-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* ── NAVIGATION ───────────────────────────────────────────────── */
+.nav-header {
+  position: fixed;
+  top: var(--status-h);
+  left: 0; right: 0;
+  z-index: 990;
+  height: var(--nav-h);
+  background: var(--bg-nav);
+  border-bottom: 1px solid var(--border-2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+}
+
+.nav-header.scrolled {
+  border-bottom-color: var(--red-border);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.7);
+}
+
+.nav-inner {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.nav-brand {
+  font-family: var(--font-hud);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-1);
+  transition: color var(--t-fast);
+  white-space: nowrap;
+}
+
+.brand-bracket { color: var(--red); font-weight: 400; }
+.brand-dash    { color: var(--text-3); }
+.brand-ops     { color: var(--red); }
+
+.nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-system-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 50px;
+}
+
+.nav-controls { display: flex; align-items: center; gap: 1rem; }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.nl {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  padding: 0.4rem 0.7rem;
+  border-radius: var(--r);
+  transition: all var(--t-fast);
+  position: relative;
+  white-space: nowrap;
+}
+
+.nl:hover, .nl.active { color: var(--text-1); }
+
+.nl.active {
+  color: var(--red);
+}
+
+.nl.active::before {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+.nl--cta {
+  background: rgba(224,35,29,0.1);
+  color: var(--red) !important;
+  border: 1px solid var(--red-border);
+  margin-left: 0.3rem;
+}
+
+.nl--cta:hover {
+  background: var(--red);
+  color: #fff !important;
+}
+
+.nl--cta.active::before { display: none; }
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: 1px solid var(--border-2);
+  border-radius: var(--r);
+  cursor: pointer;
+  padding: 7px;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--text-2);
+  border-radius: 2px;
+  transition: all var(--t-base);
+}
+
+.nav-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(4.5px, 4.5px); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(4.5px, -4.5px); }
+
+/* ── BOOT OVERLAY ─────────────────────────────────────────────── */
+.boot-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #020305;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.boot-overlay.done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.boot-inner {
+  width: min(680px, 92vw);
+  font-family: var(--font-mono);
+}
+
+.boot-logo {
+  font-family: var(--font-hud);
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: var(--red);
+  text-shadow: 0 0 20px var(--red), 0 0 40px rgba(224,35,29,0.4);
+  margin-bottom: 0.4rem;
+}
+
+.boot-sub {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  margin-bottom: 1.8rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+}
+
+.boot-log {
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--text-2);
+  min-height: 220px;
+  max-height: 220px;
+  overflow: hidden;
+}
+
+.boot-log .bl-ok   { color: var(--green); }
+.boot-log .bl-err  { color: var(--red);   }
+.boot-log .bl-warn { color: var(--amber); }
+.boot-log .bl-dim  { color: var(--text-3); }
+.boot-log .bl-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.boot-log .bl-dots {
+  flex: 1;
+  border-bottom: 1px dotted var(--border-2);
+  margin: 0 0.5rem 4px;
+}
+
+.boot-bar-wrap {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.boot-bar-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+
+.boot-bar-track {
+  flex: 1;
+  height: 4px;
+  background: var(--border-2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.boot-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--red-dim), var(--red));
+  border-radius: 4px;
+  transition: width 0.12s ease;
+  box-shadow: 0 0 8px var(--red);
+}
+
+.boot-bar-pct {
+  font-size: 0.7rem;
+  color: var(--red);
+  min-width: 3ch;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── SECTION HEADER ───────────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 3.5rem;
+  text-align: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.sh-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-2));
+  min-width: 40px;
+}
+
+.sh-line:last-child {
+  background: linear-gradient(270deg, transparent, var(--border-2));
+}
+
+.sh-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--red);
+  white-space: nowrap;
+}
+
+.sh-title {
+  font-family: var(--font-hud);
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-1);
+  white-space: nowrap;
+}
+
+/* ── HERO SECTION ─────────────────────────────────────────────── */
+.hero-section {
+  min-height: 100vh;
+  padding-top: calc(var(--top-offset) + 2rem);
+  display: flex;
+  align-items: center;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+  align-items: start;
+  width: 100%;
+}
+
+/* Terminal / Identity panel */
+.hero-identity-panel { height: 100%; }
+
+.terminal-boot-output {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: var(--text-2);
+  min-height: 280px;
+}
+
+.tbo-line { display: flex; align-items: baseline; gap: 0.4rem; }
+.tbo-prompt { color: var(--red); font-weight: 600; flex-shrink: 0; }
+.tbo-cmd    { color: var(--text-1); }
+.tbo-out    { color: var(--text-2); padding-left: 1.2rem; }
+.tbo-ok     { color: var(--green); }
+.tbo-cursor {
+  color: var(--red);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Hero identity (shown after boot) */
+.hero-identity { animation: fadeIn 0.6s ease both; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hi-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  margin-bottom: 0.75rem;
+}
+
+.hi-name {
+  font-family: var(--font-hud);
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.hi-name-glow {
+  color: var(--red);
+  text-shadow: 0 0 30px rgba(224,35,29,0.5), 0 0 60px rgba(224,35,29,0.2);
+}
+
+.hi-title {
+  font-family: var(--font-mono);
+  font-size: clamp(0.85rem, 1.8vw, 1rem);
+  color: var(--text-2);
+  letter-spacing: 0.06em;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.hi-sep { color: var(--red); }
+
+.hi-tagline {
+  font-size: 1rem;
+  color: var(--text-2);
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  max-width: 540px;
+}
+
+.hi-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* ── HERO METRICS COL ─────────────────────────────────────────── */
+.hero-metrics-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Resource bar metrics */
+.metrics-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.metric-row {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.metric-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+
+.metric-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.metric-bar {
+  flex: 1;
+  height: 5px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  width: var(--w);
+  background: linear-gradient(90deg, var(--red-dim), var(--red));
+  border-radius: 5px;
+  transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 0 6px rgba(224,35,29,0.5);
+}
+
+.metric-fill--amber {
+  background: linear-gradient(90deg, #b87800, var(--amber));
+  box-shadow: 0 0 6px rgba(255,171,0,0.4);
+}
+
+.metric-fill--green {
+  background: linear-gradient(90deg, #00a854, var(--green));
+  box-shadow: 0 0 6px rgba(0,230,118,0.4);
+}
+
+.metric-val {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-2);
+  min-width: 3.5ch;
+  text-align: right;
+}
+
+/* Service list */
+.service-list { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.svc-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+}
+
+.svc-name {
+  flex: 1;
+  color: var(--text-2);
+}
+
+.svc-status {
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+/* Stats panel */
+.stats-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0.85rem 1.25rem;
+}
+
+.stat-cell { text-align: center; }
+
+.stat-val {
+  display: block;
+  font-family: var(--font-hud);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--red);
+  line-height: 1;
+  text-shadow: 0 0 16px rgba(224,35,29,0.4);
+}
+
+.stat-unit {
+  font-family: var(--font-hud);
+  font-size: 1rem;
+  color: var(--text-3);
+}
+
+.stat-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--border-2);
+}
+
+/* ── ABOUT SECTION ────────────────────────────────────────────── */
+.about-section { background: var(--bg-1); }
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* neofetch panel */
+.neofetch-body {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.nf-avatar { flex-shrink: 0; }
+
+.ascii-art {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  line-height: 1.2;
+  color: var(--red);
+  white-space: pre;
+  text-shadow: 0 0 8px rgba(224,35,29,0.4);
+}
+
+.nf-color-dots {
+  display: flex;
+  gap: 3px;
+  margin-top: 0.6rem;
+}
+
+.nf-color-dots span {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.nf-color-dots span:nth-child(1) { background: #282828; }
+.nf-color-dots span:nth-child(2) { background: var(--red); }
+.nf-color-dots span:nth-child(3) { background: var(--green); }
+.nf-color-dots span:nth-child(4) { background: var(--amber); }
+.nf-color-dots span:nth-child(5) { background: var(--blue); }
+.nf-color-dots span:nth-child(6) { background: #e040fb; }
+.nf-color-dots span:nth-child(7) { background: var(--text-2); }
+.nf-color-dots span:nth-child(8) { background: var(--text-1); }
+
+.nf-info { flex: 1; }
+
+.nf-row {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.8;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nf-key { color: var(--red); min-width: 70px; }
+.nf-sep { color: var(--text-3); }
+.nf-val { color: var(--text-2); }
+
+.nf-divider {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--border-2);
+  margin: 0.2rem 0;
+}
+
+/* Bio text */
+.bio-text {
+  font-size: 0.97rem;
+  color: var(--text-2);
+  line-height: 1.85;
+  margin-bottom: 0.85rem;
+}
+
+.bio-text:last-child { margin-bottom: 0; }
+.bio-text strong { color: var(--red); font-weight: 600; }
+
+/* Capabilities */
+.about-text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cap-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.77rem;
+  line-height: 1.6;
+}
+
+.cap-dot { color: var(--green); font-size: 0.9rem; flex-shrink: 0; }
+.cap-name { color: var(--text-1); min-width: 200px; }
+.cap-desc { color: var(--text-3); font-size: 0.72rem; }
+
+/* ── SKILLS / GAUGES ──────────────────────────────────────────── */
+.skills-section { background: var(--bg-0); }
+
+.skills-categories {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cat-btn {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  padding: 0.35rem 0.85rem;
+  background: transparent;
+  color: var(--text-3);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+
+.cat-btn:hover { color: var(--text-1); border-color: rgba(255,255,255,0.15); }
+
+.cat-btn.active {
+  background: rgba(224,35,29,0.12);
+  color: var(--red);
+  border-color: var(--red-border);
+}
+
+.gauges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.gauge-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all var(--t-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.gauge-panel::before,
+.gauge-panel::after {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px;
+  border-color: var(--corner);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.gauge-panel::before { top: -1px; left: -1px; border-width: 1.5px 0 0 1.5px; }
+.gauge-panel::after  { bottom: -1px; right: -1px; border-width: 0 1.5px 1.5px 0; }
+
+.gauge-panel:hover {
+  border-color: var(--red-border);
+  box-shadow: 0 0 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(224,35,29,0.06);
+  transform: translateY(-3px);
+}
+
+.gauge-panel.hidden { display: none; }
+
+.gp-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gp-icon {
+  font-size: 0.85rem;
+  color: var(--red);
+}
+
+.gp-name {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gp-cat {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  background: var(--border);
+  padding: 1px 5px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* SVG Radial Gauge */
+.gp-gauge-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.gauge-svg {
+  width: 110px;
+  height: 110px;
+}
+
+.gauge-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.05);
+  stroke-width: 8;
+}
+
+.gauge-fill {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 314.16;
+  stroke-dashoffset: 314.16;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: drop-shadow(0 0 4px rgba(224,35,29,0.5));
+}
+
+.gauge-fill.animated {
+  /* stroke-dashoffset set by JS */
+}
+
+.gp-center-text {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+
+.gp-pct {
+  display: block;
+  font-family: var(--font-hud);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1;
+}
+
+.gp-unit {
+  font-size: 0.8rem;
+  color: var(--text-3);
+}
+
+.gp-sublabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* Sparkline */
+.gp-sparkline {
+  height: 28px;
+  width: 100%;
+}
+
+.spark-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── ACTIVITY / HEARTBEAT ─────────────────────────────────────── */
+.activity-section { background: var(--bg-1); }
+
+.heartbeat-panel {}
+
+.hb-body { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.hb-stats-row {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.hb-stat { text-align: center; }
+
+.hb-stat-val {
+  display: block;
+  font-family: var(--font-hud);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.hb-stat-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  margin-top: 0.2rem;
+}
+
+/* Monitor wrapper */
+.hb-monitor {
+  position: relative;
+}
+
+.hb-monitor-inner {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.hb-y-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding-block: 4px;
+}
+
+.hb-canvas-wrap {
+  flex: 1;
+  position: relative;
+  height: 160px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+#heartbeat-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hb-scan-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(0,230,118,0.6), transparent);
+  opacity: 0.5;
+  animation: scan 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scan {
+  from { left: -2px; }
+  to   { left: 100%; }
+}
+
+.hb-months {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 0 0 2.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+
+/* Contribution heatmap */
+.contribution-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cs-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+}
+
+.cs-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+  grid-auto-flow: column;
+  gap: 3px;
+  height: 90px;
+}
+
+.cs-cell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  transition: transform var(--t-fast), filter var(--t-fast);
+}
+
+.cs-cell:hover {
+  transform: scale(1.4);
+  filter: brightness(1.5);
+}
+
+.cs-cell.l0 { background: rgba(255,255,255,0.04); }
+.cs-cell.l1 { background: rgba(224,35,29,0.25); }
+.cs-cell.l2 { background: rgba(224,35,29,0.45); }
+.cs-cell.l3 { background: rgba(224,35,29,0.70); }
+.cs-cell.l4 { background: var(--red); box-shadow: 0 0 4px rgba(224,35,29,0.4); }
+
+.cs-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+
+.cs-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.cs-0 { background: rgba(255,255,255,0.04); }
+.cs-1 { background: rgba(224,35,29,0.25); }
+.cs-2 { background: rgba(224,35,29,0.45); }
+.cs-3 { background: rgba(224,35,29,0.70); }
+.cs-4 { background: var(--red); }
+
+/* ── PROJECTS / SERVICES ──────────────────────────────────────── */
+.projects-section { background: var(--bg-0); }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.25rem;
+}
+
+.svc-body { display: flex; flex-direction: column; gap: 0.85rem; }
+
+.svc-status-line {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.svc-title {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: var(--text-1);
+  letter-spacing: 0.02em;
+  flex: 1;
+}
+
+.svc-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.svc-meta {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--text-3);
+}
+
+.svc-meta i { margin-right: 0.35rem; }
+
+.svc-desc {
+  font-size: 0.88rem;
+  color: var(--text-2);
+  line-height: 1.75;
+  flex: 1;
+}
+
+.svc-deps {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.dep-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+
+.dep-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: var(--red);
+  background: rgba(224,35,29,0.08);
+  border: 1px solid rgba(224,35,29,0.2);
+  padding: 1px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.svc-links {
+  display: flex;
+  gap: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.svc-link {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color var(--t-fast);
+  text-transform: lowercase;
+}
+
+.svc-link:hover { color: var(--text-1); }
+.svc-link--accent:hover { color: var(--red); }
+
+/* ── BLOG / LOG STREAM ────────────────────────────────────────── */
+.blog-section { background: var(--bg-1); }
+
+.log-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+}
+
+.log-entry {
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  transition: background var(--t-fast);
+  position: relative;
+}
+
+.log-entry::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: transparent;
+  transition: background var(--t-fast);
+}
+
+.log-entry:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+.log-entry:hover::before { background: var(--red); }
+
+.log-entry:last-child { border-bottom: none; }
+
+.log-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.log-ts {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--text-3);
+}
+
+.log-sev {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+.log-info  { color: var(--blue);  background: rgba(64,196,255,0.08); border: 1px solid rgba(64,196,255,0.2); }
+.log-warn  { color: var(--amber); background: rgba(255,171,0,0.08);  border: 1px solid rgba(255,171,0,0.2); }
+.log-debug { color: var(--text-3); background: rgba(255,255,255,0.04); border: 1px solid var(--border-2); }
+
+.log-src {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--green);
+  letter-spacing: 0.04em;
+}
+
+.log-title {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.log-title a { color: var(--text-1); transition: color var(--t-fast); }
+.log-title a:hover { color: var(--red); }
+
+.log-excerpt {
+  font-size: 0.88rem;
+  color: var(--text-2);
+  line-height: 1.7;
+}
+
+.log-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.log-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  background: var(--border);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+.log-read-more {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: gap var(--t-fast);
+  text-transform: lowercase;
+  width: fit-content;
+}
+
+.log-read-more:hover { gap: 0.6rem; }
+
+.log-pending { background: rgba(0,0,0,0.2); }
+
+.log-pending-text {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+}
+
+.blink-cursor {
+  color: var(--red);
+  animation: blink 1s step-end infinite;
+}
+
+/* ── CONTACT ──────────────────────────────────────────────────── */
+.contact-section { background: var(--bg-0); }
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Ping panel */
+.ping-output {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.po-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.po-key {
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+  min-width: 70px;
+}
+
+.po-val { color: var(--text-2); }
+
+.contact-channels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.channel-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r);
+  transition: all var(--t-base);
+}
+
+.channel-btn i {
+  font-size: 1.1rem;
+  color: var(--red);
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.channel-btn:hover {
+  border-color: var(--red-border);
+  background: rgba(224,35,29,0.06);
+  transform: translateX(4px);
+}
+
+.ch-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+}
+
+.ch-val {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-2);
+}
+
+/* Command form */
+.cmd-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cmd-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.cmd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cmd-field label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+}
+
+.cf-prompt { color: var(--red); }
+.cf-req { color: var(--text-3); }
+
+.cmd-field input,
+.cmd-field textarea {
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r);
+  padding: 0.65rem 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-1);
+  outline: none;
+  resize: vertical;
+  width: 100%;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.cmd-field input::placeholder,
+.cmd-field textarea::placeholder {
+  color: var(--text-3);
+}
+
+.cmd-field input:focus,
+.cmd-field textarea:focus {
+  border-color: var(--red-border);
+  box-shadow: 0 0 0 3px var(--red-glow);
+}
+
+.cmd-field input.error,
+.cmd-field textarea.error {
+  border-color: #ff5555;
+}
+
+.form-status {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--r);
+  display: none;
+}
+
+.form-status.success {
+  display: block;
+  color: var(--green);
+  background: var(--green-dim);
+  border: 1px solid rgba(0,230,118,0.25);
+}
+
+.form-status.error-msg {
+  display: block;
+  color: #ff6b6b;
+  background: rgba(255,85,85,0.08);
+  border: 1px solid rgba(255,85,85,0.2);
+}
+
+/* ── FOOTER ───────────────────────────────────────────────────── */
+.site-footer {
+  background: #030305;
+  border-top: 1px solid var(--border);
+  padding-block: 1.75rem;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  text-align: center;
+}
+
+.footer-brand {
+  font-family: var(--font-hud);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-nav a {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  transition: color var(--t-fast);
+}
+
+.footer-nav a:hover { color: var(--red); }
+
+.footer-sys {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+
+/* ── BACK TO TOP ──────────────────────────────────────────────── */
+.back-to-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 800;
+  width: 40px; height: 40px;
+  background: var(--red);
+  border: none;
+  border-radius: var(--r);
+  color: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: all var(--t-base);
+  box-shadow: 0 4px 16px rgba(224,35,29,0.4);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: var(--red-bright);
+  transform: translateY(-3px);
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .hero-metrics-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .stats-panel { grid-column: 1 / -1; }
+
+  .about-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 820px) {
+  .nav-toggle { display: flex; }
+
+  .nav-links {
+    position: fixed;
+    top: var(--top-offset);
+    left: 0; right: 0; bottom: 0;
+    background: rgba(5,5,7,0.97);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.77,0,0.18,1);
+    z-index: 988;
+  }
+
+  .nav-links.open { transform: translateX(0); }
+
+  .nl { font-size: 1rem; padding: 0.7rem 1.5rem; }
+  .nl--cta { margin-left: 0; margin-top: 0.5rem; }
+
+  .nav-center { display: none; }
+  .sb-hide-sm { display: none; }
+
+  .hero-metrics-col { grid-template-columns: 1fr; }
+  .cmd-form-row { grid-template-columns: 1fr; }
+
+  .gauges-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .cap-list li { flex-wrap: wrap; }
+  .cap-desc { display: none; }
+
+  .neofetch-body { flex-direction: column; }
+}
+
+@media (max-width: 560px) {
+  :root { --section-py: 3.5rem; }
+
+  .projects-grid { grid-template-columns: 1fr; }
+
+  .hi-actions { flex-direction: column; }
+  .btn { justify-content: center; }
+
+  .hb-stats-row { gap: 1.2rem; }
+
+  .gauges-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── REDUCED MOTION ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CASE FILES / INCIDENT CARDS  —  projects section rebuild
+═══════════════════════════════════════════════════════════════ */
+
+/* Filter tabs */
+.cf-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.cf-tab {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  padding: 0.38rem 0.9rem;
+  background: transparent;
+  color: var(--text-3);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all var(--t-fast);
+}
+
+.cf-tab:hover { color: var(--text-1); border-color: rgba(255,255,255,0.15); }
+
+.cf-tab.active {
+  background: rgba(224,35,29,0.1);
+  color: var(--red);
+  border-color: var(--red-border);
+}
+
+/* Layout grid */
+.cf-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 1.25rem;
+}
+
+.cf-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cf-row-3 {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.cf-row-2 {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+/* ── BASE INCIDENT CARD ───────────────────────────────────────── */
+.ic {
+  position: relative;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  transition: transform var(--t-base), box-shadow var(--t-base), border-color var(--t-base);
+}
+
+.ic:hover { transform: translateY(-4px); }
+
+/* Left severity bar */
+.ic-severity-bar {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 3px;
+  border-radius: var(--r-lg) 0 0 var(--r-lg);
+}
+
+/* Large watermark number */
+.ic-watermark {
+  position: absolute;
+  bottom: -0.5rem; right: 0.75rem;
+  font-family: var(--font-hud);
+  font-size: 5rem;
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.04em;
+  opacity: 0.055;
+  color: var(--text-1);
+}
+
+.ic-watermark--sm { font-size: 3.5rem; }
+
+/* Severity ribbon */
+.ic-ribbon {
+  position: absolute;
+  top: 14px; right: -22px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #fff;
+  background: var(--red);
+  padding: 3px 28px;
+  transform: rotate(45deg);
+  transform-origin: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.ic-ribbon--amber { background: var(--amber); color: #000; }
+
+/* ── CRITICAL VARIANT ─────────────────────────────────────────── */
+.ic--critical {
+  border-color: rgba(224,35,29,0.3);
+  animation: critical-breathe 4s ease-in-out infinite;
+}
+
+.ic--critical .ic-severity-bar {
+  background: linear-gradient(180deg, var(--red), var(--red-dim));
+  box-shadow: 2px 0 12px rgba(224,35,29,0.5);
+}
+
+.ic--critical:hover {
+  border-color: rgba(224,35,29,0.65);
+  box-shadow:
+    0 0 0 1px rgba(224,35,29,0.12),
+    0 8px 40px rgba(0,0,0,0.6),
+    0 0 30px rgba(224,35,29,0.18),
+    inset 0 0 40px rgba(224,35,29,0.04);
+}
+
+@keyframes critical-breathe {
+  0%, 100% { box-shadow: 0 0 12px rgba(224,35,29,0.08); }
+  50%       { box-shadow: 0 0 28px rgba(224,35,29,0.2), 0 0 60px rgba(224,35,29,0.07); }
+}
+
+/* ── HIGH VARIANT ─────────────────────────────────────────────── */
+.ic--high {
+  border-color: rgba(255,171,0,0.25);
+  animation: high-breathe 4.5s ease-in-out infinite;
+}
+
+.ic--high .ic-severity-bar {
+  background: linear-gradient(180deg, var(--amber), #b87800);
+  box-shadow: 2px 0 12px rgba(255,171,0,0.4);
+}
+
+.ic--high:hover {
+  border-color: rgba(255,171,0,0.55);
+  box-shadow:
+    0 0 0 1px rgba(255,171,0,0.1),
+    0 8px 40px rgba(0,0,0,0.6),
+    0 0 30px rgba(255,171,0,0.14),
+    inset 0 0 40px rgba(255,171,0,0.03);
+}
+
+@keyframes high-breathe {
+  0%, 100% { box-shadow: 0 0 10px rgba(255,171,0,0.06); }
+  50%       { box-shadow: 0 0 24px rgba(255,171,0,0.16), 0 0 50px rgba(255,171,0,0.06); }
+}
+
+/* ── INFRA VARIANT ────────────────────────────────────────────── */
+.ic--infra .ic-severity-bar {
+  background: linear-gradient(180deg, var(--blue), #0080b3);
+  box-shadow: 2px 0 10px rgba(64,196,255,0.35);
+}
+
+.ic--infra:hover {
+  border-color: rgba(64,196,255,0.3);
+  box-shadow:
+    0 0 0 1px rgba(64,196,255,0.08),
+    0 8px 40px rgba(0,0,0,0.5),
+    0 0 24px rgba(64,196,255,0.1);
+}
+
+/* ── DEPLOY VARIANT ───────────────────────────────────────────── */
+.ic--deploy .ic-severity-bar {
+  background: linear-gradient(180deg, var(--green), #00a854);
+  box-shadow: 2px 0 10px rgba(0,230,118,0.35);
+}
+
+.ic--deploy:hover {
+  border-color: rgba(0,230,118,0.3);
+  box-shadow:
+    0 0 0 1px rgba(0,230,118,0.08),
+    0 8px 40px rgba(0,0,0,0.5),
+    0 0 24px rgba(0,230,118,0.1);
+}
+
+/* ── FEATURED CARD ────────────────────────────────────────────── */
+.ic--featured {
+  padding: 1.75rem 1.75rem 1.75rem 2rem;
+}
+
+.ic--featured .ic-watermark {
+  font-size: 9rem;
+  opacity: 0.045;
+  bottom: -1.5rem;
+}
+
+/* ── PULSING ALERT DOT ────────────────────────────────────────── */
+.ic-alert-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 0 0 rgba(224,35,29,0.7);
+  animation: alert-ring 2s ease-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes alert-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(224,35,29,0.7); }
+  70%  { box-shadow: 0 0 0 8px rgba(224,35,29,0); }
+  100% { box-shadow: 0 0 0 0 rgba(224,35,29,0); }
+}
+
+/* ── CARD HEADER ──────────────────────────────────────────────── */
+.ic-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.ic-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.ic-status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ic-id {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+}
+
+.ic-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+.ic-type--incident {
+  background: rgba(224,35,29,0.1);
+  border: 1px solid rgba(224,35,29,0.3);
+  color: var(--red);
+}
+
+.ic-type--high {
+  background: rgba(255,171,0,0.1);
+  border: 1px solid rgba(255,171,0,0.3);
+  color: var(--amber);
+}
+
+.ic-type--infra {
+  background: rgba(64,196,255,0.08);
+  border: 1px solid rgba(64,196,255,0.25);
+  color: var(--blue);
+}
+
+.ic-type--deploy {
+  background: rgba(0,230,118,0.08);
+  border: 1px solid rgba(0,230,118,0.25);
+  color: var(--green);
+}
+
+.ic-cve-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--red);
+  background: rgba(224,35,29,0.08);
+  border: 1px solid rgba(224,35,29,0.2);
+  padding: 2px 7px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+.ic-resolved {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ic-resolved--green { color: var(--green); }
+
+/* ── CARD TITLE ───────────────────────────────────────────────── */
+.ic-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-1);
+  line-height: 1.35;
+}
+
+.ic--featured .ic-title {
+  font-family: var(--font-hud);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  letter-spacing: 0.04em;
+  font-weight: 700;
+}
+
+/* ── KPI METRICS ROW ──────────────────────────────────────────── */
+.ic-kpis {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem 1rem;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  flex-wrap: wrap;
+}
+
+.ic-kpis--sm {
+  gap: 1rem;
+  padding: 0.6rem 0.85rem;
+}
+
+.kpi { text-align: center; }
+
+.kpi-val {
+  display: block;
+  font-family: var(--font-hud);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--red);
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(224,35,29,0.4);
+}
+
+.ic-kpis--sm .kpi-val { font-size: 1.15rem; }
+
+.kpi-val--amber { color: var(--amber); text-shadow: 0 0 12px rgba(255,171,0,0.3); }
+.kpi-val--blue  { color: var(--blue);  text-shadow: 0 0 12px rgba(64,196,255,0.3); }
+.kpi-val--green { color: var(--green); text-shadow: 0 0 12px rgba(0,230,118,0.3); }
+
+.kpi-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+.kpi-sep {
+  width: 1px;
+  height: 30px;
+  background: var(--border-2);
+  flex-shrink: 0;
+}
+
+/* ── DESCRIPTION ──────────────────────────────────────────────── */
+.ic-desc {
+  font-size: 0.9rem;
+  color: var(--text-2);
+  line-height: 1.8;
+  flex: 1;
+}
+
+.ic-desc--sm { font-size: 0.84rem; line-height: 1.72; }
+
+.ic-desc code, .ic-desc--sm code {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  color: var(--amber);
+  background: rgba(255,171,0,0.08);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+/* ── ATTACK VECTOR ────────────────────────────────────────────── */
+.ic-vector-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  padding: 0.45rem 0.75rem;
+  background: rgba(224,35,29,0.04);
+  border-left: 2px solid var(--red-border);
+  border-radius: 0 var(--r) var(--r) 0;
+}
+
+.ic--high .ic-vector-row  { border-left-color: rgba(255,171,0,0.4); background: rgba(255,171,0,0.04); }
+.ic--infra .ic-vector-row { border-left-color: rgba(64,196,255,0.3); background: rgba(64,196,255,0.03); }
+
+.ivr-label {
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.ivr-val { color: var(--text-2); }
+
+/* ── TAGS ─────────────────────────────────────────────────────── */
+.ic-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.ict {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.07em;
+  padding: 2px 7px;
+  border-radius: 2px;
+  border: 1px solid var(--border-2);
+  color: var(--text-3);
+  background: rgba(255,255,255,0.03);
+  transition: all var(--t-fast);
+  text-transform: uppercase;
+}
+
+.ic:hover .ict {
+  border-color: rgba(255,255,255,0.12);
+  color: var(--text-2);
+}
+
+/* ── INCIDENT TIMELINE ────────────────────────────────────────── */
+.ic-timeline {
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.itl-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  margin-bottom: 0.65rem;
+}
+
+.itl-track {
+  display: flex;
+  align-items: center;
+}
+
+.itl-phase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.itl-phase span {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.itl-node {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--border-2);
+  background: var(--bg-2);
+  transition: all var(--t-base);
+}
+
+.itl-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  margin-bottom: 18px;
+  transition: background var(--t-base);
+}
+
+.itl-done .itl-node {
+  background: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 6px rgba(0,230,118,0.6);
+}
+
+.itl-line.itl-done { background: var(--green); }
+
+.itl-phase.itl-done span { color: var(--green); }
+
+/* ── CARD FOOTER ──────────────────────────────────────────────── */
+.ic-footer {
+  display: flex;
+  gap: 1.25rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.ic-footer--sm {
+  padding-top: 0.6rem;
+  gap: 1rem;
+}
+
+.ic-link {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color var(--t-fast), gap var(--t-fast);
+  text-transform: lowercase;
+}
+
+.ic-link:hover { color: var(--text-1); gap: 0.6rem; }
+
+.ic-link--primary {
+  color: var(--red);
+  font-weight: 600;
+}
+
+.ic-link--primary:hover { color: var(--red-bright); }
+
+/* ── HIDDEN STATE (filter) ────────────────────────────────────── */
+.ic.ic-hidden,
+.cf-col-right.cf-hidden,
+.cf-row-3 .ic.ic-hidden,
+.cf-row-2 .ic.ic-hidden {
+  display: none;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .cf-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cf-col-right {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cf-row-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .cf-col-right { grid-template-columns: 1fr; }
+  .cf-row-3     { grid-template-columns: 1fr; }
+  .cf-row-2     { grid-template-columns: 1fr; }
+
+  .ic-watermark  { font-size: 4rem; }
+  .ic--featured .ic-watermark { font-size: 5rem; }
+
+  .itl-phase span { font-size: 0.48rem; }
+
+  .ic-ribbon {
+    top: 10px; right: -20px;
+    font-size: 0.52rem;
+    padding: 2px 22px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- ── BOOT OVERLAY ─────────────────────────────── -->
+  <div id="boot-overlay" class="boot-overlay" aria-live="polite" aria-label="System boot sequence">
+    <div class="boot-inner">
+      <div class="boot-logo">DERRICK-OPS</div>
+      <div class="boot-sub">BIOS v2.4.1 · DevOps Systems · All Rights Reserved</div>
+      <div id="boot-log" class="boot-log"></div>
+      <div class="boot-bar-wrap">
+        <div class="boot-bar-label">INITIALIZING</div>
+        <div class="boot-bar-track"><div id="boot-bar" class="boot-bar-fill"></div></div>
+        <div id="boot-pct" class="boot-bar-pct">0%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GLOBAL OVERLAYS ──────────────────────────── -->
+  <div class="crt-scanlines" aria-hidden="true"></div>
+  <div class="crt-vignette"  aria-hidden="true"></div>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- ── TOP STATUS BAR ───────────────────────────── -->
+  <div class="status-bar" role="banner" aria-label="System status bar">
+    <div class="status-bar-left">
+      <span class="sb-item">
+        <span class="dot dot--green pulse" aria-hidden="true"></span>
+        <span>SYS: OPERATIONAL</span>
+      </span>
+      <span class="sb-item sb-hide-sm">
+        <span class="dot dot--yellow" aria-hidden="true"></span>
+        <span>UPTIME: <span id="uptime-counter" class="accent-text">00:00:00</span></span>
+      </span>
+      <span class="sb-item sb-hide-sm">
+        <i class="fas fa-server" aria-hidden="true"></i>
+        <span>SERVERS: <span class="accent-text">ONLINE</span></span>
+      </span>
+    </div>
+    <div class="status-bar-right">
+      <span class="sb-item sb-hide-sm">
+        <i class="fas fa-shield-halved" aria-hidden="true"></i>
+        <span>FIREWALL: <span class="green-text">ACTIVE</span></span>
+      </span>
+      <span class="sb-item">
+        <i class="fas fa-clock" aria-hidden="true"></i>
+        <span id="live-clock" class="accent-text">--:--:--</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- ── NAVIGATION ───────────────────────────────── -->
+  <header class="nav-header" id="nav-header">
+    <nav class="nav-inner" aria-label="Main navigation">
+      <a href="#home" class="nav-brand" aria-label="Home">
+        <span class="brand-bracket">[</span>
+        <span class="brand-name">DERRICK</span>
+        <span class="brand-dash">-</span>
+        <span class="brand-ops">OPS</span>
+        <span class="brand-bracket">]</span>
+      </a>
+
+      <div class="nav-center sb-hide-sm">
+        <span class="nav-system-tag">
+          <span class="dot dot--green pulse" aria-hidden="true"></span>
+          ALL SYSTEMS NOMINAL
+        </span>
+      </div>
+
+      <div class="nav-controls">
+        <ul class="nav-links" id="nav-links" role="list">
+          <li><a href="#home"     class="nl active" data-s="home">_HOME</a></li>
+          <li><a href="#about"    class="nl" data-s="about">_ABOUT</a></li>
+          <li><a href="#skills"   class="nl" data-s="skills">_METRICS</a></li>
+          <li><a href="#activity" class="nl" data-s="activity">_PULSE</a></li>
+          <li><a href="#projects" class="nl" data-s="projects">_SERVICES</a></li>
+          <li><a href="#blog"     class="nl" data-s="blog">_LOGS</a></li>
+          <li><a href="#contact"  class="nl nl--cta" data-s="contact">_CONNECT</a></li>
+        </ul>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 1 · HOME / BOOT HERO
+    ══════════════════════════════════════════════ -->
+    <section id="home" class="section hero-section" aria-labelledby="hero-heading">
+      <div class="container">
+        <div class="hero-grid">
+
+          <!-- LEFT: Identity panel -->
+          <div class="panel hero-identity-panel">
+            <div class="panel-title-bar">
+              <span class="ptb-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </span>
+              <span class="ptb-label">derrick@devops-server: ~</span>
+              <span class="ptb-status">
+                <span class="dot dot--green pulse" aria-hidden="true"></span>LIVE
+              </span>
+            </div>
+            <div class="panel-body">
+              <div class="terminal-boot-output" id="terminal-output" aria-label="Terminal output" aria-live="polite">
+                <!-- JS fills this in -->
+              </div>
+              <div class="hero-identity" id="hero-identity" style="display:none" aria-label="Identity panel">
+                <div class="hi-label">// IDENTIFIED OPERATOR</div>
+                <h1 id="hero-heading" class="hi-name">
+                  <span class="hi-name-glow">DERRICK</span>
+                </h1>
+                <div class="hi-title">
+                  <span class="hi-role">DevOps Engineer</span>
+                  <span class="hi-sep" aria-hidden="true">|</span>
+                  <span class="hi-role">Linux Systems Administrator</span>
+                </div>
+                <p class="hi-tagline">
+                  Building reliable infrastructure, automating deployments,<br/>
+                  and maintaining secure Linux server environments.
+                </p>
+                <div class="hi-actions">
+                  <a href="#projects" class="btn btn-primary">
+                    <i class="fas fa-server" aria-hidden="true"></i> View Services
+                  </a>
+                  <a href="#" class="btn btn-outline" download>
+                    <i class="fas fa-file-arrow-down" aria-hidden="true"></i> Download CV
+                  </a>
+                  <a href="#contact" class="btn btn-ghost">
+                    <i class="fas fa-terminal" aria-hidden="true"></i> Connect
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Live Metrics column -->
+          <div class="hero-metrics-col">
+
+            <!-- Resource monitors -->
+            <div class="panel metrics-panel">
+              <div class="panel-title-bar">
+                <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+                <span class="ptb-label">SYSTEM_RESOURCES</span>
+                <span class="ptb-status green-text">MONITORING</span>
+              </div>
+              <div class="panel-body metrics-body">
+                <div class="metric-row">
+                  <span class="metric-label">CPU</span>
+                  <div class="metric-bar-wrap" role="meter" aria-label="CPU usage">
+                    <div class="metric-bar"><div class="metric-fill" id="cpu-bar" style="--w:0%"></div></div>
+                    <span class="metric-val" id="cpu-val">--</span>
+                  </div>
+                </div>
+                <div class="metric-row">
+                  <span class="metric-label">RAM</span>
+                  <div class="metric-bar-wrap" role="meter" aria-label="RAM usage">
+                    <div class="metric-bar"><div class="metric-fill" id="ram-bar" style="--w:0%"></div></div>
+                    <span class="metric-val" id="ram-val">--</span>
+                  </div>
+                </div>
+                <div class="metric-row">
+                  <span class="metric-label">DISK</span>
+                  <div class="metric-bar-wrap" role="meter" aria-label="Disk usage">
+                    <div class="metric-bar"><div class="metric-fill metric-fill--amber" id="disk-bar" style="--w:0%"></div></div>
+                    <span class="metric-val" id="disk-val">--</span>
+                  </div>
+                </div>
+                <div class="metric-row">
+                  <span class="metric-label">NET</span>
+                  <div class="metric-bar-wrap" role="meter" aria-label="Network usage">
+                    <div class="metric-bar"><div class="metric-fill metric-fill--green" id="net-bar" style="--w:0%"></div></div>
+                    <span class="metric-val" id="net-val">--</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Service status -->
+            <div class="panel services-mini-panel">
+              <div class="panel-title-bar">
+                <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+                <span class="ptb-label">CORE_SERVICES</span>
+                <span class="ptb-status">4/4 RUNNING</span>
+              </div>
+              <div class="panel-body">
+                <ul class="service-list" aria-label="Core services status">
+                  <li class="svc-item">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="svc-name">nginx.service</span>
+                    <span class="svc-status green-text">active (running)</span>
+                  </li>
+                  <li class="svc-item">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="svc-name">mysql.service</span>
+                    <span class="svc-status green-text">active (running)</span>
+                  </li>
+                  <li class="svc-item">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="svc-name">ufw.service</span>
+                    <span class="svc-status green-text">active (running)</span>
+                  </li>
+                  <li class="svc-item">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="svc-name">certbot.timer</span>
+                    <span class="svc-status green-text">active (waiting)</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Stats panel -->
+            <div class="panel stats-panel">
+              <div class="panel-body stats-body">
+                <div class="stat-cell">
+                  <span class="stat-val" data-target="5">0</span>
+                  <span class="stat-unit">YRS</span>
+                  <span class="stat-label">Experience</span>
+                </div>
+                <div class="stat-divider" aria-hidden="true"></div>
+                <div class="stat-cell">
+                  <span class="stat-val" data-target="50">0</span>
+                  <span class="stat-unit">+</span>
+                  <span class="stat-label">Servers</span>
+                </div>
+                <div class="stat-divider" aria-hidden="true"></div>
+                <div class="stat-cell">
+                  <span class="stat-val" data-target="99">0</span>
+                  <span class="stat-unit">.9%</span>
+                  <span class="stat-label">Uptime</span>
+                </div>
+              </div>
+            </div>
+          </div><!-- /.hero-metrics-col -->
+        </div><!-- /.hero-grid -->
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 2 · ABOUT / SYSTEM INFO
+    ══════════════════════════════════════════════ -->
+    <section id="about" class="section about-section" aria-labelledby="about-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="sh-line" aria-hidden="true"></div>
+          <span class="sh-tag">// MODULE 01</span>
+          <h2 id="about-heading" class="sh-title">OPERATOR_PROFILE</h2>
+          <div class="sh-line" aria-hidden="true"></div>
+        </div>
+
+        <div class="about-grid">
+          <!-- neofetch-style panel -->
+          <div class="panel neofetch-panel reveal">
+            <div class="panel-title-bar">
+              <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="ptb-label">neofetch</span>
+            </div>
+            <div class="panel-body neofetch-body">
+              <div class="nf-avatar" aria-label="Profile photo placeholder">
+                <div class="nf-avatar-art" aria-hidden="true">
+<pre class="ascii-art">
+ ██████╗ ███████╗██████╗ ██████╗ 
+ ██╔══██╗██╔════╝██╔══██╗╚════██╗
+ ██║  ██║█████╗  ██████╔╝ █████╔╝
+ ██║  ██║██╔══╝  ██╔══██╗ ╚═══██╗
+ ██████╔╝███████╗██║  ██║██████╔╝
+ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝ 
+</pre>
+                </div>
+                <div class="nf-color-dots" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="nf-info">
+                <div class="nf-row"><span class="nf-key">operator</span><span class="nf-sep">@</span><span class="nf-val">devops-server</span></div>
+                <div class="nf-divider" aria-hidden="true">───────────────────────</div>
+                <div class="nf-row"><span class="nf-key">OS</span><span class="nf-val">Ubuntu 22.04.3 LTS x86_64</span></div>
+                <div class="nf-row"><span class="nf-key">Host</span><span class="nf-val">Linux Infrastructure</span></div>
+                <div class="nf-row"><span class="nf-key">Kernel</span><span class="nf-val">5.15.0-91-generic</span></div>
+                <div class="nf-row"><span class="nf-key">Shell</span><span class="nf-val">bash 5.1.16</span></div>
+                <div class="nf-row"><span class="nf-key">WEB</span><span class="nf-val">Nginx · Apache</span></div>
+                <div class="nf-row"><span class="nf-key">DB</span><span class="nf-val">MySQL · MariaDB</span></div>
+                <div class="nf-row"><span class="nf-key">DNS</span><span class="nf-val">BIND9 · Cloudflare</span></div>
+                <div class="nf-row"><span class="nf-key">SSL</span><span class="nf-val">Let's Encrypt · Certbot</span></div>
+                <div class="nf-row"><span class="nf-key">FW</span><span class="nf-val">UFW · iptables</span></div>
+                <div class="nf-row"><span class="nf-key">Terminal</span><span class="nf-val">tmux · SSH</span></div>
+                <div class="nf-row"><span class="nf-key">Location</span><span class="nf-val">Nairobi, Kenya 🇰🇪</span></div>
+                <div class="nf-row"><span class="nf-key">Contact</span><span class="nf-val accent-text">info@derroh.co.ke</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bio + capabilities -->
+          <div class="about-text-col">
+            <div class="panel bio-panel reveal">
+              <div class="panel-title-bar">
+                <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+                <span class="ptb-label">cat /etc/operator.conf</span>
+              </div>
+              <div class="panel-body">
+                <p class="bio-text">
+                  I'm a <strong class="accent-text">DevOps-focused systems professional</strong> with hands-on experience managing and troubleshooting Linux server infrastructure and hosting environments. I specialize in keeping systems running reliably, securely, and efficiently — from initial server provisioning to long-running operational health.
+                </p>
+                <p class="bio-text">
+                  My work spans the full infrastructure stack: web server configuration, complex network diagnostics, SSL lifecycle management, and zero-downtime database migrations. Every server I touch is treated as production — because in this field, it usually is.
+                </p>
+              </div>
+            </div>
+
+            <div class="panel capabilities-panel reveal">
+              <div class="panel-title-bar">
+                <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+                <span class="ptb-label">systemctl list-units --state=active</span>
+              </div>
+              <div class="panel-body">
+                <ul class="cap-list" aria-label="Active capabilities">
+                  <li><span class="cap-dot" aria-hidden="true">●</span><span class="cap-name">linux-admin.service</span><span class="cap-desc">Server administration &amp; hardening</span></li>
+                  <li><span class="cap-dot" aria-hidden="true">●</span><span class="cap-name">infra-troubleshoot.service</span><span class="cap-desc">Hosting infrastructure diagnosis</span></li>
+                  <li><span class="cap-dot" aria-hidden="true">●</span><span class="cap-name">ssl-manager.service</span><span class="cap-desc">Certificate installation &amp; renewal</span></li>
+                  <li><span class="cap-dot" aria-hidden="true">●</span><span class="cap-name">dns-config.service</span><span class="cap-desc">DNS configuration &amp; propagation</span></li>
+                  <li><span class="cap-dot" aria-hidden="true">●</span><span class="cap-name">mail-server.service</span><span class="cap-desc">SMTP, SPF, DKIM troubleshooting</span></li>
+                  <li><span class="cap-dot" aria-hidden="true">●</span><span class="cap-name">db-migration.service</span><span class="cap-desc">MySQL/MariaDB migration &amp; validation</span></li>
+                  <li><span class="cap-dot" aria-hidden="true">●</span><span class="cap-name">network-ops.service</span><span class="cap-desc">Network &amp; firewall configuration</span></li>
+                  <li><span class="cap-dot" aria-hidden="true">●</span><span class="cap-name">app-debug.service</span><span class="cap-desc">Website &amp; application troubleshooting</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 3 · SKILLS / METRIC GAUGES
+    ══════════════════════════════════════════════ -->
+    <section id="skills" class="section skills-section" aria-labelledby="skills-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="sh-line" aria-hidden="true"></div>
+          <span class="sh-tag">// MODULE 02</span>
+          <h2 id="skills-heading" class="sh-title">PERFORMANCE_METRICS</h2>
+          <div class="sh-line" aria-hidden="true"></div>
+        </div>
+
+        <!-- Category row labels -->
+        <div class="skills-categories reveal">
+          <button class="cat-btn active" data-cat="all">ALL</button>
+          <button class="cat-btn" data-cat="devops">DEVOPS</button>
+          <button class="cat-btn" data-cat="server">SERVER</button>
+          <button class="cat-btn" data-cat="network">NETWORK</button>
+          <button class="cat-btn" data-cat="database">DATABASE</button>
+          <button class="cat-btn" data-cat="tools">TOOLS</button>
+        </div>
+
+        <div class="gauges-grid" id="gauges-grid" aria-label="Skills as server metric gauges">
+
+          <!-- DevOps -->
+          <div class="gauge-panel reveal" data-cat="devops">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fab fa-linux"></i></span>
+              <span class="gp-name">LINUX_ADMIN</span>
+              <span class="gp-cat">devops</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="92"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel reveal" data-cat="devops">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-gears"></i></span>
+              <span class="gp-name">INFRA_DEPLOY</span>
+              <span class="gp-cat">devops</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="88"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel reveal" data-cat="devops">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-chart-line"></i></span>
+              <span class="gp-name">SYS_MONITOR</span>
+              <span class="gp-cat">devops</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="85"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <!-- Server -->
+          <div class="gauge-panel reveal" data-cat="server">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-bolt"></i></span>
+              <span class="gp-name">NGINX</span>
+              <span class="gp-cat">server</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="90"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel reveal" data-cat="server">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-feather"></i></span>
+              <span class="gp-name">APACHE</span>
+              <span class="gp-cat">server</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="88"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel reveal" data-cat="server">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-lock"></i></span>
+              <span class="gp-name">SSL_MGR</span>
+              <span class="gp-cat">server</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="93"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel reveal" data-cat="server">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-globe"></i></span>
+              <span class="gp-name">DNS_CONFIG</span>
+              <span class="gp-cat">server</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="87"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <!-- Network -->
+          <div class="gauge-panel reveal" data-cat="network">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-fire-flame-curved"></i></span>
+              <span class="gp-name">FIREWALL</span>
+              <span class="gp-cat">network</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="86"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel reveal" data-cat="network">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-network-wired"></i></span>
+              <span class="gp-name">NET_INFRA</span>
+              <span class="gp-cat">network</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="84"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <!-- Database -->
+          <div class="gauge-panel reveal" data-cat="database">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-database"></i></span>
+              <span class="gp-name">MYSQL</span>
+              <span class="gp-cat">database</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="85"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel reveal" data-cat="database">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-arrows-rotate"></i></span>
+              <span class="gp-name">DB_MIGRATION</span>
+              <span class="gp-cat">database</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="87"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <!-- Tools -->
+          <div class="gauge-panel reveal" data-cat="tools">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-terminal"></i></span>
+              <span class="gp-name">BASH_SHELL</span>
+              <span class="gp-cat">tools</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="91"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel reveal" data-cat="tools">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fab fa-git-alt"></i></span>
+              <span class="gp-name">GIT</span>
+              <span class="gp-cat">tools</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="88"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+        </div><!-- /#gauges-grid -->
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 4 · GITHUB ACTIVITY / HEARTBEAT
+    ══════════════════════════════════════════════ -->
+    <section id="activity" class="section activity-section" aria-labelledby="activity-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="sh-line" aria-hidden="true"></div>
+          <span class="sh-tag">// MODULE 03</span>
+          <h2 id="activity-heading" class="sh-title">COMMIT_PULSE</h2>
+          <div class="sh-line" aria-hidden="true"></div>
+        </div>
+
+        <div class="panel heartbeat-panel reveal">
+          <div class="panel-title-bar">
+            <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="ptb-label">GITHUB ACTIVITY MONITOR — 52W</span>
+            <div class="ptb-right">
+              <span class="dot dot--red pulse" aria-hidden="true"></span>
+              <span class="accent-text">LIVE FEED</span>
+            </div>
+          </div>
+          <div class="panel-body hb-body">
+            <div class="hb-stats-row" aria-label="Activity statistics">
+              <div class="hb-stat">
+                <span class="hb-stat-val accent-text" id="hb-commits">847</span>
+                <span class="hb-stat-label">COMMITS</span>
+              </div>
+              <div class="hb-stat">
+                <span class="hb-stat-val green-text" id="hb-streak">23</span>
+                <span class="hb-stat-label">DAY STREAK</span>
+              </div>
+              <div class="hb-stat">
+                <span class="hb-stat-val" id="hb-repos">18</span>
+                <span class="hb-stat-label">REPOS</span>
+              </div>
+              <div class="hb-stat">
+                <span class="hb-stat-val" id="hb-prs">42</span>
+                <span class="hb-stat-label">PULL REQ.</span>
+              </div>
+            </div>
+
+            <!-- EKG / Heartbeat canvas -->
+            <div class="hb-monitor" aria-label="Heartbeat activity monitor">
+              <div class="hb-monitor-inner">
+                <div class="hb-y-labels" aria-hidden="true">
+                  <span>HIGH</span>
+                  <span>MED</span>
+                  <span>LOW</span>
+                </div>
+                <div class="hb-canvas-wrap">
+                  <canvas id="heartbeat-canvas" aria-label="Activity heartbeat visualization"></canvas>
+                  <div class="hb-scan-line" id="hb-scan" aria-hidden="true"></div>
+                </div>
+              </div>
+              <div class="hb-months" id="hb-months" aria-label="Month labels" aria-hidden="true"></div>
+            </div>
+
+            <!-- Contribution heatmap strip -->
+            <div class="contribution-strip" aria-label="Contribution heatmap">
+              <div class="cs-label">CONTRIBUTION MAP</div>
+              <div class="cs-grid" id="cs-grid" aria-hidden="true"></div>
+              <div class="cs-legend" aria-hidden="true">
+                <span>LESS</span>
+                <span class="cs-dot cs-0"></span>
+                <span class="cs-dot cs-1"></span>
+                <span class="cs-dot cs-2"></span>
+                <span class="cs-dot cs-3"></span>
+                <span class="cs-dot cs-4"></span>
+                <span>MORE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 5 · PROJECTS / INCIDENT CASE FILES
+    ══════════════════════════════════════════════ -->
+    <section id="projects" class="section projects-section" aria-labelledby="projects-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="sh-line" aria-hidden="true"></div>
+          <span class="sh-tag">// MODULE 04</span>
+          <h2 id="projects-heading" class="sh-title">CASE_FILES</h2>
+          <div class="sh-line" aria-hidden="true"></div>
+        </div>
+
+        <!-- Filter tabs -->
+        <div class="cf-filters reveal" role="tablist" aria-label="Filter case files">
+          <button class="cf-tab active" data-filter="all" role="tab" aria-selected="true">ALL FILES</button>
+          <button class="cf-tab" data-filter="incident" role="tab" aria-selected="false">
+            <span class="dot dot--red" aria-hidden="true"></span> INCIDENTS
+          </button>
+          <button class="cf-tab" data-filter="infra" role="tab" aria-selected="false">
+            <span class="dot dot--yellow" aria-hidden="true"></span> INFRASTRUCTURE
+          </button>
+          <button class="cf-tab" data-filter="deploy" role="tab" aria-selected="false">
+            <span class="dot dot--green" aria-hidden="true"></span> DEPLOYMENTS
+          </button>
+        </div>
+
+        <div class="cf-layout" id="cf-layout">
+
+          <!-- ── FEATURED: CVE-2026-29205 ──────────────── -->
+          <article class="ic ic--featured ic--critical reveal" data-filter="incident" aria-labelledby="ic-cve">
+            <div class="ic-severity-bar" aria-hidden="true"></div>
+            <div class="ic-watermark" aria-hidden="true">INC-001</div>
+            <div class="ic-ribbon" aria-hidden="true">CRITICAL</div>
+
+            <header class="ic-head">
+              <div class="ic-meta-row">
+                <span class="ic-id">INC-2026-001</span>
+                <span class="ic-type-badge ic-type--incident">
+                  <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> SECURITY INCIDENT
+                </span>
+              </div>
+              <div class="ic-status-row">
+                <span class="ic-alert-dot" aria-hidden="true"></span>
+                <span class="ic-cve-tag">CVE-2026-29205</span>
+                <span class="ic-resolved">
+                  <i class="fas fa-circle-check" aria-hidden="true"></i> RESOLVED
+                </span>
+              </div>
+            </header>
+
+            <h3 id="ic-cve" class="ic-title">cPanel RCE Malware Attack &amp; Multi-Server Breach Response</h3>
+
+            <div class="ic-kpis" aria-label="Incident key metrics">
+              <div class="kpi">
+                <span class="kpi-val">12+</span>
+                <span class="kpi-label">Servers</span>
+              </div>
+              <div class="kpi-sep" aria-hidden="true"></div>
+              <div class="kpi">
+                <span class="kpi-val">&lt;4h</span>
+                <span class="kpi-label">Response</span>
+              </div>
+              <div class="kpi-sep" aria-hidden="true"></div>
+              <div class="kpi">
+                <span class="kpi-val">0</span>
+                <span class="kpi-label">Data Loss</span>
+              </div>
+              <div class="kpi-sep" aria-hidden="true"></div>
+              <div class="kpi">
+                <span class="kpi-val">100%</span>
+                <span class="kpi-label">Contained</span>
+              </div>
+            </div>
+
+            <p class="ic-desc">
+              Active exploitation of CVE-2026-29205 across multiple shared hosting accounts. Identified malicious payloads injected via cPanel RCE vector, performed forensic analysis across affected servers, removed compromised binaries, rotated credentials, patched the vector, and coordinated client notifications with loss scenario documentation.
+            </p>
+
+            <div class="ic-vector-row">
+              <span class="ivr-label">Attack Vector</span>
+              <span class="ivr-val">Remote Code Execution via cPanel API</span>
+            </div>
+
+            <div class="ic-tags">
+              <span class="ict">cPanel/WHM</span>
+              <span class="ict">CVE-2026-29205</span>
+              <span class="ict">Bash Forensics</span>
+              <span class="ict">Exim</span>
+              <span class="ict">SSH Hardening</span>
+              <span class="ict">Client Comms</span>
+            </div>
+
+            <div class="ic-timeline" aria-label="Incident response phases">
+              <div class="itl-label">RESPONSE PHASES</div>
+              <div class="itl-track">
+                <div class="itl-phase itl-done">
+                  <div class="itl-node" aria-hidden="true"></div>
+                  <span>DETECT</span>
+                </div>
+                <div class="itl-line itl-done" aria-hidden="true"></div>
+                <div class="itl-phase itl-done">
+                  <div class="itl-node" aria-hidden="true"></div>
+                  <span>CONTAIN</span>
+                </div>
+                <div class="itl-line itl-done" aria-hidden="true"></div>
+                <div class="itl-phase itl-done">
+                  <div class="itl-node" aria-hidden="true"></div>
+                  <span>ERADICATE</span>
+                </div>
+                <div class="itl-line itl-done" aria-hidden="true"></div>
+                <div class="itl-phase itl-done">
+                  <div class="itl-node" aria-hidden="true"></div>
+                  <span>RECOVER</span>
+                </div>
+              </div>
+            </div>
+
+            <footer class="ic-footer">
+              <a href="#" class="ic-link ic-link--primary">
+                <i class="fas fa-file-lines" aria-hidden="true"></i> Case Study
+              </a>
+              <a href="#" class="ic-link">
+                <i class="fab fa-github" aria-hidden="true"></i> Scripts
+              </a>
+            </footer>
+          </article>
+
+          <!-- ── RIGHT COL: SSH + Network ──────────────── -->
+          <div class="cf-col-right">
+
+            <!-- SSH Compromise -->
+            <article class="ic ic--critical reveal" data-filter="incident" aria-labelledby="ic-ssh">
+              <div class="ic-severity-bar" aria-hidden="true"></div>
+              <div class="ic-watermark ic-watermark--sm" aria-hidden="true">INC-004</div>
+              <div class="ic-ribbon" aria-hidden="true">CRITICAL</div>
+
+              <header class="ic-head">
+                <div class="ic-meta-row">
+                  <span class="ic-id">INC-2025-004</span>
+                  <span class="ic-type-badge ic-type--incident">
+                    <i class="fas fa-user-secret" aria-hidden="true"></i> INTRUSION
+                  </span>
+                </div>
+                <span class="ic-resolved">
+                  <i class="fas fa-circle-check" aria-hidden="true"></i> RESOLVED
+                </span>
+              </header>
+
+              <h3 id="ic-ssh" class="ic-title">Active SSH Compromise &amp; Backdoor Removal</h3>
+              <p class="ic-desc ic-desc--sm">Discovered unauthorized SSH keys and a backdoored <code>/tmp/.bashrc</code> planted by "Frada/Bang Hengker". Evicted attacker, audited all sessions, rotated keys, and hardened SSH config.</p>
+
+              <div class="ic-tags">
+                <span class="ict">SSH</span>
+                <span class="ict">Forensics</span>
+                <span class="ict">iptables</span>
+                <span class="ict">fail2ban</span>
+              </div>
+
+              <footer class="ic-footer ic-footer--sm">
+                <a href="#" class="ic-link ic-link--primary">
+                  <i class="fas fa-file-lines" aria-hidden="true"></i> Write-up
+                </a>
+                <a href="#" class="ic-link">
+                  <i class="fab fa-github" aria-hidden="true"></i> Scripts
+                </a>
+              </footer>
+            </article>
+
+            <!-- AlmaLinux Network -->
+            <article class="ic ic--infra reveal" data-filter="infra" aria-labelledby="ic-net">
+              <div class="ic-severity-bar" aria-hidden="true"></div>
+              <div class="ic-watermark ic-watermark--sm" aria-hidden="true">PRJ-007</div>
+
+              <header class="ic-head">
+                <div class="ic-meta-row">
+                  <span class="ic-id">PRJ-2025-007</span>
+                  <span class="ic-type-badge ic-type--infra">
+                    <i class="fas fa-network-wired" aria-hidden="true"></i> INFRASTRUCTURE
+                  </span>
+                </div>
+                <span class="ic-resolved ic-resolved--green">
+                  <i class="fas fa-circle-check" aria-hidden="true"></i> COMPLETED
+                </span>
+              </header>
+
+              <h3 id="ic-net" class="ic-title">AlmaLinux VPS Non-Standard Gateway Recovery</h3>
+              <p class="ic-desc ic-desc--sm">Restored networking on an OVH/Hetzner VPS with non-standard gateway config using raw <code>ip</code> commands, then engineered systemd-networkd persistence to survive reboots.</p>
+
+              <div class="ic-tags">
+                <span class="ict">AlmaLinux</span>
+                <span class="ict">systemd-networkd</span>
+                <span class="ict">ip route</span>
+                <span class="ict">OVH</span>
+              </div>
+
+              <footer class="ic-footer ic-footer--sm">
+                <a href="#" class="ic-link ic-link--primary">
+                  <i class="fas fa-file-lines" aria-hidden="true"></i> Write-up
+                </a>
+              </footer>
+            </article>
+
+          </div><!-- /.cf-col-right -->
+
+          <!-- ── ROW 2: Three mid-size cards ───────────── -->
+          <div class="cf-row-3">
+
+            <!-- OPcache Webshell -->
+            <article class="ic ic--high reveal" data-filter="incident" aria-labelledby="ic-opcache">
+              <div class="ic-severity-bar" aria-hidden="true"></div>
+              <div class="ic-watermark" aria-hidden="true">INC-002</div>
+              <div class="ic-ribbon ic-ribbon--amber" aria-hidden="true">HIGH</div>
+
+              <header class="ic-head">
+                <div class="ic-meta-row">
+                  <span class="ic-id">INC-2025-002</span>
+                  <span class="ic-type-badge ic-type--high">
+                    <i class="fas fa-spider" aria-hidden="true"></i> MALWARE
+                  </span>
+                </div>
+                <span class="ic-resolved">
+                  <i class="fas fa-circle-check" aria-hidden="true"></i> RESOLVED
+                </span>
+              </header>
+
+              <h3 id="ic-opcache" class="ic-title">WordPress OPcache-Disguised Webshell Remediation</h3>
+
+              <div class="ic-kpis ic-kpis--sm" aria-label="Incident metrics">
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--amber">3</span>
+                  <span class="kpi-label">Sites</span>
+                </div>
+                <div class="kpi-sep" aria-hidden="true"></div>
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--amber">6h</span>
+                  <span class="kpi-label">Analysis</span>
+                </div>
+                <div class="kpi-sep" aria-hidden="true"></div>
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--amber">0</span>
+                  <span class="kpi-label">Downtime</span>
+                </div>
+              </div>
+
+              <p class="ic-desc ic-desc--sm">
+                Discovered and removed a sophisticated PHP webshell disguised as a legitimate OPcache file deep in the WordPress filesystem. Performed full filesystem audit, removed persistent backdoors, and hardened file permissions and upload restrictions.
+              </p>
+
+              <div class="ic-vector-row">
+                <span class="ivr-label">Method</span>
+                <span class="ivr-val">PHP Webshell via File Upload Bypass</span>
+              </div>
+
+              <div class="ic-tags">
+                <span class="ict">WordPress</span>
+                <span class="ict">PHP OPcache</span>
+                <span class="ict">Malware Forensics</span>
+                <span class="ict">ClamAV</span>
+                <span class="ict">CSF</span>
+              </div>
+
+              <div class="ic-timeline" aria-label="Incident phases">
+                <div class="itl-label">RESPONSE PHASES</div>
+                <div class="itl-track">
+                  <div class="itl-phase itl-done"><div class="itl-node" aria-hidden="true"></div><span>DETECT</span></div>
+                  <div class="itl-line itl-done" aria-hidden="true"></div>
+                  <div class="itl-phase itl-done"><div class="itl-node" aria-hidden="true"></div><span>CONTAIN</span></div>
+                  <div class="itl-line itl-done" aria-hidden="true"></div>
+                  <div class="itl-phase itl-done"><div class="itl-node" aria-hidden="true"></div><span>ERADICATE</span></div>
+                  <div class="itl-line itl-done" aria-hidden="true"></div>
+                  <div class="itl-phase itl-done"><div class="itl-node" aria-hidden="true"></div><span>RECOVER</span></div>
+                </div>
+              </div>
+
+              <footer class="ic-footer">
+                <a href="#" class="ic-link ic-link--primary"><i class="fas fa-file-lines" aria-hidden="true"></i> Case Study</a>
+                <a href="#" class="ic-link"><i class="fab fa-github" aria-hidden="true"></i> Scripts</a>
+              </footer>
+            </article>
+
+            <!-- Cryptominer -->
+            <article class="ic ic--critical reveal" data-filter="incident" aria-labelledby="ic-crypto">
+              <div class="ic-severity-bar" aria-hidden="true"></div>
+              <div class="ic-watermark" aria-hidden="true">INC-003</div>
+              <div class="ic-ribbon" aria-hidden="true">CRITICAL</div>
+
+              <header class="ic-head">
+                <div class="ic-meta-row">
+                  <span class="ic-id">INC-2025-003</span>
+                  <span class="ic-type-badge ic-type--incident">
+                    <i class="fas fa-microchip" aria-hidden="true"></i> CRYPTOMINER
+                  </span>
+                </div>
+                <span class="ic-resolved">
+                  <i class="fas fa-circle-check" aria-hidden="true"></i> RESOLVED
+                </span>
+              </header>
+
+              <h3 id="ic-crypto" class="ic-title">CentOS Cryptominer Eradication &amp; Root Compromise Cleanup</h3>
+
+              <div class="ic-kpis ic-kpis--sm" aria-label="Incident metrics">
+                <div class="kpi">
+                  <span class="kpi-val">CPU</span>
+                  <span class="kpi-label">99% Usage</span>
+                </div>
+                <div class="kpi-sep" aria-hidden="true"></div>
+                <div class="kpi">
+                  <span class="kpi-val">4</span>
+                  <span class="kpi-label">Malicious Procs</span>
+                </div>
+                <div class="kpi-sep" aria-hidden="true"></div>
+                <div class="kpi">
+                  <span class="kpi-val">0%</span>
+                  <span class="kpi-label">Post-Clean CPU</span>
+                </div>
+              </div>
+
+              <p class="ic-desc ic-desc--sm">
+                Identified and eradicated <code>CSPUpdate</code> cryptominer binaries with malicious <code>cron.d</code> persistence on a compromised CentOS server. Traced root-level access, removed all footholds, and hardened the system against reinfection.
+              </p>
+
+              <div class="ic-vector-row">
+                <span class="ivr-label">Persistence</span>
+                <span class="ivr-val">Malicious cron.d + Hidden Binaries in /tmp</span>
+              </div>
+
+              <div class="ic-tags">
+                <span class="ict">CentOS</span>
+                <span class="ict">cron.d</span>
+                <span class="ict">CSPUpdate</span>
+                <span class="ict">Bash Forensics</span>
+                <span class="ict">rkhunter</span>
+              </div>
+
+              <div class="ic-timeline" aria-label="Incident phases">
+                <div class="itl-label">RESPONSE PHASES</div>
+                <div class="itl-track">
+                  <div class="itl-phase itl-done"><div class="itl-node" aria-hidden="true"></div><span>DETECT</span></div>
+                  <div class="itl-line itl-done" aria-hidden="true"></div>
+                  <div class="itl-phase itl-done"><div class="itl-node" aria-hidden="true"></div><span>CONTAIN</span></div>
+                  <div class="itl-line itl-done" aria-hidden="true"></div>
+                  <div class="itl-phase itl-done"><div class="itl-node" aria-hidden="true"></div><span>ERADICATE</span></div>
+                  <div class="itl-line itl-done" aria-hidden="true"></div>
+                  <div class="itl-phase itl-done"><div class="itl-node" aria-hidden="true"></div><span>RECOVER</span></div>
+                </div>
+              </div>
+
+              <footer class="ic-footer">
+                <a href="#" class="ic-link ic-link--primary"><i class="fas fa-file-lines" aria-hidden="true"></i> Case Study</a>
+                <a href="#" class="ic-link"><i class="fab fa-github" aria-hidden="true"></i> Scripts</a>
+              </footer>
+            </article>
+
+            <!-- ownCloud + MinIO -->
+            <article class="ic ic--infra reveal" data-filter="infra" aria-labelledby="ic-owncloud">
+              <div class="ic-severity-bar" aria-hidden="true"></div>
+              <div class="ic-watermark" aria-hidden="true">PRJ-005</div>
+
+              <header class="ic-head">
+                <div class="ic-meta-row">
+                  <span class="ic-id">PRJ-2024-005</span>
+                  <span class="ic-type-badge ic-type--infra">
+                    <i class="fas fa-cloud" aria-hidden="true"></i> INFRA BUILD
+                  </span>
+                </div>
+                <span class="ic-resolved ic-resolved--green">
+                  <i class="fas fa-circle-check" aria-hidden="true"></i> LIVE
+                </span>
+              </header>
+
+              <h3 id="ic-owncloud" class="ic-title">ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes</h3>
+
+              <div class="ic-kpis ic-kpis--sm" aria-label="Project metrics">
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--blue">2TB</span>
+                  <span class="kpi-label">Storage</span>
+                </div>
+                <div class="kpi-sep" aria-hidden="true"></div>
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--blue">S3</span>
+                  <span class="kpi-label">Backend</span>
+                </div>
+                <div class="kpi-sep" aria-hidden="true"></div>
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--blue">K8s</span>
+                  <span class="kpi-label">Orchestrated</span>
+                </div>
+              </div>
+
+              <p class="ic-desc ic-desc--sm">
+                Deployed a full self-hosted ownCloud instance backed by MinIO S3-compatible storage, running across Docker Compose and later Kubernetes. Resolved entrypoint config rewrites, GuzzleHttp dependency gaps, and duplicate config key conflicts.
+              </p>
+
+              <div class="ic-tags">
+                <span class="ict">Docker</span>
+                <span class="ict">Kubernetes</span>
+                <span class="ict">ownCloud</span>
+                <span class="ict">MinIO</span>
+                <span class="ict">Nginx</span>
+                <span class="ict">S3 API</span>
+              </div>
+
+              <footer class="ic-footer">
+                <a href="https://derroh.co.ke" target="_blank" rel="noopener noreferrer" class="ic-link ic-link--primary">
+                  <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Live Demo
+                </a>
+                <a href="#" class="ic-link"><i class="fab fa-github" aria-hidden="true"></i> Repo</a>
+              </footer>
+            </article>
+
+          </div><!-- /.cf-row-3 -->
+
+          <!-- ── ROW 3: Two wide deployment cards ───────── -->
+          <div class="cf-row-2">
+
+            <!-- IMAP Migration -->
+            <article class="ic ic--deploy reveal" data-filter="deploy" aria-labelledby="ic-imap">
+              <div class="ic-severity-bar" aria-hidden="true"></div>
+              <div class="ic-watermark" aria-hidden="true">PRJ-006</div>
+
+              <header class="ic-head">
+                <div class="ic-meta-row">
+                  <span class="ic-id">PRJ-2025-006</span>
+                  <span class="ic-type-badge ic-type--deploy">
+                    <i class="fas fa-right-left" aria-hidden="true"></i> MIGRATION
+                  </span>
+                </div>
+                <span class="ic-resolved ic-resolved--green">
+                  <i class="fas fa-circle-check" aria-hidden="true"></i> COMPLETED
+                </span>
+              </header>
+
+              <h3 id="ic-imap" class="ic-title">Zero-Loss IMAP Migration: Zoho Mail → cPanel via imapsync</h3>
+
+              <div class="ic-kpis ic-kpis--sm" aria-label="Project metrics">
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--green">0</span>
+                  <span class="kpi-label">Msgs Lost</span>
+                </div>
+                <div class="kpi-sep" aria-hidden="true"></div>
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--green">100%</span>
+                  <span class="kpi-label">Folders Synced</span>
+                </div>
+                <div class="kpi-sep" aria-hidden="true"></div>
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--green">Live</span>
+                  <span class="kpi-label">Cutover</span>
+                </div>
+              </div>
+
+              <p class="ic-desc ic-desc--sm">
+                Orchestrated a complete mailbox migration from Zoho Mail to a cPanel Dovecot mail server using imapsync. Migrated all folders, preserved message flags, validated message counts pre/post, and coordinated a live DNS MX cutover with zero user interruption.
+              </p>
+
+              <div class="ic-tags">
+                <span class="ict">imapsync</span>
+                <span class="ict">Zoho Mail</span>
+                <span class="ict">cPanel</span>
+                <span class="ict">Dovecot</span>
+                <span class="ict">DNS MX</span>
+                <span class="ict">IMAP</span>
+              </div>
+
+              <footer class="ic-footer">
+                <a href="#" class="ic-link ic-link--primary"><i class="fas fa-file-lines" aria-hidden="true"></i> Write-up</a>
+                <a href="#" class="ic-link"><i class="fab fa-github" aria-hidden="true"></i> Scripts</a>
+              </footer>
+            </article>
+
+            <!-- Node.js on LiteSpeed -->
+            <article class="ic ic--deploy reveal" data-filter="deploy" aria-labelledby="ic-node">
+              <div class="ic-severity-bar" aria-hidden="true"></div>
+              <div class="ic-watermark" aria-hidden="true">PRJ-008</div>
+
+              <header class="ic-head">
+                <div class="ic-meta-row">
+                  <span class="ic-id">PRJ-2025-008</span>
+                  <span class="ic-type-badge ic-type--deploy">
+                    <i class="fab fa-node-js" aria-hidden="true"></i> DEPLOYMENT
+                  </span>
+                </div>
+                <span class="ic-resolved ic-resolved--green">
+                  <i class="fas fa-circle-check" aria-hidden="true"></i> PRODUCTION
+                </span>
+              </header>
+
+              <h3 id="ic-node" class="ic-title">Node.js App Deployment on cPanel LiteSpeed: ESM, nproc &amp; Vite Build</h3>
+
+              <div class="ic-kpis ic-kpis--sm" aria-label="Project metrics">
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--green">ESM</span>
+                  <span class="kpi-label">Fixed</span>
+                </div>
+                <div class="kpi-sep" aria-hidden="true"></div>
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--green">nproc</span>
+                  <span class="kpi-label">Unlocked</span>
+                </div>
+                <div class="kpi-sep" aria-hidden="true"></div>
+                <div class="kpi">
+                  <span class="kpi-val kpi-val--green">Prod</span>
+                  <span class="kpi-label">Running</span>
+                </div>
+              </div>
+
+              <p class="ic-desc ic-desc--sm">
+                Resolved a cascade of Node.js deployment failures on cPanel shared hosting with LiteSpeed: ESM/CJS module conflicts, process limits blocking <code>npm install</code>, hardcoded localhost API URLs, and Express 5 route syntax changes — all the way to a clean production Vite build.
+              </p>
+
+              <div class="ic-tags">
+                <span class="ict">Node.js</span>
+                <span class="ict">LiteSpeed</span>
+                <span class="ict">cPanel</span>
+                <span class="ict">Vite</span>
+                <span class="ict">ESM/CJS</span>
+                <span class="ict">Express 5</span>
+              </div>
+
+              <footer class="ic-footer">
+                <a href="#" class="ic-link ic-link--primary"><i class="fas fa-file-lines" aria-hidden="true"></i> Write-up</a>
+                <a href="#" class="ic-link"><i class="fab fa-github" aria-hidden="true"></i> Repo</a>
+              </footer>
+            </article>
+
+          </div><!-- /.cf-row-2 -->
+
+        </div><!-- /#cf-layout -->
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 6 · BLOG / LOG STREAM
+    ══════════════════════════════════════════════ -->
+    <section id="blog" class="section blog-section" aria-labelledby="blog-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="sh-line" aria-hidden="true"></div>
+          <span class="sh-tag">// MODULE 05</span>
+          <h2 id="blog-heading" class="sh-title">SYSTEM_LOGS</h2>
+          <div class="sh-line" aria-hidden="true"></div>
+        </div>
+
+        <div class="panel log-panel reveal">
+          <div class="panel-title-bar">
+            <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="ptb-label">journalctl -f --output=short-precise</span>
+            <div class="ptb-right">
+              <span class="dot dot--green pulse" aria-hidden="true"></span>
+              <span class="green-text">TAILING</span>
+            </div>
+          </div>
+          <div class="panel-body log-body">
+
+            <article class="log-entry reveal" aria-labelledby="log-1">
+              <div class="log-meta">
+                <span class="log-ts">Mar 08 14:22:11</span>
+                <span class="log-sev log-info">INFO</span>
+                <span class="log-src">blog.derrick</span>
+              </div>
+              <h3 id="log-1" class="log-title">
+                <a href="#">Hardening Your Linux Server: A Practical Checklist</a>
+              </h3>
+              <p class="log-excerpt">A step-by-step walkthrough of essential security measures before going to production — SSH key enforcement, fail2ban, and kernel parameter hardening.</p>
+              <div class="log-tags">
+                <span class="log-tag">linux-admin</span>
+                <span class="log-tag">security</span>
+                <span class="log-tag">ssh</span>
+              </div>
+              <a href="#" class="log-read-more" aria-label="Read: Hardening Your Linux Server">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </article>
+
+            <article class="log-entry reveal" aria-labelledby="log-2">
+              <div class="log-meta">
+                <span class="log-ts">Feb 21 09:45:33</span>
+                <span class="log-sev log-warn">WARN</span>
+                <span class="log-src">blog.derrick</span>
+              </div>
+              <h3 id="log-2" class="log-title">
+                <a href="#">Debugging SMTP Delivery Failures: Where to Start</a>
+              </h3>
+              <p class="log-excerpt">Email delivery issues are notoriously opaque. A systematic framework — MX verification, log analysis, and blacklist checks — that cuts diagnosis time in half.</p>
+              <div class="log-tags">
+                <span class="log-tag">smtp</span>
+                <span class="log-tag">postfix</span>
+                <span class="log-tag">dns</span>
+              </div>
+              <a href="#" class="log-read-more" aria-label="Read: Debugging SMTP">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </article>
+
+            <article class="log-entry reveal" aria-labelledby="log-3">
+              <div class="log-meta">
+                <span class="log-ts">Jan 15 17:03:08</span>
+                <span class="log-sev log-info">INFO</span>
+                <span class="log-src">blog.derrick</span>
+              </div>
+              <h3 id="log-3" class="log-title">
+                <a href="#">Nginx vs Apache: Choosing the Right Web Server</a>
+              </h3>
+              <p class="log-excerpt">When Nginx's event-driven model wins, when Apache's .htaccess flexibility matters, and how to choose for your specific hosting stack.</p>
+              <div class="log-tags">
+                <span class="log-tag">nginx</span>
+                <span class="log-tag">apache</span>
+                <span class="log-tag">hosting</span>
+              </div>
+              <a href="#" class="log-read-more" aria-label="Read: Nginx vs Apache">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </article>
+
+            <article class="log-entry reveal" aria-labelledby="log-4">
+              <div class="log-meta">
+                <span class="log-ts">Dec 09 11:28:45</span>
+                <span class="log-sev log-info">INFO</span>
+                <span class="log-src">blog.derrick</span>
+              </div>
+              <h3 id="log-4" class="log-title">
+                <a href="#">SSL Certificate Management at Scale</a>
+              </h3>
+              <p class="log-excerpt">Let's Encrypt automation with Certbot, wildcard certificate strategies, and renewal monitoring across dozens of domains without the panic.</p>
+              <div class="log-tags">
+                <span class="log-tag">ssl</span>
+                <span class="log-tag">certbot</span>
+                <span class="log-tag">automation</span>
+              </div>
+              <a href="#" class="log-read-more" aria-label="Read: SSL Certificate Management">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </article>
+
+            <article class="log-entry reveal" aria-labelledby="log-5">
+              <div class="log-meta">
+                <span class="log-ts">Nov 22 08:14:52</span>
+                <span class="log-sev log-debug">DEBUG</span>
+                <span class="log-src">blog.derrick</span>
+              </div>
+              <h3 id="log-5" class="log-title">
+                <a href="#">Bash Scripts Every Sysadmin Should Have</a>
+              </h3>
+              <p class="log-excerpt">Battle-tested scripts for disk monitoring, log rotation, user management, and automated backup validation that save hours every week.</p>
+              <div class="log-tags">
+                <span class="log-tag">bash</span>
+                <span class="log-tag">automation</span>
+                <span class="log-tag">sysadmin</span>
+              </div>
+              <a href="#" class="log-read-more" aria-label="Read: Bash Scripts">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </article>
+
+            <div class="log-entry log-pending">
+              <div class="log-meta">
+                <span class="log-ts" id="log-ts-live">loading...</span>
+                <span class="log-sev log-info">INFO</span>
+                <span class="log-src">blog.derrick</span>
+              </div>
+              <span class="log-pending-text">
+                Next post initializing<span class="blink-cursor">▌</span>
+              </span>
+              <a href="#contact" class="log-read-more">subscribe <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 7 · CONTACT / COMMAND INPUT
+    ══════════════════════════════════════════════ -->
+    <section id="contact" class="section contact-section" aria-labelledby="contact-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="sh-line" aria-hidden="true"></div>
+          <span class="sh-tag">// MODULE 06</span>
+          <h2 id="contact-heading" class="sh-title">ESTABLISH_CONNECTION</h2>
+          <div class="sh-line" aria-hidden="true"></div>
+        </div>
+
+        <div class="contact-grid">
+
+          <!-- Info panel -->
+          <div class="panel contact-info-panel reveal">
+            <div class="panel-title-bar">
+              <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="ptb-label">ping derrick</span>
+            </div>
+            <div class="panel-body">
+              <div class="ping-output" aria-label="Connection info">
+                <div class="po-line">
+                  <span class="po-key">PING</span>
+                  <span class="po-val accent-text">info@derroh.co.ke</span>
+                </div>
+                <div class="po-line">
+                  <span class="po-key">STATUS</span>
+                  <span class="po-val green-text">REACHABLE</span>
+                </div>
+                <div class="po-line">
+                  <span class="po-key">LOCATION</span>
+                  <span class="po-val">Nairobi, Kenya 🇰🇪</span>
+                </div>
+                <div class="po-line">
+                  <span class="po-key">LATENCY</span>
+                  <span class="po-val green-text">&lt; 24hrs response</span>
+                </div>
+                <div class="po-line">
+                  <span class="po-key">AVAIL</span>
+                  <span class="po-val accent-text">Open to opportunities</span>
+                </div>
+              </div>
+
+              <div class="contact-channels">
+                <a href="mailto:info@derroh.co.ke" class="channel-btn" aria-label="Send email">
+                  <i class="fas fa-envelope" aria-hidden="true"></i>
+                  <div>
+                    <span class="ch-label">EMAIL</span>
+                    <span class="ch-val">info@derroh.co.ke</span>
+                  </div>
+                </a>
+                <a href="#" class="channel-btn" aria-label="GitHub profile" rel="noopener noreferrer">
+                  <i class="fab fa-github" aria-hidden="true"></i>
+                  <div>
+                    <span class="ch-label">GITHUB</span>
+                    <span class="ch-val">github.com/derroh</span>
+                  </div>
+                </a>
+                <a href="#" class="channel-btn" aria-label="LinkedIn profile" rel="noopener noreferrer">
+                  <i class="fab fa-linkedin" aria-hidden="true"></i>
+                  <div>
+                    <span class="ch-label">LINKEDIN</span>
+                    <span class="ch-val">linkedin.com/in/derroh</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Command form -->
+          <div class="panel contact-form-panel reveal">
+            <div class="panel-title-bar">
+              <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="ptb-label">send-message --to derrick</span>
+            </div>
+            <div class="panel-body">
+              <form class="cmd-form" id="contact-form" novalidate aria-label="Contact form">
+                <div class="cmd-form-row">
+                  <div class="cmd-field">
+                    <label for="f-name">
+                      <span class="cf-prompt">--name</span>
+                      <span class="cf-req" aria-label="required">*</span>
+                    </label>
+                    <input type="text" id="f-name" name="name" placeholder="Your full name" required autocomplete="name"/>
+                  </div>
+                  <div class="cmd-field">
+                    <label for="f-email">
+                      <span class="cf-prompt">--email</span>
+                      <span class="cf-req" aria-label="required">*</span>
+                    </label>
+                    <input type="email" id="f-email" name="email" placeholder="your@email.com" required autocomplete="email"/>
+                  </div>
+                </div>
+                <div class="cmd-field">
+                  <label for="f-subject">
+                    <span class="cf-prompt">--subject</span>
+                    <span class="cf-req" aria-label="required">*</span>
+                  </label>
+                  <input type="text" id="f-subject" name="subject" placeholder="What's the issue / opportunity?" required/>
+                </div>
+                <div class="cmd-field">
+                  <label for="f-message">
+                    <span class="cf-prompt">--message</span>
+                    <span class="cf-req" aria-label="required">*</span>
+                  </label>
+                  <textarea id="f-message" name="message" rows="6" placeholder="Describe your project, issue, or question..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="form-submit">
+                  <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                  <span>./send-message.sh</span>
+                </button>
+                <div class="form-status" id="form-status" aria-live="polite" role="status"></div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ────────────────────────────────── -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner container">
+      <div class="footer-brand">
+        <span class="brand-bracket">[</span>DERRICK<span class="brand-dash">-</span><span class="brand-ops">OPS</span><span class="brand-bracket">]</span>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="#home">_HOME</a>
+        <a href="#about">_ABOUT</a>
+        <a href="#skills">_METRICS</a>
+        <a href="#activity">_PULSE</a>
+        <a href="#projects">_SERVICES</a>
+        <a href="#blog">_LOGS</a>
+        <a href="#contact">_CONNECT</a>
+      </nav>
+      <div class="footer-sys">
+        <span class="dot dot--green pulse" aria-hidden="true"></span>
+        <span>ALL SYSTEMS OPERATIONAL · &copy; <span id="footer-year"></span> DERRICK</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">
+    <i class="fas fa-chevron-up" aria-hidden="true"></i>
+  </button>
+
+  <script>
+/**
+ * DERRICK-OPS  |  script.js
+ * Command Center Engine
+ * ─ Boot sequence animation
+ * ─ Live clock + uptime counter
+ * ─ Animated resource bar metrics (live-updating)
+ * ─ Radial SVG gauge animations + sparklines
+ * ─ Canvas EKG heartbeat monitor
+ * ─ GitHub-style contribution heatmap
+ * ─ Scroll reveal + active nav
+ * ─ Contact form validation
+ * ─ Skill category filter
+ * ─ Background particle grid
+ */
+
+'use strict';
+
+/* ── HELPERS ──────────────────────────────────────────────────── */
+const $  = (s, ctx = document) => ctx.querySelector(s);
+const $$ = (s, ctx = document) => [...ctx.querySelectorAll(s)];
+const rand = (a, b) => Math.random() * (b - a) + a;
+const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+const lerp  = (a, b, t)   => a + (b - a) * t;
+
+/* ── BOOT SEQUENCE ────────────────────────────────────────────── */
+const BOOT_LINES = [
+  { t: 'DERRICK-OPS BIOS v2.4.1  (C) 2024 DevOps Systems', cls: '' },
+  { t: '─────────────────────────────────────────────────', cls: 'bl-dim' },
+  { t: 'CPU: Intel Xeon E5-2690 v4 @ 2.60GHz', ok: true },
+  { t: 'RAM: 64 GB DDR4-2400 ECC',              ok: true },
+  { t: 'DISK: 2TB NVMe SSD RAID-1',             ok: true },
+  { t: 'NIC: Dual 10GbE (bonded)',              ok: true },
+  { t: 'FIREWALL: UFW / iptables loaded',        ok: true },
+  { t: 'SSL: Certificates valid',               ok: true },
+  { t: 'DNS: Nameservers responding',           ok: true },
+  { t: 'SMTP: Mail relay operational',          ok: true },
+  { t: '─────────────────────────────────────────────────', cls: 'bl-dim' },
+  { t: 'Mounting filesystems …',    ok: true },
+  { t: 'Loading kernel modules …',  ok: true },
+  { t: 'Starting system services …',ok: true },
+  { t: 'Initializing network …',    ok: true },
+  { t: '─────────────────────────────────────────────────', cls: 'bl-dim' },
+  { t: '[ ALL SYSTEMS OPERATIONAL ]', cls: 'bl-ok' },
+];
+
+function renderBootLine(line, container) {
+  const el = document.createElement('div');
+  if (line.ok) {
+    el.className = 'bl-line';
+    el.innerHTML = `<span>${line.t}</span><span class="bl-dots"></span><span class="bl-ok">[ OK ]</span>`;
+  } else {
+    el.className = line.cls || '';
+    el.textContent = line.t;
+  }
+  container.appendChild(el);
+}
+
+async function runBoot() {
+  const overlay  = $('#boot-overlay');
+  const log      = $('#boot-log');
+  const bar      = $('#boot-bar');
+  const pct      = $('#boot-pct');
+  const heroOut  = $('#terminal-output');
+  const heroId   = $('#hero-identity');
+
+  if (!overlay) return;
+
+  // Check reduced motion
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    overlay.classList.add('done');
+    if (heroOut) heroOut.style.display = 'none';
+    if (heroId)  heroId.style.display  = 'block';
+    initAll();
+    return;
+  }
+
+  const total = BOOT_LINES.length;
+  for (let i = 0; i < total; i++) {
+    await delay(reduced ? 0 : rand(40, 95));
+    renderBootLine(BOOT_LINES[i], log);
+    const progress = Math.round(((i + 1) / total) * 100);
+    bar.style.width = progress + '%';
+    pct.textContent = progress + '%';
+    log.scrollTop = log.scrollHeight;
+  }
+
+  await delay(420);
+
+  // Fade out overlay
+  overlay.classList.add('done');
+  document.body.style.overflow = '';
+
+  // Run terminal typewriter in hero
+  await delay(350);
+  runHeroTerminal(heroOut, heroId);
+
+  initAll();
+}
+
+function delay(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+/* ── HERO TERMINAL TYPEWRITER ─────────────────────────────────── */
+const HERO_SEQUENCE = [
+  { type: 'cmd',  text: 'whoami',     delay: 300  },
+  { type: 'out',  text: 'derrick — devops engineer · linux systems administrator', delay: 100 },
+  { type: 'cmd',  text: 'uname -a',   delay: 400  },
+  { type: 'out',  text: 'Linux devops-server 5.15.0-91-generic #101-Ubuntu SMP x86_64 GNU/Linux', delay: 80 },
+  { type: 'cmd',  text: 'systemctl is-active infrastructure', delay: 500 },
+  { type: 'out',  text: '<span class="tbo-ok">active</span>', delay: 80 },
+  { type: 'cmd',  text: 'cat ~/.profile_summary', delay: 400 },
+  { type: 'out',  text: '5+ yrs experience · 50+ servers managed · 99.9% uptime goal', delay: 80 },
+  { type: 'ready' },
+];
+
+async function runHeroTerminal(container, identityEl) {
+  if (!container) return;
+  container.innerHTML = '';
+  const PROMPT = 'derrick@server:~$';
+
+  for (const step of HERO_SEQUENCE) {
+    if (step.type === 'ready') {
+      await delay(300);
+      container.style.display = 'none';
+      if (identityEl) identityEl.style.display = 'block';
+      return;
+    }
+
+    if (step.type === 'cmd') {
+      await delay(step.delay || 200);
+      const line = document.createElement('div');
+      line.className = 'tbo-line';
+      const promptSpan = document.createElement('span');
+      promptSpan.className = 'tbo-prompt';
+      promptSpan.textContent = PROMPT;
+      const cmdSpan = document.createElement('span');
+      cmdSpan.className = 'tbo-cmd';
+      line.appendChild(promptSpan);
+      line.appendChild(cmdSpan);
+      container.appendChild(line);
+      await typeText(cmdSpan, step.text, 38);
+    }
+
+    if (step.type === 'out') {
+      await delay(step.delay || 80);
+      const out = document.createElement('div');
+      out.className = 'tbo-out';
+      out.innerHTML = step.text;
+      container.appendChild(out);
+    }
+  }
+}
+
+async function typeText(el, text, speed = 40) {
+  for (const char of text) {
+    el.textContent += char;
+    await delay(speed + rand(-10, 10));
+  }
+}
+
+/* ── LIVE CLOCK ───────────────────────────────────────────────── */
+function initClock() {
+  const clockEl = $('#live-clock');
+  const logTs   = $('#log-ts-live');
+  if (!clockEl) return;
+
+  function tick() {
+    const now = new Date();
+    const hh  = String(now.getHours()).padStart(2,'0');
+    const mm  = String(now.getMinutes()).padStart(2,'0');
+    const ss  = String(now.getSeconds()).padStart(2,'0');
+    clockEl.textContent = `${hh}:${mm}:${ss}`;
+    if (logTs) {
+      const mon = now.toLocaleString('en', { month: 'short' });
+      const d   = String(now.getDate()).padStart(2,'0');
+      logTs.textContent = `${mon} ${d} ${hh}:${mm}:${ss}`;
+    }
+  }
+
+  tick();
+  setInterval(tick, 1000);
+}
+
+/* ── UPTIME COUNTER ───────────────────────────────────────────── */
+function initUptime() {
+  const el = $('#uptime-counter');
+  if (!el) return;
+  const start = Date.now();
+
+  setInterval(() => {
+    const s = Math.floor((Date.now() - start) / 1000);
+    const h = String(Math.floor(s / 3600)).padStart(2,'0');
+    const m = String(Math.floor((s % 3600) / 60)).padStart(2,'0');
+    const sec = String(s % 60).padStart(2,'0');
+    el.textContent = `${h}:${m}:${sec}`;
+  }, 1000);
+}
+
+/* ── FOOTER YEAR ──────────────────────────────────────────────── */
+function initFooterYear() {
+  const el = $('#footer-year');
+  if (el) el.textContent = new Date().getFullYear();
+}
+
+/* ── LIVE RESOURCE METRICS (hero) ─────────────────────────────── */
+const metricTargets = {
+  cpu:  { el: $('#cpu-bar'),  val: $('#cpu-val'),  base: 34, range: 18, suffix: '%' },
+  ram:  { el: $('#ram-bar'),  val: $('#ram-val'),  base: 62, range: 12, suffix: '%' },
+  disk: { el: $('#disk-bar'), val: $('#disk-val'), base: 58, range:  5, suffix: '%' },
+  net:  { el: $('#net-bar'),  val: $('#net-val'),  base: 22, range: 30, suffix: 'Mb/s' },
+};
+
+let metricCurrent = { cpu: 0, ram: 0, disk: 0, net: 0 };
+
+function updateMetrics() {
+  for (const [key, cfg] of Object.entries(metricTargets)) {
+    if (!cfg.el) continue;
+    const target = cfg.base + rand(-cfg.range, cfg.range);
+    metricCurrent[key] = lerp(metricCurrent[key], target, 0.25);
+    const v = clamp(metricCurrent[key], 0, 100);
+    cfg.el.style.setProperty('--w', `${v.toFixed(1)}%`);
+    const display = key === 'net'
+      ? (metricCurrent[key] * 0.8).toFixed(1) + ' Mb/s'
+      : Math.round(v) + '%';
+    cfg.val.textContent = display;
+  }
+}
+
+function initMetrics() {
+  // Warm-up values
+  metricCurrent = { cpu: 34, ram: 62, disk: 58, net: 22 };
+  updateMetrics();
+  setInterval(updateMetrics, 2200);
+}
+
+/* ── STAT COUNTERS (hero) ─────────────────────────────────────── */
+function initStatCounters() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el     = entry.target;
+      const target = parseInt(el.dataset.target, 10);
+      const dur    = 1600;
+      const steps  = 50;
+      const stepMs = dur / steps;
+      let i = 0;
+      const timer = setInterval(() => {
+        i++;
+        el.textContent = Math.round(target * (i / steps));
+        if (i >= steps) { el.textContent = target; clearInterval(timer); }
+      }, stepMs);
+      obs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+
+  $$('.stat-val').forEach(el => obs.observe(el));
+}
+
+/* ── RADIAL GAUGE ANIMATIONS ──────────────────────────────────── */
+function initGauges() {
+  const circumference = 2 * Math.PI * 50; // r=50
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const panel = entry.target;
+      const circle = $('.gauge-fill', panel);
+      const pctEl  = $('.gp-pct', panel);
+      if (!circle || !pctEl) return;
+
+      const pct  = parseInt(circle.dataset.pct, 10) || 80;
+      const dash = circumference - (pct / 100) * circumference;
+
+      requestAnimationFrame(() => {
+        circle.style.strokeDashoffset = dash;
+        circle.classList.add('animated');
+      });
+
+      // Animate number
+      let current = 0;
+      const steps = 60;
+      const step  = pct / steps;
+      const timer = setInterval(() => {
+        current = Math.min(current + step, pct);
+        pctEl.innerHTML = Math.round(current) + '<span class="gp-unit">%</span>';
+        if (current >= pct) clearInterval(timer);
+      }, 1400 / steps);
+
+      // Draw sparkline
+      const canvas = $('.spark-canvas', panel);
+      if (canvas) drawSparkline(canvas, pct);
+
+      obs.unobserve(panel);
+    });
+  }, { threshold: 0.2 });
+
+  $$('.gauge-panel').forEach(p => obs.observe(p));
+}
+
+function drawSparkline(canvas, basePct) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 140;
+  const H = canvas.offsetHeight || 28;
+  canvas.width  = W;
+  canvas.height = H;
+
+  const points = 24;
+  const data   = Array.from({ length: points }, (_, i) =>
+    clamp(basePct + rand(-12, 12) + Math.sin(i * 0.4) * 5, 10, 100)
+  );
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Fill
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, 'rgba(224,35,29,0.3)');
+  grad.addColorStop(1, 'rgba(224,35,29,0)');
+
+  ctx.beginPath();
+  data.forEach((v, i) => {
+    const x = (i / (points - 1)) * W;
+    const y = H - (v / 100) * H;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.lineTo(W, H);
+  ctx.lineTo(0, H);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  data.forEach((v, i) => {
+    const x = (i / (points - 1)) * W;
+    const y = H - (v / 100) * H;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = 'rgba(224,35,29,0.8)';
+  ctx.lineWidth   = 1.5;
+  ctx.stroke();
+}
+
+/* ── HEARTBEAT / EKG CANVAS ───────────────────────────────────── */
+function initHeartbeat() {
+  const canvas = $('#heartbeat-canvas');
+  if (!canvas) return;
+
+  const wrap = canvas.parentElement;
+
+  function resize() {
+    canvas.width  = wrap.clientWidth;
+    canvas.height = wrap.clientHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  const ctx = canvas.getContext('2d');
+
+  // Generate waveform data: base noise + QRS spikes
+  function generateWave(length) {
+    const data = new Float32Array(length);
+    for (let i = 0; i < length; i++) {
+      // Base noise
+      data[i] = Math.sin(i * 0.08) * 0.04 + (Math.random() - 0.5) * 0.06;
+    }
+
+    // Add commit-spike QRS complexes at random positions
+    const spikeInterval = Math.floor(length / 18);
+    for (let s = spikeInterval; s < length - 20; s += spikeInterval + Math.floor(rand(-8, 8))) {
+      const intensity = rand(0.45, 1.0);
+      data[s - 2] -= 0.10 * intensity;
+      data[s - 1] -= 0.18 * intensity;
+      data[s]      = intensity;          // peak
+      data[s + 1] -= 0.30 * intensity;
+      data[s + 2] -= 0.08 * intensity;
+      data[s + 3] += 0.14 * intensity;
+      data[s + 4] += 0.06 * intensity;
+    }
+    return data;
+  }
+
+  const WAVE_LEN = 1200;
+  const wave = generateWave(WAVE_LEN);
+  let offset = 0;
+  let animId;
+
+  function drawEKG() {
+    const W = canvas.width;
+    const H = canvas.height;
+    if (W === 0 || H === 0) { animId = requestAnimationFrame(drawEKG); return; }
+
+    // Fade tail
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(0, 0, W, H);
+
+    const midY = H * 0.5;
+    const amp  = H * 0.36;
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = 1;
+    for (let y = 0; y <= H; y += H / 4) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    for (let x = 0; x <= W; x += W / 12) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+
+    // Draw waveform
+    ctx.beginPath();
+    const visiblePts = W;
+    for (let px = 0; px < visiblePts; px++) {
+      const idx = (offset + px) % WAVE_LEN;
+      const v   = wave[idx];
+      const y   = midY - v * amp;
+      // Color based on amplitude: spikes = red, normal = green
+      const intensity = Math.abs(v);
+      if (intensity > 0.3) {
+        if (px > 0) ctx.stroke();
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(224,35,29,${clamp(intensity * 1.5, 0.5, 1)})`;
+        ctx.lineWidth = 2;
+        ctx.moveTo(px - 1, midY - (wave[(offset + px - 1) % WAVE_LEN]) * amp);
+      } else if (px === 0 || Math.abs(wave[(offset + px - 1) % WAVE_LEN]) > 0.3) {
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(0,230,118,0.7)';
+        ctx.lineWidth = 1.5;
+      }
+      px === 0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+    }
+    ctx.stroke();
+
+    // Moving bright tip
+    const tipIdx = (offset + W - 1) % WAVE_LEN;
+    const tipY   = midY - wave[tipIdx] * amp;
+    ctx.beginPath();
+    ctx.arc(W - 1, tipY, 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#00e676';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#00e676';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    offset = (offset + 2) % WAVE_LEN;
+    animId = requestAnimationFrame(drawEKG);
+  }
+
+  // Only run when visible
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) drawEKG();
+      else cancelAnimationFrame(animId);
+    });
+  }, { threshold: 0.1 });
+  obs.observe(canvas);
+
+  // Month labels
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const now = new Date();
+  const labels = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    labels.push(months[d.getMonth()]);
+  }
+  const mEl = $('#hb-months');
+  if (mEl) mEl.innerHTML = labels.map(m => `<span>${m}</span>`).join('');
+}
+
+/* ── CONTRIBUTION HEATMAP ─────────────────────────────────────── */
+function initHeatmap() {
+  const grid = $('#cs-grid');
+  if (!grid) return;
+
+  const weeks = 52;
+  const days  = 7;
+
+  // Generate semi-realistic activity pattern
+  function genLevel() {
+    const r = Math.random();
+    if (r < 0.28) return 0;
+    if (r < 0.50) return 1;
+    if (r < 0.70) return 2;
+    if (r < 0.85) return 3;
+    return 4;
+  }
+
+  // Busier periods simulation
+  const cells = [];
+  for (let w = 0; w < weeks; w++) {
+    const weekBias = Math.sin(w * 0.3) * 0.3 + 0.3; // wave pattern
+    for (let d = 0; d < days; d++) {
+      const r = Math.random() + weekBias * 0.4;
+      let level;
+      if (r < 0.30) level = 0;
+      else if (r < 0.55) level = 1;
+      else if (r < 0.75) level = 2;
+      else if (r < 0.88) level = 3;
+      else level = 4;
+      cells.push(level);
+    }
+  }
+
+  const frag = document.createDocumentFragment();
+  cells.forEach(level => {
+    const cell = document.createElement('div');
+    cell.className = `cs-cell l${level}`;
+    cell.setAttribute('role', 'img');
+    cell.setAttribute('aria-label', `Activity level ${level}`);
+    frag.appendChild(cell);
+  });
+  grid.appendChild(frag);
+}
+
+/* ── BACKGROUND PARTICLE GRID ─────────────────────────────────── */
+function initBgCanvas() {
+  const canvas = $('#bg-canvas');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes = [], edges = [];
+  let animId;
+
+  function setup() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+
+    const count = Math.floor((W * H) / 22000);
+    nodes = Array.from({ length: count }, () => ({
+      x: rand(0, W),
+      y: rand(0, H),
+      vx: rand(-0.18, 0.18),
+      vy: rand(-0.18, 0.18),
+      r: rand(1, 2.5),
+    }));
+  }
+
+  setup();
+  window.addEventListener('resize', () => { setup(); }, { passive: true });
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Move
+    nodes.forEach(n => {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0) n.x = W; if (n.x > W) n.x = 0;
+      if (n.y < 0) n.y = H; if (n.y > H) n.y = 0;
+    });
+
+    // Edges
+    const DIST = 130;
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < DIST) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(224,35,29,${(1 - d / DIST) * 0.12})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Nodes
+    nodes.forEach(n => {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(224,35,29,0.25)';
+      ctx.fill();
+    });
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  draw();
+}
+
+/* ── SKILL CATEGORY FILTER ────────────────────────────────────── */
+function initCategoryFilter() {
+  const btns   = $$('.cat-btn');
+  const panels = $$('.gauge-panel');
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = btn.dataset.cat;
+
+      panels.forEach(p => {
+        if (cat === 'all' || p.dataset.cat === cat) {
+          p.classList.remove('hidden');
+        } else {
+          p.classList.add('hidden');
+        }
+      });
+    });
+  });
+}
+
+/* ── SCROLL REVEAL ────────────────────────────────────────────── */
+function initReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const siblings = $$('.reveal', entry.target.closest('section') || document.body);
+      const idx = siblings.indexOf(entry.target);
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, Math.min(idx * 70, 350));
+      obs.unobserve(entry.target);
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+
+  $$('.reveal').forEach(el => obs.observe(el));
+}
+
+/* ── ACTIVE NAV ───────────────────────────────────────────────── */
+function initActiveNav() {
+  const sections = $$('section[id]');
+  const links    = $$('.nl[data-s]');
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => {
+          l.classList.toggle('active', l.dataset.s === entry.target.id);
+        });
+      }
+    });
+  }, { threshold: 0.35 });
+
+  sections.forEach(s => obs.observe(s));
+}
+
+/* ── MOBILE NAV ───────────────────────────────────────────────── */
+function initMobileNav() {
+  const toggle = $('#nav-toggle');
+  const menu   = $('#nav-links');
+  if (!toggle || !menu) return;
+
+  toggle.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  $$('.nl', menu).forEach(l => {
+    l.addEventListener('click', () => {
+      menu.classList.remove('open');
+      toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && menu.classList.contains('open')) {
+      menu.classList.remove('open');
+      toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      toggle.focus();
+    }
+  });
+}
+
+/* ── SCROLL EFFECTS (header + back-to-top) ────────────────────── */
+function initScrollEffects() {
+  const header  = $('#nav-header');
+  const btt     = $('#back-to-top');
+
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (header) header.classList.toggle('scrolled', y > 40);
+        if (btt)    btt.classList.toggle('visible', y > 400);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  if (btt) btt.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+/* ── SMOOTH ANCHORS ───────────────────────────────────────────── */
+function initAnchors() {
+  $$('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = $(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+}
+
+/* ── CONTACT FORM ─────────────────────────────────────────────── */
+function initContactForm() {
+  const form   = $('#contact-form');
+  const status = $('#form-status');
+  const submitBtn = $('#form-submit');
+  if (!form) return;
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const fields = {
+      name:    $('#f-name'),
+      email:   $('#f-email'),
+      subject: $('#f-subject'),
+      message: $('#f-message'),
+    };
+
+    Object.values(fields).forEach(f => f.classList.remove('error'));
+    status.className = 'form-status';
+    status.textContent = '';
+
+    let ok = true;
+    if (!fields.name.value.trim())                            { fields.name.classList.add('error');    ok = false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email.value)) { fields.email.classList.add('error');   ok = false; }
+    if (!fields.subject.value.trim())                          { fields.subject.classList.add('error'); ok = false; }
+    if (fields.message.value.trim().length < 10)               { fields.message.classList.add('error'); ok = false; }
+
+    if (!ok) {
+      status.className = 'form-status error-msg';
+      status.textContent = '⚠ Required fields incomplete.';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Transmitting…</span>';
+
+    try {
+      await delay(1500);
+      status.className = 'form-status success';
+      status.textContent = '✓ Message transmitted. Response expected within 24 hrs.';
+      form.reset();
+    } catch {
+      status.className = 'form-status error-msg';
+      status.textContent = '✗ Transmission failed. Direct: info@derroh.co.ke';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> <span>./send-message.sh</span>';
+    }
+  });
+
+  Object.values({ n: $('#f-name'), e: $('#f-email'), s: $('#f-subject'), m: $('#f-message') })
+    .filter(Boolean)
+    .forEach(f => {
+      f.addEventListener('input', () => {
+        if (f.value.trim()) f.classList.remove('error');
+      });
+    });
+}
+
+/* ── PANEL CARD TILT ──────────────────────────────────────────── */
+function initCardTilt() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.innerWidth <= 820) return;
+
+  $$('.project-svc, .gauge-panel').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x    = (e.clientX - rect.left) / rect.width  - 0.5;
+      const y    = (e.clientY - rect.top)  / rect.height - 0.5;
+      card.style.transform = `translateY(-3px) rotateX(${-y * 3}deg) rotateY(${x * 3}deg)`;
+      card.style.transition = 'transform 0.08s ease';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+      card.style.transition = 'all 0.28s ease';
+    });
+  });
+}
+
+/* ── INIT ALL ─────────────────────────────────────────────────── */
+function initAll() {
+  initClock();
+  initUptime();
+  initFooterYear();
+  initMetrics();
+  initStatCounters();
+  initGauges();
+  initHeartbeat();
+  initHeatmap();
+  initBgCanvas();
+  initCategoryFilter();
+  initReveal();
+  initActiveNav();
+  initMobileNav();
+  initScrollEffects();
+  initAnchors();
+  initContactForm();
+  initCardTilt();
+  initCaseFileFilter();
+}
+
+/* ── BOOT ─────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.style.overflow = 'hidden'; // lock scroll during boot
+  runBoot();
+});
+
+/* ── CASE FILE FILTER ─────────────────────────────────────────── */
+function initCaseFileFilter() {
+  const tabs  = $$('.cf-tab');
+  const cards = $$('.ic[data-filter]');
+  const rowContainers = [
+    $('.cf-col-right'),
+    $('.cf-row-3'),
+    $('.cf-row-2'),
+  ].filter(Boolean);
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected','true');
+
+      const filter = tab.dataset.filter;
+
+      cards.forEach(card => {
+        const match = filter === 'all' || card.dataset.filter === filter;
+        card.classList.toggle('ic-hidden', !match);
+        card.style.display = match ? '' : 'none';
+      });
+
+      // Restore flex/grid display on visible containers
+      rowContainers.forEach(c => {
+        const hasVisible = [...c.querySelectorAll('.ic')].some(
+          el => el.style.display !== 'none'
+        );
+        c.style.display = hasVisible ? '' : 'none';
+      });
+    });
+  });
+}
+
+
+
+</script>
+</body>
+</html>
