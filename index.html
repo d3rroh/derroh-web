@@ -2477,6 +2477,427 @@ button { font-family: inherit; }
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   NEW GAUGE VARIANTS  (containers category)
+═══════════════════════════════════════════════════════════════ */
+.gauge-panel--featured {
+  border-color: rgba(64,196,255,0.2);
+  background: linear-gradient(135deg, var(--bg-panel) 0%, rgba(64,196,255,0.03) 100%);
+}
+
+.gauge-panel--featured:hover {
+  border-color: rgba(64,196,255,0.45);
+  box-shadow: 0 0 0 1px rgba(64,196,255,0.08), 0 16px 48px rgba(0,0,0,0.5), 0 0 24px rgba(64,196,255,0.1);
+}
+
+.gp-icon--blue  { color: var(--blue); }
+.gp-icon--green { color: var(--green); }
+.gp-icon--amber { color: var(--amber); }
+
+.gp-cat--blue  { background: rgba(64,196,255,0.08); color: var(--blue);  border: 1px solid rgba(64,196,255,0.2); border-radius: 2px; padding: 1px 4px; }
+.gp-cat--green { background: rgba(0,230,118,0.08);  color: var(--green); border: 1px solid rgba(0,230,118,0.2);  border-radius: 2px; padding: 1px 4px; }
+.gp-cat--amber { background: rgba(255,171,0,0.08);  color: var(--amber); border: 1px solid rgba(255,171,0,0.2);  border-radius: 2px; padding: 1px 4px; }
+
+.gauge-fill--blue  { stroke: var(--blue);  filter: drop-shadow(0 0 4px rgba(64,196,255,0.5)); }
+.gauge-fill--green { stroke: var(--green); filter: drop-shadow(0 0 4px rgba(0,230,118,0.5)); }
+.gauge-fill--amber { stroke: var(--amber); filter: drop-shadow(0 0 4px rgba(255,171,0,0.5)); }
+
+/* ═══════════════════════════════════════════════════════════════
+   LIVE STACK SECTION
+═══════════════════════════════════════════════════════════════ */
+.stack-section { background: var(--bg-1); }
+
+.stack-body { display: flex; flex-direction: column; gap: 1.5rem; }
+
+/* Cluster bar */
+.stack-cluster-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+
+.scb-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0.65rem 1.25rem;
+  flex: 1;
+  min-width: 160px;
+}
+
+.scb-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+
+.scb-val {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-2);
+  letter-spacing: 0.04em;
+}
+
+.scb-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--border-2);
+  flex-shrink: 0;
+}
+
+/* Namespace grid */
+.stack-ns-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1rem;
+}
+
+.ns-block {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: border-color var(--t-base);
+}
+
+.ns-block:hover { border-color: var(--red-border); }
+
+.ns-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.9rem;
+  background: rgba(0,0,0,0.25);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.ns-icon { color: var(--blue); font-size: 0.8rem; flex-shrink: 0; }
+
+.ns-name {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--blue);
+  letter-spacing: 0.04em;
+  flex: 1;
+}
+
+.ns-domain {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border: 1px solid var(--border-2);
+  border-radius: 2px;
+}
+
+.ns-pods {
+  padding: 0.6rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pod-row {
+  display: grid;
+  grid-template-columns: 12px 110px 1fr auto auto;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: background var(--t-fast);
+}
+
+.pod-row:last-child { border-bottom: none; }
+.pod-row:hover { background: rgba(255,255,255,0.02); border-radius: var(--r); }
+
+.pod-name  { color: var(--text-1); letter-spacing: 0.03em; }
+.pod-img   { color: var(--text-3); letter-spacing: 0.02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pod-status { white-space: nowrap; font-size: 0.65rem; }
+.pod-meta  { color: var(--text-3); font-size: 0.62rem; white-space: nowrap; }
+
+/* Ingress table */
+.stack-ingress-table {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.sit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+
+.sit-class {
+  color: var(--blue);
+  letter-spacing: 0.06em;
+}
+
+.sit-rows { padding: 0.5rem 0; }
+
+.sit-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.45rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  transition: background var(--t-fast);
+  flex-wrap: wrap;
+}
+
+.sit-row:hover { background: rgba(255,255,255,0.025); }
+
+.sit-host  { color: var(--text-1); min-width: 190px; }
+.sit-arrow { color: var(--text-3); letter-spacing: -0.04em; flex-shrink: 0; }
+.sit-svc   { color: var(--amber); flex: 1; }
+.sit-tls   { font-size: 0.65rem; display: flex; align-items: center; gap: 0.35rem; }
+
+/* ═══════════════════════════════════════════════════════════════
+   CI/CD PIPELINE SECTION
+═══════════════════════════════════════════════════════════════ */
+.cicd-section { background: var(--bg-0); }
+
+.cicd-body { display: flex; flex-direction: column; gap: 2rem; }
+
+/* Pipeline flow */
+.pipeline-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-2) transparent;
+}
+
+.pf-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.1rem 1rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  min-width: 130px;
+  text-align: center;
+  transition: all var(--t-base);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.pf-stage:hover {
+  border-color: var(--red-border);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 16px rgba(224,35,29,0.1);
+}
+
+.pf-stage--trigger {
+  border-color: rgba(64,196,255,0.3);
+}
+
+.pf-stage--final {
+  border-color: rgba(0,230,118,0.35);
+  background: linear-gradient(135deg, var(--bg-panel), rgba(0,230,118,0.04));
+  animation: final-glow 3s ease-in-out infinite;
+}
+
+@keyframes final-glow {
+  0%,100% { box-shadow: 0 0 10px rgba(0,230,118,0.08); }
+  50%      { box-shadow: 0 0 24px rgba(0,230,118,0.2), 0 0 50px rgba(0,230,118,0.06); }
+}
+
+.pf-stage-icon {
+  font-size: 1.5rem;
+  color: var(--red);
+  line-height: 1;
+}
+
+.pf-stage--trigger .pf-stage-icon { color: var(--blue); }
+.pf-stage--final   .pf-stage-icon { color: var(--green); }
+
+.pf-stage-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+}
+
+.pf-stage-num {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+}
+
+.pf-stage-name {
+  font-family: var(--font-hud);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+.pf-stage-detail {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+}
+
+.pf-stage-status {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.pf-done { color: var(--green); }
+.pf-live { color: var(--green); font-weight: 700; }
+
+/* Connector between stages */
+.pf-connector {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+  width: 40px;
+  height: 2px;
+}
+
+.pf-conn-line {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--red-dim), rgba(224,35,29,0.5));
+}
+
+.pf-conn-pulse {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: pipe-pulse 2s linear infinite;
+  box-shadow: 0 0 6px var(--red);
+}
+
+@keyframes pipe-pulse {
+  0%   { left: 0; opacity: 1; }
+  100% { left: calc(100% - 8px); opacity: 0.3; }
+}
+
+/* Recent runs */
+.cicd-runs {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.cicd-runs-header {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid var(--border);
+}
+
+.cicd-run-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: background var(--t-fast);
+  flex-wrap: wrap;
+}
+
+.cicd-run-row:last-child { border-bottom: none; }
+.cicd-run-row:hover { background: rgba(255,255,255,0.025); }
+
+.crr-id  { color: var(--text-3); min-width: 35px; }
+.crr-ref { color: var(--text-2); flex: 1; }
+.crr-time{ color: var(--text-3); font-size: 0.65rem; min-width: 50px; text-align: right; }
+.crr-status { font-size: 0.65rem; font-weight: 700; min-width: 50px; text-align: right; }
+.crr-pass { color: var(--green); }
+.crr-fail { color: var(--red); }
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .pod-row {
+    grid-template-columns: 12px auto 1fr auto;
+  }
+  .pod-img { display: none; }
+  .pipeline-flow { gap: 0; }
+  .pf-connector { width: 20px; }
+  .pf-stage { min-width: 100px; padding: 0.85rem 0.65rem; }
+  .pf-stage-name { font-size: 0.62rem; }
+  .pf-stage-detail { display: none; }
+}
+
+@media (max-width: 600px) {
+  .stack-cluster-bar { flex-direction: column; }
+  .scb-divider { width: 100%; height: 1px; }
+  .sit-row { gap: 0.5rem; }
+  .sit-svc { min-width: unset; }
+  .pipeline-flow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .pf-connector {
+    width: 2px;
+    height: 24px;
+    flex-direction: column;
+  }
+  .pf-conn-line {
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--red-dim), rgba(224,35,29,0.5));
+  }
+  .pf-conn-pulse {
+    left: 50%;
+    transform: translateX(-50%);
+    animation: pipe-pulse-v 2s linear infinite;
+  }
+  @keyframes pipe-pulse-v {
+    0%   { top: 0; opacity: 1; }
+    100% { top: calc(100% - 8px); opacity: 0.3; }
+  }
+  .pf-stage { width: 100%; flex-direction: row; text-align: left; min-width: unset; }
+  .pf-stage-info { align-items: flex-start; }
+}
+
 </style>
 </head>
 <body>
@@ -2552,7 +2973,9 @@ button { font-family: inherit; }
           <li><a href="#about"    class="nl" data-s="about">_ABOUT</a></li>
           <li><a href="#skills"   class="nl" data-s="skills">_METRICS</a></li>
           <li><a href="#activity" class="nl" data-s="activity">_PULSE</a></li>
-          <li><a href="#projects" class="nl" data-s="projects">_SERVICES</a></li>
+          <li><a href="#projects" class="nl" data-s="projects">_CASES</a></li>
+          <li><a href="#stack"    class="nl" data-s="stack">_STACK</a></li>
+          <li><a href="#cicd"     class="nl" data-s="cicd">_CICD</a></li>
           <li><a href="#blog"     class="nl" data-s="blog">_LOGS</a></li>
           <li><a href="#contact"  class="nl nl--cta" data-s="contact">_CONNECT</a></li>
         </ul>
@@ -2825,9 +3248,12 @@ button { font-family: inherit; }
           <div class="sh-line" aria-hidden="true"></div>
         </div>
 
-        <!-- Category row labels -->
+        <!-- Category filter -->
         <div class="skills-categories reveal">
           <button class="cat-btn active" data-cat="all">ALL</button>
+          <button class="cat-btn" data-cat="containers">
+            <i class="fas fa-cubes-stacked"></i> CONTAINERS
+          </button>
           <button class="cat-btn" data-cat="devops">DEVOPS</button>
           <button class="cat-btn" data-cat="server">SERVER</button>
           <button class="cat-btn" data-cat="network">NETWORK</button>
@@ -2837,7 +3263,84 @@ button { font-family: inherit; }
 
         <div class="gauges-grid" id="gauges-grid" aria-label="Skills as server metric gauges">
 
-          <!-- DevOps -->
+          <!-- ── CONTAINERS (new) ── -->
+          <div class="gauge-panel gauge-panel--featured reveal" data-cat="containers">
+            <div class="gp-header">
+              <span class="gp-icon gp-icon--blue"><i class="fas fa-dharmachakra"></i></span>
+              <span class="gp-name">KUBERNETES</span>
+              <span class="gp-cat gp-cat--blue">containers</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill gauge-fill--blue" cx="60" cy="60" r="50" data-pct="85"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">k3s · Bare VPS</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel gauge-panel--featured reveal" data-cat="containers">
+            <div class="gp-header">
+              <span class="gp-icon gp-icon--blue"><i class="fab fa-docker"></i></span>
+              <span class="gp-name">DOCKER</span>
+              <span class="gp-cat gp-cat--blue">containers</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill gauge-fill--blue" cx="60" cy="60" r="50" data-pct="90"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Compose · Hub</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel gauge-panel--featured reveal" data-cat="containers">
+            <div class="gp-header">
+              <span class="gp-icon gp-icon--green"><i class="fab fa-github"></i></span>
+              <span class="gp-name">GITHUB_ACTIONS</span>
+              <span class="gp-cat gp-cat--green">tools</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill gauge-fill--green" cx="60" cy="60" r="50" data-pct="83"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">CI/CD Pipelines</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel gauge-panel--featured reveal" data-cat="containers">
+            <div class="gp-header">
+              <span class="gp-icon gp-icon--amber"><i class="fas fa-cloud"></i></span>
+              <span class="gp-name">CLOUDFLARE</span>
+              <span class="gp-cat gp-cat--amber">server</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill gauge-fill--amber" cx="60" cy="60" r="50" data-pct="88"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">DNS · TLS · Proxy</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <!-- ── DevOps ── -->
           <div class="gauge-panel reveal" data-cat="devops">
             <div class="gp-header">
               <span class="gp-icon"><i class="fab fa-linux"></i></span>
@@ -2895,7 +3398,26 @@ button { font-family: inherit; }
             <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
           </div>
 
-          <!-- Server -->
+          <div class="gauge-panel reveal" data-cat="devops">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-shield-halved"></i></span>
+              <span class="gp-name">WP_SECURITY</span>
+              <span class="gp-cat">devops</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="87"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">Malware · Forensics</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <!-- ── Server ── -->
           <div class="gauge-panel reveal" data-cat="server">
             <div class="gp-header">
               <span class="gp-icon"><i class="fas fa-bolt"></i></span>
@@ -2972,7 +3494,26 @@ button { font-family: inherit; }
             <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
           </div>
 
-          <!-- Network -->
+          <div class="gauge-panel reveal" data-cat="server">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fas fa-server"></i></span>
+              <span class="gp-name">CPANEL_WHM</span>
+              <span class="gp-cat">server</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="91"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">cPanel · WHM · CWP</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <!-- ── Network ── -->
           <div class="gauge-panel reveal" data-cat="network">
             <div class="gp-header">
               <span class="gp-icon"><i class="fas fa-fire-flame-curved"></i></span>
@@ -2986,7 +3527,7 @@ button { font-family: inherit; }
               </svg>
               <div class="gp-center-text">
                 <span class="gp-pct">0<span class="gp-unit">%</span></span>
-                <span class="gp-sublabel">Proficiency</span>
+                <span class="gp-sublabel">UFW · iptables</span>
               </div>
             </div>
             <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
@@ -3011,7 +3552,7 @@ button { font-family: inherit; }
             <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
           </div>
 
-          <!-- Database -->
+          <!-- ── Database ── -->
           <div class="gauge-panel reveal" data-cat="database">
             <div class="gp-header">
               <span class="gp-icon"><i class="fas fa-database"></i></span>
@@ -3050,7 +3591,7 @@ button { font-family: inherit; }
             <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
           </div>
 
-          <!-- Tools -->
+          <!-- ── Tools ── -->
           <div class="gauge-panel reveal" data-cat="tools">
             <div class="gp-header">
               <span class="gp-icon"><i class="fas fa-terminal"></i></span>
@@ -3084,6 +3625,25 @@ button { font-family: inherit; }
               <div class="gp-center-text">
                 <span class="gp-pct">0<span class="gp-unit">%</span></span>
                 <span class="gp-sublabel">Proficiency</span>
+              </div>
+            </div>
+            <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <div class="gauge-panel reveal" data-cat="tools">
+            <div class="gp-header">
+              <span class="gp-icon"><i class="fab fa-laravel"></i></span>
+              <span class="gp-name">LARAVEL</span>
+              <span class="gp-cat">tools</span>
+            </div>
+            <div class="gp-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="gauge-track" cx="60" cy="60" r="50"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="50" data-pct="78"/>
+              </svg>
+              <div class="gp-center-text">
+                <span class="gp-pct">0<span class="gp-unit">%</span></span>
+                <span class="gp-sublabel">App Deployment</span>
               </div>
             </div>
             <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
@@ -3701,13 +4261,347 @@ button { font-family: inherit; }
     </section>
 
     <!-- ══════════════════════════════════════════════
-         SECTION 6 · BLOG / LOG STREAM
+         SECTION 6 · LIVE STACK / kubectl dashboard
+    ══════════════════════════════════════════════ -->
+    <section id="stack" class="section stack-section" aria-labelledby="stack-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="sh-line" aria-hidden="true"></div>
+          <span class="sh-tag">// MODULE 05</span>
+          <h2 id="stack-heading" class="sh-title">LIVE_STACK</h2>
+          <div class="sh-line" aria-hidden="true"></div>
+        </div>
+
+        <!-- kubectl get all --all-namespaces style header -->
+        <div class="panel stack-panel reveal">
+          <div class="panel-title-bar">
+            <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="ptb-label">kubectl get all --all-namespaces · server.derroh.co.ke</span>
+            <div class="ptb-right">
+              <span class="dot dot--green pulse" aria-hidden="true"></span>
+              <span class="green-text">k3s RUNNING</span>
+            </div>
+          </div>
+          <div class="panel-body stack-body">
+
+            <!-- Cluster overview bar -->
+            <div class="stack-cluster-bar">
+              <div class="scb-item">
+                <span class="scb-label">CLUSTER</span>
+                <span class="scb-val accent-text">k3s · Contabo VPS</span>
+              </div>
+              <div class="scb-divider" aria-hidden="true"></div>
+              <div class="scb-item">
+                <span class="scb-label">NODE</span>
+                <span class="scb-val green-text">server.derroh.co.ke · Ready</span>
+              </div>
+              <div class="scb-divider" aria-hidden="true"></div>
+              <div class="scb-item">
+                <span class="scb-label">INGRESS</span>
+                <span class="scb-val">nginx-ingress · Cloudflare TLS</span>
+              </div>
+              <div class="scb-divider" aria-hidden="true"></div>
+              <div class="scb-item">
+                <span class="scb-label">NAMESPACES</span>
+                <span class="scb-val accent-text">4 active</span>
+              </div>
+            </div>
+
+            <!-- Namespace rows -->
+            <div class="stack-ns-grid">
+
+              <!-- milestone namespace -->
+              <div class="ns-block">
+                <div class="ns-header">
+                  <span class="ns-icon" aria-hidden="true"><i class="fas fa-layer-group"></i></span>
+                  <span class="ns-name">namespace/milestone</span>
+                  <span class="ns-domain">milestone.derroh.co.ke</span>
+                </div>
+                <div class="ns-pods">
+                  <div class="pod-row">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="pod-name">milestone-app</span>
+                    <span class="pod-img">d3rroh/milestone:latest</span>
+                    <span class="pod-status green-text">Running</span>
+                    <span class="pod-meta">php-fpm · Apache · Laravel</span>
+                  </div>
+                  <div class="pod-row">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="pod-name">milestone-db</span>
+                    <span class="pod-img">mysql:8.0</span>
+                    <span class="pod-status green-text">Running</span>
+                    <span class="pod-meta">PVC: milestone-storage</span>
+                  </div>
+                  <div class="pod-row">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="pod-name">milestone-queue</span>
+                    <span class="pod-img">d3rroh/milestone:latest</span>
+                    <span class="pod-status green-text">Running</span>
+                    <span class="pod-meta">Laravel Queue Worker</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- derroh-web namespace -->
+              <div class="ns-block">
+                <div class="ns-header">
+                  <span class="ns-icon" aria-hidden="true"><i class="fas fa-layer-group"></i></span>
+                  <span class="ns-name">namespace/derroh-web</span>
+                  <span class="ns-domain">derroh.co.ke</span>
+                </div>
+                <div class="ns-pods">
+                  <div class="pod-row">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="pod-name">derroh-web</span>
+                    <span class="pod-img">d3rroh/derroh-web:latest</span>
+                    <span class="pod-status green-text">Running</span>
+                    <span class="pod-meta">nginx:alpine · Static Site</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- kimberley-web namespace -->
+              <div class="ns-block">
+                <div class="ns-header">
+                  <span class="ns-icon" aria-hidden="true"><i class="fas fa-layer-group"></i></span>
+                  <span class="ns-name">namespace/kimberley-web</span>
+                  <span class="ns-domain">kimberley.name.ng</span>
+                </div>
+                <div class="ns-pods">
+                  <div class="pod-row">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="pod-name">kimberley-web</span>
+                    <span class="pod-img">d3rroh/kimberley-web:latest</span>
+                    <span class="pod-status green-text">Running</span>
+                    <span class="pod-meta">nginx:alpine · Static Site</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- mail namespace -->
+              <div class="ns-block">
+                <div class="ns-header">
+                  <span class="ns-icon" aria-hidden="true"><i class="fas fa-layer-group"></i></span>
+                  <span class="ns-name">namespace/mail</span>
+                  <span class="ns-domain">mail.derroh.co.ke</span>
+                </div>
+                <div class="ns-pods">
+                  <div class="pod-row">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="pod-name">docker-mailserver</span>
+                    <span class="pod-img">ghcr.io/docker-mailserver/docker-mailserver</span>
+                    <span class="pod-status green-text">Running</span>
+                    <span class="pod-meta">Postfix · Dovecot · rspamd</span>
+                  </div>
+                  <div class="pod-row">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="pod-name">roundcube</span>
+                    <span class="pod-img">roundcube/roundcubemail</span>
+                    <span class="pod-status green-text">Running</span>
+                    <span class="pod-meta">Webmail · IMAP</span>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /.stack-ns-grid -->
+
+            <!-- Ingress routing table -->
+            <div class="stack-ingress-table">
+              <div class="sit-header">
+                <span>INGRESS ROUTING TABLE</span>
+                <span class="sit-class">nginx · class: nginx</span>
+              </div>
+              <div class="sit-rows">
+                <div class="sit-row">
+                  <span class="sit-host">milestone.derroh.co.ke</span>
+                  <span class="sit-arrow" aria-hidden="true">──▶</span>
+                  <span class="sit-svc">milestone-app:80</span>
+                  <span class="sit-tls green-text"><i class="fas fa-lock"></i> TLS · Cloudflare</span>
+                </div>
+                <div class="sit-row">
+                  <span class="sit-host">derroh.co.ke</span>
+                  <span class="sit-arrow" aria-hidden="true">──▶</span>
+                  <span class="sit-svc">derroh-web:80</span>
+                  <span class="sit-tls green-text"><i class="fas fa-lock"></i> TLS · Cloudflare</span>
+                </div>
+                <div class="sit-row">
+                  <span class="sit-host">kimberley.name.ng</span>
+                  <span class="sit-arrow" aria-hidden="true">──▶</span>
+                  <span class="sit-svc">kimberley-web:80</span>
+                  <span class="sit-tls green-text"><i class="fas fa-lock"></i> TLS · Cloudflare</span>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /.stack-body -->
+        </div><!-- /.stack-panel -->
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 7 · CI/CD PIPELINE
+    ══════════════════════════════════════════════ -->
+    <section id="cicd" class="section cicd-section" aria-labelledby="cicd-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="sh-line" aria-hidden="true"></div>
+          <span class="sh-tag">// MODULE 06</span>
+          <h2 id="cicd-heading" class="sh-title">CICD_PIPELINE</h2>
+          <div class="sh-line" aria-hidden="true"></div>
+        </div>
+
+        <div class="panel cicd-panel reveal">
+          <div class="panel-title-bar">
+            <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="ptb-label">GitHub Actions · Automated Deployment Pipeline</span>
+            <div class="ptb-right">
+              <span class="dot dot--green pulse" aria-hidden="true"></span>
+              <span class="green-text">PIPELINE ACTIVE</span>
+            </div>
+          </div>
+          <div class="panel-body cicd-body">
+
+            <!-- Pipeline flow -->
+            <div class="pipeline-flow" aria-label="CI/CD pipeline stages">
+
+              <div class="pf-stage pf-stage--trigger" id="pf-s1">
+                <div class="pf-stage-icon"><i class="fab fa-github"></i></div>
+                <div class="pf-stage-info">
+                  <span class="pf-stage-num">01</span>
+                  <span class="pf-stage-name">GIT PUSH</span>
+                  <span class="pf-stage-detail">github.com/d3rroh</span>
+                </div>
+                <div class="pf-stage-status pf-done">
+                  <span class="dot dot--green" aria-hidden="true"></span> passed
+                </div>
+              </div>
+
+              <div class="pf-connector" aria-hidden="true">
+                <div class="pf-conn-line"></div>
+                <div class="pf-conn-pulse"></div>
+              </div>
+
+              <div class="pf-stage" id="pf-s2">
+                <div class="pf-stage-icon"><i class="fas fa-play-circle"></i></div>
+                <div class="pf-stage-info">
+                  <span class="pf-stage-num">02</span>
+                  <span class="pf-stage-name">ACTIONS TRIGGER</span>
+                  <span class="pf-stage-detail">.github/workflows/deploy.yml</span>
+                </div>
+                <div class="pf-stage-status pf-done">
+                  <span class="dot dot--green" aria-hidden="true"></span> passed
+                </div>
+              </div>
+
+              <div class="pf-connector" aria-hidden="true">
+                <div class="pf-conn-line"></div>
+                <div class="pf-conn-pulse"></div>
+              </div>
+
+              <div class="pf-stage" id="pf-s3">
+                <div class="pf-stage-icon"><i class="fab fa-docker"></i></div>
+                <div class="pf-stage-info">
+                  <span class="pf-stage-num">03</span>
+                  <span class="pf-stage-name">DOCKER BUILD</span>
+                  <span class="pf-stage-detail">docker build --no-cache</span>
+                </div>
+                <div class="pf-stage-status pf-done">
+                  <span class="dot dot--green" aria-hidden="true"></span> passed
+                </div>
+              </div>
+
+              <div class="pf-connector" aria-hidden="true">
+                <div class="pf-conn-line"></div>
+                <div class="pf-conn-pulse"></div>
+              </div>
+
+              <div class="pf-stage" id="pf-s4">
+                <div class="pf-stage-icon"><i class="fas fa-upload"></i></div>
+                <div class="pf-stage-info">
+                  <span class="pf-stage-num">04</span>
+                  <span class="pf-stage-name">PUSH TO HUB</span>
+                  <span class="pf-stage-detail">hub.docker.com/u/d3rroh</span>
+                </div>
+                <div class="pf-stage-status pf-done">
+                  <span class="dot dot--green" aria-hidden="true"></span> passed
+                </div>
+              </div>
+
+              <div class="pf-connector" aria-hidden="true">
+                <div class="pf-conn-line"></div>
+                <div class="pf-conn-pulse"></div>
+              </div>
+
+              <div class="pf-stage" id="pf-s5">
+                <div class="pf-stage-icon"><i class="fas fa-dharmachakra"></i></div>
+                <div class="pf-stage-info">
+                  <span class="pf-stage-num">05</span>
+                  <span class="pf-stage-name">KUBECTL ROLLOUT</span>
+                  <span class="pf-stage-detail">kubectl rollout restart</span>
+                </div>
+                <div class="pf-stage-status pf-done">
+                  <span class="dot dot--green" aria-hidden="true"></span> passed
+                </div>
+              </div>
+
+              <div class="pf-connector" aria-hidden="true">
+                <div class="pf-conn-line"></div>
+                <div class="pf-conn-pulse"></div>
+              </div>
+
+              <div class="pf-stage pf-stage--final" id="pf-s6">
+                <div class="pf-stage-icon"><i class="fas fa-circle-check"></i></div>
+                <div class="pf-stage-info">
+                  <span class="pf-stage-num">06</span>
+                  <span class="pf-stage-name">LIVE</span>
+                  <span class="pf-stage-detail">Pods healthy · 0 downtime</span>
+                </div>
+                <div class="pf-stage-status pf-live">
+                  <span class="dot dot--green pulse" aria-hidden="true"></span> live
+                </div>
+              </div>
+
+            </div><!-- /.pipeline-flow -->
+
+            <!-- Active pipelines table -->
+            <div class="cicd-runs">
+              <div class="cicd-runs-header">RECENT PIPELINE RUNS</div>
+              <div class="cicd-run-row">
+                <span class="crr-dot dot dot--green" aria-hidden="true"></span>
+                <span class="crr-id">#247</span>
+                <span class="crr-ref">main · d3rroh/derroh-web</span>
+                <span class="crr-time">2m 14s</span>
+                <span class="crr-status crr-pass">passed</span>
+              </div>
+              <div class="cicd-run-row">
+                <span class="crr-dot dot dot--green" aria-hidden="true"></span>
+                <span class="crr-id">#246</span>
+                <span class="crr-ref">main · d3rroh/milestone</span>
+                <span class="crr-time">3m 41s</span>
+                <span class="crr-status crr-pass">passed</span>
+              </div>
+              <div class="cicd-run-row">
+                <span class="crr-dot dot dot--green" aria-hidden="true"></span>
+                <span class="crr-id">#245</span>
+                <span class="crr-ref">main · d3rroh/kimberley-web</span>
+                <span class="crr-time">1m 58s</span>
+                <span class="crr-status crr-pass">passed</span>
+              </div>
+            </div>
+
+          </div><!-- /.cicd-body -->
+        </div><!-- /.cicd-panel -->
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 8 · BLOG / LOG STREAM
     ══════════════════════════════════════════════ -->
     <section id="blog" class="section blog-section" aria-labelledby="blog-heading">
       <div class="container">
         <div class="section-header reveal">
           <div class="sh-line" aria-hidden="true"></div>
-          <span class="sh-tag">// MODULE 05</span>
+          <span class="sh-tag">// MODULE 07</span>
           <h2 id="blog-heading" class="sh-title">SYSTEM_LOGS</h2>
           <div class="sh-line" aria-hidden="true"></div>
         </div>
@@ -3725,92 +4619,135 @@ button { font-family: inherit; }
 
             <article class="log-entry reveal" aria-labelledby="log-1">
               <div class="log-meta">
+                <span class="log-ts">Jun 10 09:14:22</span>
+                <span class="log-sev log-warn">WARN</span>
+                <span class="log-src">blog.derrick</span>
+              </div>
+              <h3 id="log-1" class="log-title">
+                <a href="#">Migrating from Docker Compose to k3s: What Actually Breaks</a>
+              </h3>
+              <p class="log-excerpt">A real account of migrating a full production stack to Kubernetes on a bare Contabo VPS — port conflicts, CNI surprises, LoadBalancer gotchas, and why nginx-ingress + Cloudflare is the clean path.</p>
+              <div class="log-tags">
+                <span class="log-tag">k3s</span>
+                <span class="log-tag">kubernetes</span>
+                <span class="log-tag">docker-compose</span>
+                <span class="log-tag">nginx-ingress</span>
+              </div>
+              <a href="#" class="log-read-more" aria-label="Read: Migrating to k3s">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </article>
+
+            <article class="log-entry reveal" aria-labelledby="log-2">
+              <div class="log-meta">
+                <span class="log-ts">May 28 14:33:07</span>
+                <span class="log-sev log-info">INFO</span>
+                <span class="log-src">blog.derrick</span>
+              </div>
+              <h3 id="log-2" class="log-title">
+                <a href="#">Kubernetes PVC Permissions: fsGroup, Init Containers, and www-data</a>
+              </h3>
+              <p class="log-excerpt">The definitive fix for Laravel storage permission errors in Kubernetes — why fsGroup: 33 works, when you need an init container with runAsUser: 0, and making entrypoints self-healing.</p>
+              <div class="log-tags">
+                <span class="log-tag">kubernetes</span>
+                <span class="log-tag">pvc</span>
+                <span class="log-tag">laravel</span>
+                <span class="log-tag">fsgroup</span>
+              </div>
+              <a href="#" class="log-read-more" aria-label="Read: PVC Permissions">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </article>
+
+            <article class="log-entry reveal" aria-labelledby="log-3">
+              <div class="log-meta">
+                <span class="log-ts">May 12 11:08:55</span>
+                <span class="log-sev log-warn">WARN</span>
+                <span class="log-src">blog.derrick</span>
+              </div>
+              <h3 id="log-3" class="log-title">
+                <a href="#">Detecting OPcache-Disguised Webshells in WordPress</a>
+              </h3>
+              <p class="log-excerpt">How attackers hide PHP webshells as legitimate OPcache files, the filesystem patterns that give them away, and a complete remediation playbook including permission hardening.</p>
+              <div class="log-tags">
+                <span class="log-tag">security</span>
+                <span class="log-tag">wordpress</span>
+                <span class="log-tag">malware</span>
+                <span class="log-tag">opcache</span>
+              </div>
+              <a href="#" class="log-read-more" aria-label="Read: OPcache Webshells">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </article>
+
+            <article class="log-entry reveal" aria-labelledby="log-4">
+              <div class="log-meta">
+                <span class="log-ts">Apr 19 08:47:31</span>
+                <span class="log-sev log-info">INFO</span>
+                <span class="log-src">blog.derrick</span>
+              </div>
+              <h3 id="log-4" class="log-title">
+                <a href="#">GitHub Actions → Docker Hub → kubectl: A Real CI/CD Pipeline</a>
+              </h3>
+              <p class="log-excerpt">Building a complete zero-downtime deployment pipeline for multiple apps — secrets management, multi-arch builds, rollout restart strategy, and wiring it all to a k3s cluster on a bare VPS.</p>
+              <div class="log-tags">
+                <span class="log-tag">github-actions</span>
+                <span class="log-tag">docker</span>
+                <span class="log-tag">kubernetes</span>
+                <span class="log-tag">cicd</span>
+              </div>
+              <a href="#" class="log-read-more" aria-label="Read: CI/CD Pipeline">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </article>
+
+            <article class="log-entry reveal" aria-labelledby="log-5">
+              <div class="log-meta">
+                <span class="log-ts">Mar 31 16:22:44</span>
+                <span class="log-sev log-debug">DEBUG</span>
+                <span class="log-src">blog.derrick</span>
+              </div>
+              <h3 id="log-5" class="log-title">
+                <a href="#">Zero-Downtime IMAP Migration with imapsync</a>
+              </h3>
+              <p class="log-excerpt">Migrating a full mailbox from Zoho to cPanel Dovecot with zero message loss — folder mapping, flag preservation, pre/post count validation, and the MX cutover timing that keeps users unaware.</p>
+              <div class="log-tags">
+                <span class="log-tag">imapsync</span>
+                <span class="log-tag">email</span>
+                <span class="log-tag">dovecot</span>
+                <span class="log-tag">dns</span>
+              </div>
+              <a href="#" class="log-read-more" aria-label="Read: IMAP Migration">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </article>
+
+            <article class="log-entry reveal" aria-labelledby="log-6">
+              <div class="log-meta">
                 <span class="log-ts">Mar 08 14:22:11</span>
                 <span class="log-sev log-info">INFO</span>
                 <span class="log-src">blog.derrick</span>
               </div>
-              <h3 id="log-1" class="log-title">
-                <a href="#">Hardening Your Linux Server: A Practical Checklist</a>
+              <h3 id="log-6" class="log-title">
+                <a href="#">Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts</a>
               </h3>
-              <p class="log-excerpt">A step-by-step walkthrough of essential security measures before going to production — SSH key enforcement, fail2ban, and kernel parameter hardening.</p>
+              <p class="log-excerpt">Why editing dovecot.conf inside a running docker-mailserver container loses the fix on restart, and the correct override mechanism using user-patches.sh to make it stick permanently.</p>
               <div class="log-tags">
-                <span class="log-tag">linux-admin</span>
-                <span class="log-tag">security</span>
-                <span class="log-tag">ssh</span>
+                <span class="log-tag">dovecot</span>
+                <span class="log-tag">docker-mailserver</span>
+                <span class="log-tag">email</span>
+                <span class="log-tag">containers</span>
               </div>
-              <a href="#" class="log-read-more" aria-label="Read: Hardening Your Linux Server">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+              <a href="#" class="log-read-more" aria-label="Read: Dovecot Fix">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
             </article>
 
-            <article class="log-entry reveal" aria-labelledby="log-2">
+            <article class="log-entry reveal" aria-labelledby="log-7">
               <div class="log-meta">
                 <span class="log-ts">Feb 21 09:45:33</span>
                 <span class="log-sev log-warn">WARN</span>
                 <span class="log-src">blog.derrick</span>
               </div>
-              <h3 id="log-2" class="log-title">
-                <a href="#">Debugging SMTP Delivery Failures: Where to Start</a>
+              <h3 id="log-7" class="log-title">
+                <a href="#">Hardening Your Linux Server: A Practical Checklist</a>
               </h3>
-              <p class="log-excerpt">Email delivery issues are notoriously opaque. A systematic framework — MX verification, log analysis, and blacklist checks — that cuts diagnosis time in half.</p>
+              <p class="log-excerpt">SSH key enforcement, fail2ban tuning, kernel parameter hardening, unattended-upgrades, and CIS benchmark essentials — the checklist every production server needs before going live.</p>
               <div class="log-tags">
-                <span class="log-tag">smtp</span>
-                <span class="log-tag">postfix</span>
-                <span class="log-tag">dns</span>
+                <span class="log-tag">linux-admin</span>
+                <span class="log-tag">security</span>
+                <span class="log-tag">ssh</span>
+                <span class="log-tag">hardening</span>
               </div>
-              <a href="#" class="log-read-more" aria-label="Read: Debugging SMTP">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </article>
-
-            <article class="log-entry reveal" aria-labelledby="log-3">
-              <div class="log-meta">
-                <span class="log-ts">Jan 15 17:03:08</span>
-                <span class="log-sev log-info">INFO</span>
-                <span class="log-src">blog.derrick</span>
-              </div>
-              <h3 id="log-3" class="log-title">
-                <a href="#">Nginx vs Apache: Choosing the Right Web Server</a>
-              </h3>
-              <p class="log-excerpt">When Nginx's event-driven model wins, when Apache's .htaccess flexibility matters, and how to choose for your specific hosting stack.</p>
-              <div class="log-tags">
-                <span class="log-tag">nginx</span>
-                <span class="log-tag">apache</span>
-                <span class="log-tag">hosting</span>
-              </div>
-              <a href="#" class="log-read-more" aria-label="Read: Nginx vs Apache">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </article>
-
-            <article class="log-entry reveal" aria-labelledby="log-4">
-              <div class="log-meta">
-                <span class="log-ts">Dec 09 11:28:45</span>
-                <span class="log-sev log-info">INFO</span>
-                <span class="log-src">blog.derrick</span>
-              </div>
-              <h3 id="log-4" class="log-title">
-                <a href="#">SSL Certificate Management at Scale</a>
-              </h3>
-              <p class="log-excerpt">Let's Encrypt automation with Certbot, wildcard certificate strategies, and renewal monitoring across dozens of domains without the panic.</p>
-              <div class="log-tags">
-                <span class="log-tag">ssl</span>
-                <span class="log-tag">certbot</span>
-                <span class="log-tag">automation</span>
-              </div>
-              <a href="#" class="log-read-more" aria-label="Read: SSL Certificate Management">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </article>
-
-            <article class="log-entry reveal" aria-labelledby="log-5">
-              <div class="log-meta">
-                <span class="log-ts">Nov 22 08:14:52</span>
-                <span class="log-sev log-debug">DEBUG</span>
-                <span class="log-src">blog.derrick</span>
-              </div>
-              <h3 id="log-5" class="log-title">
-                <a href="#">Bash Scripts Every Sysadmin Should Have</a>
-              </h3>
-              <p class="log-excerpt">Battle-tested scripts for disk monitoring, log rotation, user management, and automated backup validation that save hours every week.</p>
-              <div class="log-tags">
-                <span class="log-tag">bash</span>
-                <span class="log-tag">automation</span>
-                <span class="log-tag">sysadmin</span>
-              </div>
-              <a href="#" class="log-read-more" aria-label="Read: Bash Scripts">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+              <a href="#" class="log-read-more" aria-label="Read: Linux Hardening">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
             </article>
 
             <div class="log-entry log-pending">
@@ -3837,7 +4774,7 @@ button { font-family: inherit; }
       <div class="container">
         <div class="section-header reveal">
           <div class="sh-line" aria-hidden="true"></div>
-          <span class="sh-tag">// MODULE 06</span>
+          <span class="sh-tag">// MODULE 08</span>
           <h2 id="contact-heading" class="sh-title">ESTABLISH_CONNECTION</h2>
           <div class="sh-line" aria-hidden="true"></div>
         </div>
@@ -3964,7 +4901,9 @@ button { font-family: inherit; }
         <a href="#about">_ABOUT</a>
         <a href="#skills">_METRICS</a>
         <a href="#activity">_PULSE</a>
-        <a href="#projects">_SERVICES</a>
+        <a href="#projects">_CASES</a>
+        <a href="#stack">_STACK</a>
+        <a href="#cicd">_CICD</a>
         <a href="#blog">_LOGS</a>
         <a href="#contact">_CONNECT</a>
       </nav>
