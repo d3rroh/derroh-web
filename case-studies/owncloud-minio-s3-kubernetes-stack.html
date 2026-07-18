@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="/assets/img/favicon.ico" sizes="any"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon-180.png"/>
+  <meta name="description" content="Deploying a self-hosted ownCloud instance backed by MinIO S3-compatible storage across Docker Compose and later Kubernetes, and resolving the config and dependency issues along the way."/>
+  <meta name="author" content="Derrick"/>
+  <link rel="canonical" href="https://derroh.co.ke/case-studies/owncloud-minio-s3-kubernetes-stack.html"/>
+  <title>ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes | Derrick — DevOps Command Center</title>
+
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes"/>
+  <meta property="og:description" content="Deploying a self-hosted ownCloud instance backed by MinIO S3-compatible storage across Docker Compose and later Kubernetes, and resolving the config and dependency issues along the way."/>
+  <meta property="og:url" content="https://derroh.co.ke/case-studies/owncloud-minio-s3-kubernetes-stack.html"/>
+  <meta property="og:site_name" content="Derrick — DevOps Command Center"/>
+  <meta property="og:locale" content="en_KE"/>
+
+  <meta name="twitter:card" content="summary"/>
+  <meta name="twitter:title" content="ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes"/>
+  <meta name="twitter:description" content="Deploying a self-hosted ownCloud instance backed by MinIO S3-compatible storage across Docker Compose and later Kubernetes, and resolving the config and dependency issues along the way."/>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes",
+    "description": "Deploying a self-hosted ownCloud instance backed by MinIO S3-compatible storage across Docker Compose and later Kubernetes, and resolving the config and dependency issues along the way.",
+    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
+    "publisher": { "@type": "Person", "name": "Derrick" },
+    "mainEntityOfPage": "https://derroh.co.ke/case-studies/owncloud-minio-s3-kubernetes-stack.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/assets/site.css"/>
+  <style>
+    .post-wrap { max-width: 820px; margin: 0 auto; padding: 8rem 1.25rem 5rem; }
+    .post-back { display:inline-flex; align-items:center; gap:.5rem; font-family:var(--font-mono); font-size:.8rem; color:var(--text-2); margin-bottom:2rem; }
+    .post-back:hover { color: var(--red); }
+    .post-meta { font-family: var(--font-mono); font-size:.75rem; color: var(--text-3); letter-spacing:.05em; margin-bottom:.75rem; }
+    .post-title { font-family: var(--font-hud); font-size: clamp(1.5rem, 4vw, 2.4rem); color: var(--text-1); margin-bottom: 1rem; line-height:1.25; }
+    .post-tags { display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:2.5rem; }
+    .post-body p { color: var(--text-2); font-size: 1.05rem; margin-bottom: 1.25rem; }
+    .post-body h2 { font-family: var(--font-hud); font-size:1.2rem; color: var(--text-1); margin: 2.25rem 0 1rem; }
+    .post-body code { font-family: var(--font-mono); background: rgba(255,255,255,0.06); padding: .1rem .4rem; border-radius: 3px; color: var(--text-code); }
+    .post-body ul { color: var(--text-2); margin: 0 0 1.25rem 1.25rem; list-style: disc; }
+    .post-kpis { display:flex; gap:1.5rem; margin: 1.5rem 0 2rem; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+  <div class="crt-scanlines" aria-hidden="true"></div>
+  <div class="crt-vignette" aria-hidden="true"></div>
+
+  <main class="post-wrap">
+    <a href="/index.html#projects" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Case Files</a>
+    <div class="post-meta">PRJ-2024-005 · INFRA BUILD · LIVE</div>
+    <h1 class="post-title">ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes</h1>
+    <div class="post-tags">
+      <span class="ict">Docker</span>
+      <span class="ict">Kubernetes</span>
+      <span class="ict">ownCloud</span>
+      <span class="ict">MinIO</span>
+      <span class="ict">Nginx</span>
+      <span class="ict">S3 API</span>
+    </div>
+    <div class="post-body">
+      <p>This project deployed a full self-hosted ownCloud instance backed by MinIO S3-compatible object storage, first on Docker Compose and later migrated to Kubernetes, currently running with 2TB of storage on the S3 backend.</p>
+      <div class="post-kpis"><div class="kpi"><span class="kpi-val">2TB</span><span class="kpi-label">Storage</span></div><div class="kpi"><span class="kpi-val">S3</span><span class="kpi-label">Backend</span></div><div class="kpi"><span class="kpi-val">K8s</span><span class="kpi-label">Orchestrated</span></div></div>
+      <h2>Challenges</h2>
+      <p>ownCloud's Docker entrypoint rewrites <code>config.php</code> on every container restart, which conflicts with any manual configuration for S3 storage. I worked around this with a persistent override strategy rather than editing the generated config directly. The <code>files_primary_s3</code> app also had an incomplete vendor directory, requiring manual dependency resolution for missing GuzzleHttp/PSR-7 classes, plus cleanup of duplicate config key conflicts that surfaced during the migration to Kubernetes.</p>
+      <h2>Result</h2>
+      <p>The stack now runs live on the k3s cluster, with MinIO handling all object storage behind ownCloud's file layer, fronted by Nginx.</p>
+    </div>
+  </main>
+</body>
+</html>

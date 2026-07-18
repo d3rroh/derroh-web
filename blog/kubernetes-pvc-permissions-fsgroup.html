@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="/assets/img/favicon.ico" sizes="any"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon-180.png"/>
+  <meta name="description" content="The definitive fix for Laravel storage permission errors in Kubernetes — why fsGroup: 33 works, when you need an init container with runAsUser: 0, and making entrypoints self-healing."/>
+  <meta name="author" content="Derrick"/>
+  <link rel="canonical" href="https://derroh.co.ke/blog/kubernetes-pvc-permissions-fsgroup.html"/>
+  <title>Kubernetes PVC Permissions: fsGroup, Init Containers, and www-data | Derrick — DevOps Command Center</title>
+
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kubernetes PVC Permissions: fsGroup, Init Containers, and www-data"/>
+  <meta property="og:description" content="The definitive fix for Laravel storage permission errors in Kubernetes — why fsGroup: 33 works, when you need an init container with runAsUser: 0, and making entrypoints self-healing."/>
+  <meta property="og:url" content="https://derroh.co.ke/blog/kubernetes-pvc-permissions-fsgroup.html"/>
+  <meta property="og:site_name" content="Derrick — DevOps Command Center"/>
+  <meta property="og:locale" content="en_KE"/>
+
+  <meta name="twitter:card" content="summary"/>
+  <meta name="twitter:title" content="Kubernetes PVC Permissions: fsGroup, Init Containers, and www-data"/>
+  <meta name="twitter:description" content="The definitive fix for Laravel storage permission errors in Kubernetes — why fsGroup: 33 works, when you need an init container with runAsUser: 0, and making entrypoints self-healing."/>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Kubernetes PVC Permissions: fsGroup, Init Containers, and www-data",
+    "description": "The definitive fix for Laravel storage permission errors in Kubernetes — why fsGroup: 33 works, when you need an init container with runAsUser: 0, and making entrypoints self-healing.",
+    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
+    "publisher": { "@type": "Person", "name": "Derrick" },
+    "mainEntityOfPage": "https://derroh.co.ke/blog/kubernetes-pvc-permissions-fsgroup.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/assets/site.css"/>
+  <style>
+    .post-wrap { max-width: 820px; margin: 0 auto; padding: 8rem 1.25rem 5rem; }
+    .post-back { display:inline-flex; align-items:center; gap:.5rem; font-family:var(--font-mono); font-size:.8rem; color:var(--text-2); margin-bottom:2rem; }
+    .post-back:hover { color: var(--red); }
+    .post-meta { font-family: var(--font-mono); font-size:.75rem; color: var(--text-3); letter-spacing:.05em; margin-bottom:.75rem; }
+    .post-title { font-family: var(--font-hud); font-size: clamp(1.5rem, 4vw, 2.4rem); color: var(--text-1); margin-bottom: 1rem; line-height:1.25; }
+    .post-tags { display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:2.5rem; }
+    .post-body p { color: var(--text-2); font-size: 1.05rem; margin-bottom: 1.25rem; }
+    .post-body h2 { font-family: var(--font-hud); font-size:1.2rem; color: var(--text-1); margin: 2.25rem 0 1rem; }
+    .post-body code { font-family: var(--font-mono); background: rgba(255,255,255,0.06); padding: .1rem .4rem; border-radius: 3px; color: var(--text-code); }
+    .post-body ul { color: var(--text-2); margin: 0 0 1.25rem 1.25rem; list-style: disc; }
+    .post-kpis { display:flex; gap:1.5rem; margin: 1.5rem 0 2rem; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+  <div class="crt-scanlines" aria-hidden="true"></div>
+  <div class="crt-vignette" aria-hidden="true"></div>
+
+  <main class="post-wrap">
+    <a href="/index.html#blog" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Logs</a>
+    <div class="post-meta">May 28, 2026 · kubernetes · pvc · laravel · fsgroup</div>
+    <h1 class="post-title">Kubernetes PVC Permissions: fsGroup, Init Containers, and www-data</h1>
+    <div class="post-tags">
+      <span class="ict">kubernetes</span>
+      <span class="ict">pvc</span>
+      <span class="ict">laravel</span>
+      <span class="ict">fsgroup</span>
+    </div>
+    <div class="post-body">
+      <p>Laravel storage permission errors are one of the most common headaches when moving a PHP app onto a Kubernetes PersistentVolumeClaim. The web server runs as <code>www-data</code>, but volumes mounted into a pod don't automatically carry the right ownership.</p>
+      <h2>The fsGroup Fix</h2>
+      <p>Setting <code>fsGroup: 33</code> (the standard <code>www-data</code> GID on Debian-based images) in the pod's <code>securityContext</code> tells Kubernetes to change group ownership of the mounted volume to match, so the web server process can actually write to <code>storage/</code> and <code>bootstrap/cache/</code> without manual chown steps.</p>
+      <h2>When fsGroup Isn't Enough</h2>
+      <p>On some storage backends, <code>fsGroup</code> alone doesn't retroactively fix ownership on a volume that already has files with the wrong permissions. In those cases, an init container running as <code>runAsUser: 0</code> that does an explicit <code>chown -R</code> pass before the main container starts is the reliable fallback.</p>
+      <h2>Making It Self-Healing</h2>
+      <p>The last piece is making sure the container's entrypoint script re-asserts correct permissions on every startup rather than assuming they'll persist — so a pod restart, rescheduling to a different node, or a fresh PVC mount doesn't reintroduce the same permission errors.</p>
+    </div>
+  </main>
+</body>
+</html>

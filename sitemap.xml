@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://derroh.co.ke/</loc></url>
+  <url><loc>https://derroh.co.ke/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://derroh.co.ke/blog/migrating-docker-compose-to-k3s.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/blog/kubernetes-pvc-permissions-fsgroup.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/blog/detecting-opcache-webshells-wordpress.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/blog/cicd-pipeline-github-actions-docker-kubectl.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/blog/zero-downtime-imap-migration-imapsync.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/blog/dovecot-disable-plaintext-auth-fix.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/blog/linux-server-hardening-checklist.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/case-studies/cpanel-rce-malware-multi-server-breach.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/case-studies/ssh-compromise-backdoor-removal.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/case-studies/almalinux-vps-gateway-recovery.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/case-studies/wordpress-opcache-webshell-remediation.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/case-studies/centos-cryptominer-eradication.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/case-studies/owncloud-minio-s3-kubernetes-stack.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/case-studies/zoho-to-cpanel-imap-migration.html</loc><priority>0.7</priority></url>
+  <url><loc>https://derroh.co.ke/case-studies/nodejs-cpanel-litespeed-deployment.html</loc><priority>0.7</priority></url>
 </urlset>

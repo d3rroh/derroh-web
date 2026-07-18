@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="/assets/img/favicon.ico" sizes="any"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon-180.png"/>
+  <meta name="description" content="Migrating a full mailbox from Zoho to cPanel Dovecot with zero message loss — folder mapping, flag preservation, pre/post count validation, and the MX cutover timing that keeps users unaware."/>
+  <meta name="author" content="Derrick"/>
+  <link rel="canonical" href="https://derroh.co.ke/blog/zero-downtime-imap-migration-imapsync.html"/>
+  <title>Zero-Downtime IMAP Migration with imapsync | Derrick — DevOps Command Center</title>
+
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Zero-Downtime IMAP Migration with imapsync"/>
+  <meta property="og:description" content="Migrating a full mailbox from Zoho to cPanel Dovecot with zero message loss — folder mapping, flag preservation, pre/post count validation, and the MX cutover timing that keeps users unaware."/>
+  <meta property="og:url" content="https://derroh.co.ke/blog/zero-downtime-imap-migration-imapsync.html"/>
+  <meta property="og:site_name" content="Derrick — DevOps Command Center"/>
+  <meta property="og:locale" content="en_KE"/>
+
+  <meta name="twitter:card" content="summary"/>
+  <meta name="twitter:title" content="Zero-Downtime IMAP Migration with imapsync"/>
+  <meta name="twitter:description" content="Migrating a full mailbox from Zoho to cPanel Dovecot with zero message loss — folder mapping, flag preservation, pre/post count validation, and the MX cutover timing that keeps users unaware."/>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Zero-Downtime IMAP Migration with imapsync",
+    "description": "Migrating a full mailbox from Zoho to cPanel Dovecot with zero message loss — folder mapping, flag preservation, pre/post count validation, and the MX cutover timing that keeps users unaware.",
+    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
+    "publisher": { "@type": "Person", "name": "Derrick" },
+    "mainEntityOfPage": "https://derroh.co.ke/blog/zero-downtime-imap-migration-imapsync.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/assets/site.css"/>
+  <style>
+    .post-wrap { max-width: 820px; margin: 0 auto; padding: 8rem 1.25rem 5rem; }
+    .post-back { display:inline-flex; align-items:center; gap:.5rem; font-family:var(--font-mono); font-size:.8rem; color:var(--text-2); margin-bottom:2rem; }
+    .post-back:hover { color: var(--red); }
+    .post-meta { font-family: var(--font-mono); font-size:.75rem; color: var(--text-3); letter-spacing:.05em; margin-bottom:.75rem; }
+    .post-title { font-family: var(--font-hud); font-size: clamp(1.5rem, 4vw, 2.4rem); color: var(--text-1); margin-bottom: 1rem; line-height:1.25; }
+    .post-tags { display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:2.5rem; }
+    .post-body p { color: var(--text-2); font-size: 1.05rem; margin-bottom: 1.25rem; }
+    .post-body h2 { font-family: var(--font-hud); font-size:1.2rem; color: var(--text-1); margin: 2.25rem 0 1rem; }
+    .post-body code { font-family: var(--font-mono); background: rgba(255,255,255,0.06); padding: .1rem .4rem; border-radius: 3px; color: var(--text-code); }
+    .post-body ul { color: var(--text-2); margin: 0 0 1.25rem 1.25rem; list-style: disc; }
+    .post-kpis { display:flex; gap:1.5rem; margin: 1.5rem 0 2rem; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+  <div class="crt-scanlines" aria-hidden="true"></div>
+  <div class="crt-vignette" aria-hidden="true"></div>
+
+  <main class="post-wrap">
+    <a href="/index.html#blog" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Logs</a>
+    <div class="post-meta">Mar 31, 2026 · imapsync · email · dovecot · dns</div>
+    <h1 class="post-title">Zero-Downtime IMAP Migration with imapsync</h1>
+    <div class="post-tags">
+      <span class="ict">imapsync</span>
+      <span class="ict">email</span>
+      <span class="ict">dovecot</span>
+      <span class="ict">dns</span>
+    </div>
+    <div class="post-body">
+      <p><code>imapsync</code> is the tool of choice for mailbox migrations where zero message loss is non-negotiable — and getting a fully clean migration means treating folder mapping, flag preservation, and MX cutover timing as separate, deliberate steps rather than a single sync-and-hope operation.</p>
+      <h2>Folder Mapping &amp; Flags</h2>
+      <p>Source and destination folder structures rarely match exactly out of the box, so mapping needs to be explicit rather than assumed. Message flags — read/unread, flagged, replied — need to survive the sync too, or the user opens their new inbox to a pile of everything marked unread.</p>
+      <h2>Validation</h2>
+      <p>Before calling a migration complete, I always run a pre/post message count comparison per folder. Any mismatch gets investigated before cutover, not after.</p>
+      <h2>The MX Cutover</h2>
+      <p>Once the migration is validated, the DNS MX cutover is the moment that actually matters to the end user. Timing it right — after a final delta sync to catch anything that arrived during migration — is what makes the whole process invisible to them.</p>
+    </div>
+  </main>
+</body>
+</html>

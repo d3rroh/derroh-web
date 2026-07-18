@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://derroh.co.ke/sitemap.xml

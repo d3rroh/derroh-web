@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="/assets/img/favicon.ico" sizes="any"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon-180.png"/>
+  <meta name="description" content="SSH key enforcement, fail2ban tuning, kernel parameter hardening, unattended-upgrades, and CIS benchmark essentials — the checklist every production server needs before going live."/>
+  <meta name="author" content="Derrick"/>
+  <link rel="canonical" href="https://derroh.co.ke/blog/linux-server-hardening-checklist.html"/>
+  <title>Hardening Your Linux Server: A Practical Checklist | Derrick — DevOps Command Center</title>
+
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Hardening Your Linux Server: A Practical Checklist"/>
+  <meta property="og:description" content="SSH key enforcement, fail2ban tuning, kernel parameter hardening, unattended-upgrades, and CIS benchmark essentials — the checklist every production server needs before going live."/>
+  <meta property="og:url" content="https://derroh.co.ke/blog/linux-server-hardening-checklist.html"/>
+  <meta property="og:site_name" content="Derrick — DevOps Command Center"/>
+  <meta property="og:locale" content="en_KE"/>
+
+  <meta name="twitter:card" content="summary"/>
+  <meta name="twitter:title" content="Hardening Your Linux Server: A Practical Checklist"/>
+  <meta name="twitter:description" content="SSH key enforcement, fail2ban tuning, kernel parameter hardening, unattended-upgrades, and CIS benchmark essentials — the checklist every production server needs before going live."/>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Hardening Your Linux Server: A Practical Checklist",
+    "description": "SSH key enforcement, fail2ban tuning, kernel parameter hardening, unattended-upgrades, and CIS benchmark essentials — the checklist every production server needs before going live.",
+    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
+    "publisher": { "@type": "Person", "name": "Derrick" },
+    "mainEntityOfPage": "https://derroh.co.ke/blog/linux-server-hardening-checklist.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/assets/site.css"/>
+  <style>
+    .post-wrap { max-width: 820px; margin: 0 auto; padding: 8rem 1.25rem 5rem; }
+    .post-back { display:inline-flex; align-items:center; gap:.5rem; font-family:var(--font-mono); font-size:.8rem; color:var(--text-2); margin-bottom:2rem; }
+    .post-back:hover { color: var(--red); }
+    .post-meta { font-family: var(--font-mono); font-size:.75rem; color: var(--text-3); letter-spacing:.05em; margin-bottom:.75rem; }
+    .post-title { font-family: var(--font-hud); font-size: clamp(1.5rem, 4vw, 2.4rem); color: var(--text-1); margin-bottom: 1rem; line-height:1.25; }
+    .post-tags { display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:2.5rem; }
+    .post-body p { color: var(--text-2); font-size: 1.05rem; margin-bottom: 1.25rem; }
+    .post-body h2 { font-family: var(--font-hud); font-size:1.2rem; color: var(--text-1); margin: 2.25rem 0 1rem; }
+    .post-body code { font-family: var(--font-mono); background: rgba(255,255,255,0.06); padding: .1rem .4rem; border-radius: 3px; color: var(--text-code); }
+    .post-body ul { color: var(--text-2); margin: 0 0 1.25rem 1.25rem; list-style: disc; }
+    .post-kpis { display:flex; gap:1.5rem; margin: 1.5rem 0 2rem; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+  <div class="crt-scanlines" aria-hidden="true"></div>
+  <div class="crt-vignette" aria-hidden="true"></div>
+
+  <main class="post-wrap">
+    <a href="/index.html#blog" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Logs</a>
+    <div class="post-meta">Feb 21, 2026 · linux-admin · security · ssh · hardening</div>
+    <h1 class="post-title">Hardening Your Linux Server: A Practical Checklist</h1>
+    <div class="post-tags">
+      <span class="ict">linux-admin</span>
+      <span class="ict">security</span>
+      <span class="ict">ssh</span>
+      <span class="ict">hardening</span>
+    </div>
+    <div class="post-body">
+      <p>Before any server goes into production, it goes through the same hardening checklist. None of these steps are individually exotic, but skipping any one of them is consistently how servers get compromised.</p>
+      <h2>SSH</h2>
+      <p>Key-based authentication enforced, password auth disabled entirely, root login disabled, and a non-standard port where it makes sense for the environment.</p>
+      <h2>fail2ban</h2>
+      <p>Tuned ban thresholds and jail times appropriate to the service mix on the box — mail servers and web servers see very different attack patterns and need different fail2ban jail configs, not a one-size-fits-all default.</p>
+      <h2>Kernel Parameters</h2>
+      <p>Sysctl hardening covering things like disabling IP source routing, enabling SYN cookies, and restricting core dumps — the standard set of network and process hardening flags relevant to a public-facing server.</p>
+      <h2>Unattended Upgrades &amp; CIS Benchmarks</h2>
+      <p>Security patches applied automatically rather than relying on manual patching cadence, plus a pass against relevant CIS benchmark essentials for the distro in use — covering file permission baselines, unnecessary service removal, and audit logging.</p>
+    </div>
+  </main>
+</body>
+</html>

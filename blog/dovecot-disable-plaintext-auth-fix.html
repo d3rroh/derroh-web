@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="/assets/img/favicon.ico" sizes="any"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon-180.png"/>
+  <meta name="description" content="Why editing dovecot.conf inside a running docker-mailserver container loses the fix on restart, and the correct override mechanism using user-patches.sh to make it stick permanently."/>
+  <meta name="author" content="Derrick"/>
+  <link rel="canonical" href="https://derroh.co.ke/blog/dovecot-disable-plaintext-auth-fix.html"/>
+  <title>Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts | Derrick — DevOps Command Center</title>
+
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts"/>
+  <meta property="og:description" content="Why editing dovecot.conf inside a running docker-mailserver container loses the fix on restart, and the correct override mechanism using user-patches.sh to make it stick permanently."/>
+  <meta property="og:url" content="https://derroh.co.ke/blog/dovecot-disable-plaintext-auth-fix.html"/>
+  <meta property="og:site_name" content="Derrick — DevOps Command Center"/>
+  <meta property="og:locale" content="en_KE"/>
+
+  <meta name="twitter:card" content="summary"/>
+  <meta name="twitter:title" content="Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts"/>
+  <meta name="twitter:description" content="Why editing dovecot.conf inside a running docker-mailserver container loses the fix on restart, and the correct override mechanism using user-patches.sh to make it stick permanently."/>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts",
+    "description": "Why editing dovecot.conf inside a running docker-mailserver container loses the fix on restart, and the correct override mechanism using user-patches.sh to make it stick permanently.",
+    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
+    "publisher": { "@type": "Person", "name": "Derrick" },
+    "mainEntityOfPage": "https://derroh.co.ke/blog/dovecot-disable-plaintext-auth-fix.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/assets/site.css"/>
+  <style>
+    .post-wrap { max-width: 820px; margin: 0 auto; padding: 8rem 1.25rem 5rem; }
+    .post-back { display:inline-flex; align-items:center; gap:.5rem; font-family:var(--font-mono); font-size:.8rem; color:var(--text-2); margin-bottom:2rem; }
+    .post-back:hover { color: var(--red); }
+    .post-meta { font-family: var(--font-mono); font-size:.75rem; color: var(--text-3); letter-spacing:.05em; margin-bottom:.75rem; }
+    .post-title { font-family: var(--font-hud); font-size: clamp(1.5rem, 4vw, 2.4rem); color: var(--text-1); margin-bottom: 1rem; line-height:1.25; }
+    .post-tags { display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:2.5rem; }
+    .post-body p { color: var(--text-2); font-size: 1.05rem; margin-bottom: 1.25rem; }
+    .post-body h2 { font-family: var(--font-hud); font-size:1.2rem; color: var(--text-1); margin: 2.25rem 0 1rem; }
+    .post-body code { font-family: var(--font-mono); background: rgba(255,255,255,0.06); padding: .1rem .4rem; border-radius: 3px; color: var(--text-code); }
+    .post-body ul { color: var(--text-2); margin: 0 0 1.25rem 1.25rem; list-style: disc; }
+    .post-kpis { display:flex; gap:1.5rem; margin: 1.5rem 0 2rem; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+  <div class="crt-scanlines" aria-hidden="true"></div>
+  <div class="crt-vignette" aria-hidden="true"></div>
+
+  <main class="post-wrap">
+    <a href="/index.html#blog" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Logs</a>
+    <div class="post-meta">Mar 8, 2026 · dovecot · docker-mailserver · email · containers</div>
+    <h1 class="post-title">Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts</h1>
+    <div class="post-tags">
+      <span class="ict">dovecot</span>
+      <span class="ict">docker-mailserver</span>
+      <span class="ict">email</span>
+      <span class="ict">containers</span>
+    </div>
+    <div class="post-body">
+      <p>A common mistake when hardening a <code>docker-mailserver</code> instance is editing <code>dovecot.conf</code> directly inside the running container — the fix works immediately, then silently disappears the next time the container restarts or is recreated from the image.</p>
+      <h2>Why It Disappears</h2>
+      <p>Container filesystem changes outside a mounted volume don't persist across container recreation. <code>docker-mailserver</code> regenerates or overwrites parts of its config from the base image on startup, so a manual in-container edit to <code>disable_plaintext_auth</code> gets clobbered the moment the container restarts.</p>
+      <h2>The Correct Fix</h2>
+      <p>The reliable approach is using <code>docker-mailserver</code>'s supported override mechanism — a <code>user-patches.sh</code> script that runs on every container start and re-applies the configuration change idempotently, rather than relying on a manual edit surviving. This makes the fix part of the container's startup process instead of a one-time change that silently regresses.</p>
+    </div>
+  </main>
+</body>
+</html>
