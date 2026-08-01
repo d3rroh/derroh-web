@@ -3,55 +3,9 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Derrick — DevOps Engineer & Linux Systems Administrator | Kenya</title>
-  <meta name="description" content="Derrick is a DevOps Engineer and Linux Systems Administrator based in Nairobi, Kenya, specializing in Kubernetes, Docker, CI/CD pipelines, and Linux server security. 5+ years managing production infrastructure and resolving critical security incidents."/>
-  <meta name="keywords" content="DevOps Engineer, Linux Systems Administrator, Kubernetes, Docker, CI/CD, Nairobi Kenya, server security, incident response, k3s, DevOps Kenya"/>
-  <meta name="author" content="Derrick Abila"/>
-  <meta name="robots" content="index, follow, max-image-preview:large"/>
-  <link rel="canonical" href="https://derroh.co.ke/"/>
-
-  <!-- Open Graph / Facebook / LinkedIn -->
-  <meta property="og:type" content="profile"/>
-  <meta property="og:url" content="https://derroh.co.ke/"/>
-  <meta property="og:title" content="Derrick — DevOps Engineer & Linux Systems Administrator"/>
-  <meta property="og:description" content="DevOps Engineer and Linux Systems Administrator based in Nairobi, Kenya — Kubernetes, Docker, CI/CD, and Linux server security. 5+ years, 50+ servers managed, 99.9% uptime."/>
-  <meta property="og:image" content="https://derroh.co.ke/og-image.png"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta property="og:site_name" content="Derrick — DevOps Command Center"/>
-  <meta property="og:locale" content="en_KE"/>
-  <meta property="profile:first_name" content="Derrick"/>
-  <meta property="profile:username" content="d3rroh"/>
-
-  <!-- Twitter / X Card -->
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Derrick — DevOps Engineer & Linux Systems Administrator"/>
-  <meta name="twitter:description" content="DevOps Engineer and Linux Systems Administrator based in Nairobi, Kenya — Kubernetes, Docker, CI/CD, and Linux server security."/>
-  <meta name="twitter:image" content="https://derroh.co.ke/og-image.png"/>
-
-  <!-- Structured data (Person) for rich results / knowledge panel eligibility -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Derrick Abila",
-    "url": "https://derroh.co.ke/",
-    "image": "https://derroh.co.ke/android-chrome-512x512.png",
-    "jobTitle": "DevOps Engineer & Linux Systems Administrator",
-    "description": "DevOps Engineer and Linux Systems Administrator specializing in Kubernetes, Docker, CI/CD pipelines, and Linux server security.",
-    "email": "mailto:info@derroh.co.ke",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Nairobi",
-      "addressCountry": "KE"
-    },
-    "sameAs": [
-      "https://github.com/d3rroh",
-      "https://ke.linkedin.com/in/derrick-abila-a3b985204"
-    ],
-    "knowsAbout": ["Kubernetes", "Docker", "CI/CD", "Linux System Administration", "Cloud Infrastructure", "Network Security", "Incident Response"]
-  }
-  </script>
+  <meta name="description" content="Derrick – DevOps Engineer & Linux Systems Administrator. Command Center Portfolio."/>
+  <meta name="author" content="Derrick"/>
+  <title>DERRICK-OPS // DevOps Command Center</title>
 
   <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
@@ -231,11 +185,7 @@ button { font-family: inherit; }
 
 /* ── PANEL COMPONENT ──────────────────────────────────────────── */
 .panel {
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.52);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  background: var(--bg-panel);
   border: 1px solid var(--border-2);
   border-radius: var(--r-lg);
   overflow: hidden;
@@ -1075,11 +1025,7 @@ button { font-family: inherit; }
 }
 
 .gauge-panel {
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.5);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  background: var(--bg-panel);
   border: 1px solid var(--border-2);
   border-radius: var(--r-lg);
   padding: 1rem;
@@ -1640,7 +1586,6 @@ button { font-family: inherit; }
 .log-info  { color: var(--blue);  background: rgba(64,196,255,0.08); border: 1px solid rgba(64,196,255,0.2); }
 .log-warn  { color: var(--amber); background: rgba(255,171,0,0.08);  border: 1px solid rgba(255,171,0,0.2); }
 .log-debug { color: var(--text-3); background: rgba(255,255,255,0.04); border: 1px solid var(--border-2); }
-.log-crit  { color: var(--red-bright); background: var(--red-glow); border: 1px solid var(--red-border); }
 
 .log-src {
   font-family: var(--font-mono);
@@ -2109,11 +2054,7 @@ button { font-family: inherit; }
 /* ── BASE INCIDENT CARD ───────────────────────────────────────── */
 .ic {
   position: relative;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.5);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  background: var(--bg-panel);
   border: 1px solid var(--border-2);
   border-radius: var(--r-lg);
   padding: 1.5rem;
@@ -2645,7 +2586,7 @@ button { font-family: inherit; }
 ═══════════════════════════════════════════════════════════════ */
 .gauge-panel--featured {
   border-color: rgba(64,196,255,0.2);
-  background: linear-gradient(135deg, rgba(11,26,31,0.5) 0%, rgba(64,196,255,0.07) 100%);
+  background: linear-gradient(135deg, var(--bg-panel) 0%, rgba(64,196,255,0.03) 100%);
 }
 
 .gauge-panel--featured:hover {
@@ -2934,11 +2875,7 @@ button { font-family: inherit; }
 
 .topo-info-panel {
   flex: 0 0 260px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.5);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: 1.1rem;
@@ -3046,11 +2983,7 @@ button { font-family: inherit; }
 
 .globe-info-panel {
   flex: 0 0 260px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.5);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: 1.1rem;
@@ -3113,11 +3046,7 @@ button { font-family: inherit; }
   align-items: center;
   gap: 0.6rem;
   padding: 1.1rem 1rem;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.5);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  background: var(--bg-panel);
   border: 1px solid var(--border-2);
   border-radius: var(--r-lg);
   min-width: 130px;
@@ -3139,7 +3068,7 @@ button { font-family: inherit; }
 
 .pf-stage--final {
   border-color: rgba(0,230,118,0.35);
-  background: linear-gradient(135deg, rgba(11,26,31,0.5), rgba(0,230,118,0.08));
+  background: linear-gradient(135deg, var(--bg-panel), rgba(0,230,118,0.04));
   animation: final-glow 3s ease-in-out infinite;
 }
 
@@ -5393,158 +5322,6 @@ button { font-family: inherit; }
               <a href="#" class="log-read-more" aria-label="Read: Linux Hardening">cat post <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
             </article>
 
-            <article class="log-entry reveal" aria-labelledby="log-8">
-              <div class="log-meta">
-                <span class="log-ts">Jan 30 03:52:18</span>
-                <span class="log-sev log-crit">CRIT</span>
-                <span class="log-src">case-files.derrick</span>
-              </div>
-              <h3 id="log-8" class="log-title">
-                <a href="#ic-cve">Case File INC-2026-001 — cPanel RCE Malware Attack &amp; Multi-Server Breach Response</a>
-              </h3>
-              <p class="log-excerpt">Active exploitation of CVE-2026-29205 across multiple shared hosting accounts — forensic analysis across 12+ servers, malicious payload removal, credential rotation, and full client-notification documentation. Contained in under 4 hours with zero data loss.</p>
-              <div class="log-tags">
-                <span class="log-tag">cpanel-whm</span>
-                <span class="log-tag">cve-2026-29205</span>
-                <span class="log-tag">forensics</span>
-                <span class="log-tag">incident-response</span>
-              </div>
-              <a href="#ic-cve" class="log-read-more" aria-label="View case file: cPanel RCE">view case file <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </article>
-
-            <article class="log-entry reveal" aria-labelledby="log-9">
-              <div class="log-meta">
-                <span class="log-ts">Jan 14 21:07:44</span>
-                <span class="log-sev log-crit">CRIT</span>
-                <span class="log-src">case-files.derrick</span>
-              </div>
-              <h3 id="log-9" class="log-title">
-                <a href="#ic-ssh">Case File INC-2025-004 — Active SSH Compromise &amp; Backdoor Removal</a>
-              </h3>
-              <p class="log-excerpt">Discovered unauthorized SSH keys and a backdoored /tmp/.bashrc planted by an intruder. Evicted the attacker, audited every session, rotated all keys, and hardened the SSH config against re-entry.</p>
-              <div class="log-tags">
-                <span class="log-tag">ssh</span>
-                <span class="log-tag">forensics</span>
-                <span class="log-tag">iptables</span>
-                <span class="log-tag">fail2ban</span>
-              </div>
-              <a href="#ic-ssh" class="log-read-more" aria-label="View case file: SSH Compromise">view case file <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </article>
-
-            <article class="log-entry reveal" aria-labelledby="log-10">
-              <div class="log-meta">
-                <span class="log-ts">Dec 19 04:38:02</span>
-                <span class="log-sev log-crit">CRIT</span>
-                <span class="log-src">case-files.derrick</span>
-              </div>
-              <h3 id="log-10" class="log-title">
-                <a href="#ic-crypto">Case File INC-2025-003 — CentOS Cryptominer Eradication &amp; Root Compromise Cleanup</a>
-              </h3>
-              <p class="log-excerpt">Identified and eradicated CSPUpdate cryptominer binaries with malicious cron.d persistence on a compromised CentOS server. Traced the root-level access, removed every foothold, and hardened the system end to end.</p>
-              <div class="log-tags">
-                <span class="log-tag">centos</span>
-                <span class="log-tag">cryptominer</span>
-                <span class="log-tag">rootkit</span>
-                <span class="log-tag">rkhunter</span>
-              </div>
-              <a href="#ic-crypto" class="log-read-more" aria-label="View case file: Cryptominer Eradication">view case file <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </article>
-
-            <article class="log-entry reveal" aria-labelledby="log-11">
-              <div class="log-meta">
-                <span class="log-ts">Dec 02 16:11:29</span>
-                <span class="log-sev log-warn">HIGH</span>
-                <span class="log-src">case-files.derrick</span>
-              </div>
-              <h3 id="log-11" class="log-title">
-                <a href="#ic-opcache">Case File INC-2025-002 — WordPress OPcache-Disguised Webshell Remediation</a>
-              </h3>
-              <p class="log-excerpt">Discovered and removed a sophisticated PHP webshell disguised as a legitimate OPcache file across 3 sites. Full filesystem audit, persistent backdoor removal, and permission hardening to close the vector for good.</p>
-              <div class="log-tags">
-                <span class="log-tag">wordpress</span>
-                <span class="log-tag">php-opcache</span>
-                <span class="log-tag">malware-forensics</span>
-                <span class="log-tag">clamav</span>
-              </div>
-              <a href="#ic-opcache" class="log-read-more" aria-label="View case file: OPcache Webshell">view case file <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </article>
-
-            <article class="log-entry reveal" aria-labelledby="log-12">
-              <div class="log-meta">
-                <span class="log-ts">Nov 18 09:26:57</span>
-                <span class="log-sev log-info">INFO</span>
-                <span class="log-src">case-files.derrick</span>
-              </div>
-              <h3 id="log-12" class="log-title">
-                <a href="#ic-net">Case File PRJ-2025-007 — AlmaLinux VPS Non-Standard Gateway Recovery</a>
-              </h3>
-              <p class="log-excerpt">Restored networking on an OVH/Hetzner VPS running a non-standard gateway configuration using raw ip commands, then engineered systemd-networkd persistence so the fix survives every reboot.</p>
-              <div class="log-tags">
-                <span class="log-tag">almalinux</span>
-                <span class="log-tag">systemd-networkd</span>
-                <span class="log-tag">ip-route</span>
-                <span class="log-tag">ovh</span>
-              </div>
-              <a href="#ic-net" class="log-read-more" aria-label="View case file: Gateway Recovery">view case file <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </article>
-
-            <article class="log-entry reveal" aria-labelledby="log-13">
-              <div class="log-meta">
-                <span class="log-ts">Oct 25 12:44:15</span>
-                <span class="log-sev log-info">INFO</span>
-                <span class="log-src">case-files.derrick</span>
-              </div>
-              <h3 id="log-13" class="log-title">
-                <a href="#ic-imap">Case File PRJ-2025-006 — Zero-Loss IMAP Migration: Zoho Mail → cPanel via imapsync</a>
-              </h3>
-              <p class="log-excerpt">Orchestrated a complete mailbox migration from Zoho Mail to a cPanel Dovecot mail server using imapsync — every folder migrated, message flags preserved, pre/post counts validated, and a live DNS MX cutover with zero loss.</p>
-              <div class="log-tags">
-                <span class="log-tag">imapsync</span>
-                <span class="log-tag">zoho-mail</span>
-                <span class="log-tag">dovecot</span>
-                <span class="log-tag">dns-mx</span>
-              </div>
-              <a href="#ic-imap" class="log-read-more" aria-label="View case file: IMAP Migration">view case file <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </article>
-
-            <article class="log-entry reveal" aria-labelledby="log-14">
-              <div class="log-meta">
-                <span class="log-ts">Oct 09 18:03:41</span>
-                <span class="log-sev log-info">INFO</span>
-                <span class="log-src">case-files.derrick</span>
-              </div>
-              <h3 id="log-14" class="log-title">
-                <a href="#ic-node">Case File PRJ-2025-008 — Node.js App Deployment on cPanel LiteSpeed</a>
-              </h3>
-              <p class="log-excerpt">Resolved a cascade of Node.js deployment failures on cPanel/LiteSpeed shared hosting: ESM/CJS module conflicts, process limits blocking npm install, hardcoded localhost API URLs, and Express 5 route syntax breaks.</p>
-              <div class="log-tags">
-                <span class="log-tag">nodejs</span>
-                <span class="log-tag">litespeed</span>
-                <span class="log-tag">vite</span>
-                <span class="log-tag">esm-cjs</span>
-              </div>
-              <a href="#ic-node" class="log-read-more" aria-label="View case file: Node.js Deployment">view case file <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </article>
-
-            <article class="log-entry reveal" aria-labelledby="log-15">
-              <div class="log-meta">
-                <span class="log-ts">Sep 21 07:59:33</span>
-                <span class="log-sev log-info">INFO</span>
-                <span class="log-src">case-files.derrick</span>
-              </div>
-              <h3 id="log-15" class="log-title">
-                <a href="#ic-owncloud">Case File PRJ-2024-005 — ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes</a>
-              </h3>
-              <p class="log-excerpt">Deployed a full self-hosted ownCloud instance backed by MinIO S3-compatible storage, running across Docker Compose and later migrated to Kubernetes. Resolved entrypoint config rewrites, GuzzleHttp dependency gaps, and duplicate config conflicts.</p>
-              <div class="log-tags">
-                <span class="log-tag">docker</span>
-                <span class="log-tag">kubernetes</span>
-                <span class="log-tag">owncloud</span>
-                <span class="log-tag">minio</span>
-              </div>
-              <a href="#ic-owncloud" class="log-read-more" aria-label="View case file: ownCloud Stack">view case file <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </article>
-
             <div class="log-entry log-pending">
               <div class="log-meta">
                 <span class="log-ts" id="log-ts-live">loading...</span>
@@ -5614,18 +5391,18 @@ button { font-family: inherit; }
                     <span class="ch-val">info@derroh.co.ke</span>
                   </div>
                 </a>
-                <a href="https://github.com/d3rroh" class="channel-btn" aria-label="GitHub profile" target="_blank" rel="noopener noreferrer">
+                <a href="#" class="channel-btn" aria-label="GitHub profile" rel="noopener noreferrer">
                   <i class="fab fa-github" aria-hidden="true"></i>
                   <div>
                     <span class="ch-label">GITHUB</span>
-                    <span class="ch-val">github.com/d3rroh</span>
+                    <span class="ch-val">github.com/derroh</span>
                   </div>
                 </a>
-                <a href="https://ke.linkedin.com/in/derrick-abila-a3b985204" class="channel-btn" aria-label="LinkedIn profile" target="_blank" rel="noopener noreferrer">
+                <a href="#" class="channel-btn" aria-label="LinkedIn profile" rel="noopener noreferrer">
                   <i class="fab fa-linkedin" aria-hidden="true"></i>
                   <div>
                     <span class="ch-label">LINKEDIN</span>
-                    <span class="ch-val">linkedin.com/in/derrick-abila</span>
+                    <span class="ch-val">linkedin.com/in/derroh</span>
                   </div>
                 </a>
               </div>
