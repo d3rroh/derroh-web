@@ -1,0 +1,23 @@
+# Derrick — DevOps Engineer & Linux Systems Administrator
+
+> DevOps Engineer and Linux Systems Administrator based in Nairobi, Kenya, specializing in Kubernetes, Docker, CI/CD pipelines, and Linux server security. This is an interactive portfolio ("command center") with live infrastructure demos, resolved security incident write-ups, and deployment tooling.
+
+Derrick has 5+ years of experience managing production infrastructure, has administered 50+ servers, and maintains 99.9% uptime across managed systems.
+
+## Sections
+
+- [About](https://derroh.co.ke/#about): Background, experience, and core competencies.
+- [Skills](https://derroh.co.ke/#skills): Skills presented as server-metric-style gauges across categories (containers, Linux, networking, security, scripting).
+- [Case Files](https://derroh.co.ke/#cases): Detailed write-ups of resolved security incidents and infrastructure projects — CVE remediation, SSH compromise response, cryptominer eradication, webshell removal, gateway recovery, self-hosted storage deployment, and zero-downtime mail migration.
+- [Live Stack](https://derroh.co.ke/#stack): Kubernetes cluster overview — namespaces, pods, services, and ingress routing table.
+- [Traffic Topology](https://derroh.co.ke/#topology): Interactive diagram tracing request flow from Cloudflare edge through Ingress, Services, Pods, and storage.
+- [Global Edge](https://derroh.co.ke/#globe): 3D map of the origin server, operator location, and Cloudflare edge network with deployment paths.
+- [CI/CD Pipeline](https://derroh.co.ke/#cicd): Deployment flow from GitHub commit through Docker build, registry push, and Kubernetes rollout.
+- [Live Sandbox](https://derroh.co.ke/#terminal): A safe, read-only terminal with prebuilt command output (kubectl, docker, systemctl, incident list) for demonstration purposes only — it does not execute real commands.
+- [System Logs](https://derroh.co.ke/#blog): Technical write-ups and case-file summaries, most recent first.
+- [Contact](https://derroh.co.ke/#contact): Contact form and direct links (email, GitHub, LinkedIn).
+
+## Optional
+
+- [GitHub](https://github.com/d3rroh): Source code and open-source contributions.
+- [LinkedIn](https://ke.linkedin.com/in/derrick-abila-a3b985204): Professional profile and work history.

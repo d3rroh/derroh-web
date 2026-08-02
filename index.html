@@ -9,6 +9,7 @@
   <meta name="author" content="Derrick Abila"/>
   <meta name="robots" content="index, follow, max-image-preview:large"/>
   <link rel="canonical" href="https://derroh.co.ke/"/>
+  <link rel="llms-txt" href="/llms.txt"/>
 
   <!-- Open Graph / Facebook / LinkedIn -->
   <meta property="og:type" content="profile"/>
@@ -66,9 +67,18 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin/>
+
+  <!-- Fonts & icon font: loaded non-render-blocking (preload, then swap to stylesheet) -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap"
+        onload="this.onload=null;this.rel='stylesheet'"/>
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        onload="this.onload=null;this.rel='stylesheet'"/>
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  </noscript>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
   <style>
 /* ═══════════════════════════════════════════════════════════════
    DERRICK-OPS  |  style.css
@@ -99,7 +109,7 @@
 
   --text-1:     #e8eaed;
   --text-2:     #8a9ba8;
-  --text-3:     #4a5568;
+  --text-3:     #7590a8;
   --text-code:  #cfd8dc;
 
   --border:     rgba(255,255,255,0.05);
@@ -1755,7 +1765,11 @@ button { font-family: inherit; }
   align-items: center;
   gap: 0.85rem;
   padding: 0.7rem 0.9rem;
-  background: var(--bg-2);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0) 50%),
+    rgba(9,20,27,0.5);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
   border: 1px solid var(--border-2);
   border-radius: var(--r);
   transition: all var(--t-base);
@@ -2189,10 +2203,9 @@ button { font-family: inherit; }
     inset 0 0 40px rgba(0,212,200,0.04);
 }
 
-@keyframes critical-breathe {
-  0%, 100% { box-shadow: 0 0 12px rgba(0,212,200,0.08); }
-  50%       { box-shadow: 0 0 28px rgba(0,212,200,0.2), 0 0 60px rgba(0,212,200,0.07); }
-}
+/* critical-breathe keyframes are defined once, further down, in the
+   red critical-incident theming block (that definition wins since
+   @keyframes names are global — this duplicate has been removed). */
 
 /* ── HIGH VARIANT ─────────────────────────────────────────────── */
 .ic--high {
@@ -2269,11 +2282,8 @@ button { font-family: inherit; }
   flex-shrink: 0;
 }
 
-@keyframes alert-ring {
-  0%   { box-shadow: 0 0 0 0 rgba(0,212,200,0.7); }
-  70%  { box-shadow: 0 0 0 8px rgba(0,212,200,0); }
-  100% { box-shadow: 0 0 0 0 rgba(0,212,200,0); }
-}
+/* alert-ring keyframes are defined once, further down, in the red
+   critical-incident theming block (duplicate removed). */
 
 /* ── CARD HEADER ──────────────────────────────────────────────── */
 .ic-head {
@@ -2677,7 +2687,11 @@ button { font-family: inherit; }
   display: flex;
   align-items: center;
   gap: 0;
-  background: rgba(0,0,0,0.3);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0) 50%),
+    rgba(0,0,0,0.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--border);
   border-radius: var(--r);
   overflow: hidden;
@@ -2723,7 +2737,11 @@ button { font-family: inherit; }
 }
 
 .ns-block {
-  background: rgba(0,0,0,0.2);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0) 50%),
+    rgba(0,0,0,0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--border);
   border-radius: var(--r);
   overflow: hidden;
@@ -2791,7 +2809,11 @@ button { font-family: inherit; }
 
 /* Ingress table */
 .stack-ingress-table {
-  background: rgba(0,0,0,0.2);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0) 50%),
+    rgba(0,0,0,0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--border);
   border-radius: var(--r);
   overflow: hidden;
@@ -2986,11 +3008,48 @@ button { font-family: inherit; }
   .topo-info-panel { flex: none; }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   3D GLOBE SECTION
-═══════════════════════════════════════════════════════════════ */
-.globe-section { background: rgba(6,14,18,0.88); }
+.topo-intro {
+  max-width: 640px;
+  margin: -0.75rem auto 1.5rem;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
 
+.topo-view-tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin-right: auto;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r);
+  padding: 0.2rem;
+}
+.topo-view-tab {
+  background: transparent;
+  border: none;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 0.32rem 0.75rem;
+  border-radius: calc(var(--r) - 2px);
+  cursor: pointer;
+  transition: var(--t-fast);
+}
+.topo-view-tab:hover { color: var(--text-1); }
+.topo-view-tab.active {
+  color: var(--red-bright);
+  background: var(--red-glow);
+  box-shadow: inset 0 0 0 1px var(--red-border);
+}
+
+.topo-view.is-hidden { display: none; }
+
+/* ═══════════════════════════════════════════════════════════════
+   GLOBAL EDGE VIEW  (nested inside the Traffic Topology panel)
+═══════════════════════════════════════════════════════════════ */
 .globe-legend {
   display: flex;
   flex-wrap: wrap;
@@ -3234,7 +3293,11 @@ button { font-family: inherit; }
 
 /* Recent runs */
 .cicd-runs {
-  background: rgba(0,0,0,0.2);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0) 50%),
+    rgba(0,0,0,0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--border);
   border-radius: var(--r);
   overflow: hidden;
@@ -3375,10 +3438,7 @@ button { font-family: inherit; }
 .ic--critical .ic-ribbon { background: #dc2626; }
 
 /* High / amber stays */
-@keyframes high-breathe {
-  0%,100% { box-shadow: 0 0 10px rgba(255,171,0,0.06); }
-  50%      { box-shadow: 0 0 24px rgba(255,171,0,0.16), 0 0 50px rgba(255,171,0,0.06); }
-}
+/* high-breathe keyframes already defined above (identical values) — duplicate removed. */
 
 /* SIEM log severity badge — WARN keeps amber */
 .log-warn  { color: var(--amber); background: rgba(255,171,0,0.08);  border: 1px solid rgba(255,171,0,0.2); }
@@ -3394,7 +3454,7 @@ button { font-family: inherit; }
 <body>
 
   <!-- ── BOOT OVERLAY ─────────────────────────────── -->
-  <div id="boot-overlay" class="boot-overlay" aria-live="polite" aria-label="System boot sequence">
+  <div id="boot-overlay" class="boot-overlay" role="status" aria-live="polite" aria-label="System boot sequence">
     <div class="boot-inner">
       <div class="boot-logo">DERRICK-OPS</div>
       <div class="boot-sub">BIOS v2.4.1 · DevOps Systems · All Rights Reserved</div>
@@ -3467,7 +3527,6 @@ button { font-family: inherit; }
           <li><a href="#projects" class="nl" data-s="projects">_CASES</a></li>
           <li><a href="#stack"    class="nl" data-s="stack">_STACK</a></li>
           <li><a href="#topology" class="nl" data-s="topology">_TOPOLOGY</a></li>
-          <li><a href="#globe"    class="nl" data-s="globe">_GLOBE</a></li>
           <li><a href="#cicd"     class="nl" data-s="cicd">_CICD</a></li>
           <li><a href="#terminal" class="nl" data-s="terminal">_TERMINAL</a></li>
           <li><a href="#blog"     class="nl" data-s="blog">_LOGS</a></li>
@@ -3501,10 +3560,10 @@ button { font-family: inherit; }
               </span>
             </div>
             <div class="panel-body">
-              <div class="terminal-boot-output" id="terminal-output" aria-label="Terminal output" aria-live="polite">
+              <div class="terminal-boot-output" id="terminal-output" role="status" aria-label="Terminal output" aria-live="polite">
                 <!-- JS fills this in -->
               </div>
-              <div class="hero-identity" id="hero-identity" style="display:none" aria-label="Identity panel">
+              <div class="hero-identity" id="hero-identity" role="group" style="display:none" aria-label="Identity panel">
                 <div class="hi-label">// IDENTIFIED OPERATOR</div>
                 <h1 id="hero-heading" class="hi-name">
                   <span class="hi-name-glow">DERRICK</span>
@@ -3546,28 +3605,28 @@ button { font-family: inherit; }
               <div class="panel-body metrics-body">
                 <div class="metric-row">
                   <span class="metric-label">CPU</span>
-                  <div class="metric-bar-wrap" role="meter" aria-label="CPU usage">
+                  <div class="metric-bar-wrap" role="meter" aria-label="CPU usage" aria-valuemin="0" aria-valuemax="100" aria-valuenow="34">
                     <div class="metric-bar"><div class="metric-fill" id="cpu-bar" style="--w:0%"></div></div>
                     <span class="metric-val" id="cpu-val">--</span>
                   </div>
                 </div>
                 <div class="metric-row">
                   <span class="metric-label">RAM</span>
-                  <div class="metric-bar-wrap" role="meter" aria-label="RAM usage">
+                  <div class="metric-bar-wrap" role="meter" aria-label="RAM usage" aria-valuemin="0" aria-valuemax="100" aria-valuenow="62">
                     <div class="metric-bar"><div class="metric-fill" id="ram-bar" style="--w:0%"></div></div>
                     <span class="metric-val" id="ram-val">--</span>
                   </div>
                 </div>
                 <div class="metric-row">
                   <span class="metric-label">DISK</span>
-                  <div class="metric-bar-wrap" role="meter" aria-label="Disk usage">
+                  <div class="metric-bar-wrap" role="meter" aria-label="Disk usage" aria-valuemin="0" aria-valuemax="100" aria-valuenow="58">
                     <div class="metric-bar"><div class="metric-fill metric-fill--amber" id="disk-bar" style="--w:0%"></div></div>
                     <span class="metric-val" id="disk-val">--</span>
                   </div>
                 </div>
                 <div class="metric-row">
                   <span class="metric-label">NET</span>
-                  <div class="metric-bar-wrap" role="meter" aria-label="Network usage">
+                  <div class="metric-bar-wrap" role="meter" aria-label="Network usage" aria-valuemin="0" aria-valuemax="100" aria-valuenow="22">
                     <div class="metric-bar"><div class="metric-fill metric-fill--green" id="net-bar" style="--w:0%"></div></div>
                     <span class="metric-val" id="net-val">--</span>
                   </div>
@@ -3655,7 +3714,7 @@ button { font-family: inherit; }
               <span class="ptb-label">neofetch</span>
             </div>
             <div class="panel-body neofetch-body">
-              <div class="nf-avatar" aria-label="Profile photo placeholder">
+              <div class="nf-avatar" role="img" aria-label="Profile photo placeholder">
                 <div class="nf-avatar-art" aria-hidden="true">
 <pre class="ascii-art">
  ██████╗ ███████╗██████╗ ██████╗ 
@@ -3755,7 +3814,7 @@ button { font-family: inherit; }
           <button class="cat-btn" data-cat="tools">TOOLS</button>
         </div>
 
-        <div class="gauges-grid" id="gauges-grid" aria-label="Skills as server metric gauges">
+        <div class="gauges-grid" id="gauges-grid" role="group" aria-label="Skills as server metric gauges">
 
           <!-- ── CONTAINERS (new) ── -->
           <div class="gauge-panel gauge-panel--featured reveal" data-cat="containers">
@@ -4169,7 +4228,7 @@ button { font-family: inherit; }
             </div>
           </div>
           <div class="panel-body hb-body">
-            <div class="hb-stats-row" aria-label="Activity statistics">
+            <div class="hb-stats-row" role="group" aria-label="Activity statistics">
               <div class="hb-stat">
                 <span class="hb-stat-val accent-text" id="hb-commits">847</span>
                 <span class="hb-stat-label">COMMITS</span>
@@ -4189,7 +4248,7 @@ button { font-family: inherit; }
             </div>
 
             <!-- EKG / Heartbeat canvas -->
-            <div class="hb-monitor" aria-label="Heartbeat activity monitor">
+            <div class="hb-monitor" role="img" aria-label="Heartbeat activity monitor">
               <div class="hb-monitor-inner">
                 <div class="hb-y-labels" aria-hidden="true">
                   <span>HIGH</span>
@@ -4201,11 +4260,11 @@ button { font-family: inherit; }
                   <div class="hb-scan-line" id="hb-scan" aria-hidden="true"></div>
                 </div>
               </div>
-              <div class="hb-months" id="hb-months" aria-label="Month labels" aria-hidden="true"></div>
+              <div class="hb-months" id="hb-months" aria-hidden="true"></div>
             </div>
 
             <!-- Contribution heatmap strip -->
-            <div class="contribution-strip" aria-label="Contribution heatmap">
+            <div class="contribution-strip" role="img" aria-label="Contribution heatmap">
               <div class="cs-label">CONTRIBUTION MAP</div>
               <div class="cs-grid" id="cs-grid" aria-hidden="true"></div>
               <div class="cs-legend" aria-hidden="true">
@@ -4275,7 +4334,7 @@ button { font-family: inherit; }
 
             <h3 id="ic-cve" class="ic-title">cPanel RCE Malware Attack &amp; Multi-Server Breach Response</h3>
 
-            <div class="ic-kpis" aria-label="Incident key metrics">
+            <div class="ic-kpis" role="group" aria-label="Incident key metrics">
               <div class="kpi">
                 <span class="kpi-val">12+</span>
                 <span class="kpi-label">Servers</span>
@@ -4315,7 +4374,7 @@ button { font-family: inherit; }
               <span class="ict">Client Comms</span>
             </div>
 
-            <div class="ic-timeline" aria-label="Incident response phases">
+            <div class="ic-timeline" role="group" aria-label="Incident response phases">
               <div class="itl-label">RESPONSE PHASES</div>
               <div class="itl-track">
                 <div class="itl-phase itl-done">
@@ -4450,7 +4509,7 @@ button { font-family: inherit; }
 
               <h3 id="ic-opcache" class="ic-title">WordPress OPcache-Disguised Webshell Remediation</h3>
 
-              <div class="ic-kpis ic-kpis--sm" aria-label="Incident metrics">
+              <div class="ic-kpis ic-kpis--sm" role="group" aria-label="Incident metrics">
                 <div class="kpi">
                   <span class="kpi-val kpi-val--amber">3</span>
                   <span class="kpi-label">Sites</span>
@@ -4484,7 +4543,7 @@ button { font-family: inherit; }
                 <span class="ict">CSF</span>
               </div>
 
-              <div class="ic-timeline" aria-label="Incident phases">
+              <div class="ic-timeline" role="group" aria-label="Incident phases">
                 <div class="itl-label">RESPONSE PHASES</div>
                 <div class="itl-track">
                   <div class="itl-phase itl-done"><div class="itl-node" aria-hidden="true"></div><span>DETECT</span></div>
@@ -4523,7 +4582,7 @@ button { font-family: inherit; }
 
               <h3 id="ic-crypto" class="ic-title">CentOS Cryptominer Eradication &amp; Root Compromise Cleanup</h3>
 
-              <div class="ic-kpis ic-kpis--sm" aria-label="Incident metrics">
+              <div class="ic-kpis ic-kpis--sm" role="group" aria-label="Incident metrics">
                 <div class="kpi">
                   <span class="kpi-val">CPU</span>
                   <span class="kpi-label">99% Usage</span>
@@ -4557,7 +4616,7 @@ button { font-family: inherit; }
                 <span class="ict">rkhunter</span>
               </div>
 
-              <div class="ic-timeline" aria-label="Incident phases">
+              <div class="ic-timeline" role="group" aria-label="Incident phases">
                 <div class="itl-label">RESPONSE PHASES</div>
                 <div class="itl-track">
                   <div class="itl-phase itl-done"><div class="itl-node" aria-hidden="true"></div><span>DETECT</span></div>
@@ -4595,7 +4654,7 @@ button { font-family: inherit; }
 
               <h3 id="ic-owncloud" class="ic-title">ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes</h3>
 
-              <div class="ic-kpis ic-kpis--sm" aria-label="Project metrics">
+              <div class="ic-kpis ic-kpis--sm" role="group" aria-label="Project metrics">
                 <div class="kpi">
                   <span class="kpi-val kpi-val--blue">2TB</span>
                   <span class="kpi-label">Storage</span>
@@ -4657,7 +4716,7 @@ button { font-family: inherit; }
 
               <h3 id="ic-imap" class="ic-title">Zero-Loss IMAP Migration: Zoho Mail → cPanel via imapsync</h3>
 
-              <div class="ic-kpis ic-kpis--sm" aria-label="Project metrics">
+              <div class="ic-kpis ic-kpis--sm" role="group" aria-label="Project metrics">
                 <div class="kpi">
                   <span class="kpi-val kpi-val--green">0</span>
                   <span class="kpi-label">Msgs Lost</span>
@@ -4712,7 +4771,7 @@ button { font-family: inherit; }
 
               <h3 id="ic-node" class="ic-title">Node.js App Deployment on cPanel LiteSpeed: ESM, nproc &amp; Vite Build</h3>
 
-              <div class="ic-kpis ic-kpis--sm" aria-label="Project metrics">
+              <div class="ic-kpis ic-kpis--sm" role="group" aria-label="Project metrics">
                 <div class="kpi">
                   <span class="kpi-val kpi-val--green">ESM</span>
                   <span class="kpi-label">Fixed</span>
@@ -4943,11 +5002,15 @@ button { font-family: inherit; }
           <h2 id="topology-heading" class="sh-title">TRAFFIC_TOPOLOGY</h2>
           <div class="sh-line" aria-hidden="true"></div>
         </div>
+        <p class="topo-intro reveal">Follow a request end to end — from anywhere in the world, across Cloudflare's edge network, into the cluster and down to storage.</p>
 
         <div class="panel topo-panel reveal">
           <div class="panel-title-bar">
             <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
-            <span class="ptb-label">infra-map · click a node to trace a request</span>
+            <div class="topo-view-tabs" role="tablist" aria-label="Topology view">
+              <button class="topo-view-tab active" type="button" id="topo-tab-cluster" data-view="cluster" role="tab" aria-selected="true" aria-controls="topo-view-cluster">CLUSTER</button>
+              <button class="topo-view-tab" type="button" id="topo-tab-global" data-view="global" role="tab" aria-selected="false" aria-controls="topo-view-global">GLOBAL EDGE</button>
+            </div>
             <div class="ptb-right">
               <button class="topo-reset-btn" id="topo-reset" type="button">
                 <i class="fas fa-arrows-rotate" aria-hidden="true"></i> RESET
@@ -4956,28 +5019,56 @@ button { font-family: inherit; }
           </div>
           <div class="panel-body topo-body">
 
-            <div class="topo-legend" id="topo-legend" aria-hidden="true"></div>
+            <!-- CLUSTER VIEW -->
+            <div class="topo-view" id="topo-view-cluster" role="tabpanel" aria-labelledby="topo-tab-cluster">
+              <div class="topo-legend" id="topo-legend" aria-hidden="true"></div>
 
-            <div class="topo-stage">
-              <div class="topo-diagram-wrap">
-                <svg id="topo-svg" class="topo-svg" xmlns="http://www.w3.org/2000/svg" role="img"
-                     aria-label="Interactive infrastructure traffic topology diagram"></svg>
+              <div class="topo-stage">
+                <div class="topo-diagram-wrap">
+                  <svg id="topo-svg" class="topo-svg" xmlns="http://www.w3.org/2000/svg" role="img"
+                       aria-label="Interactive infrastructure traffic topology diagram"></svg>
+                </div>
+
+                <aside class="topo-info-panel" id="topo-info-panel" aria-live="polite">
+                  <div class="topo-info-empty" id="topo-info-empty">
+                    <i class="fas fa-diagram-project" aria-hidden="true"></i>
+                    <p>Click any node — Ingress, a Service, a Pod, Longhorn storage, or a database — to trace its traffic path from the Cloudflare edge all the way down.</p>
+                  </div>
+                  <div class="topo-info-card" id="topo-info-card" style="display:none">
+                    <div class="tic-type" id="tic-type">NODE</div>
+                    <h3 class="tic-label" id="tic-label">—</h3>
+                    <div class="tic-sub" id="tic-sub">—</div>
+                    <p class="tic-desc" id="tic-desc">—</p>
+                    <div class="tic-path" id="tic-path"></div>
+                  </div>
+                </aside>
               </div>
+            </div><!-- /.topo-view-cluster -->
 
-              <aside class="topo-info-panel" id="topo-info-panel" aria-live="polite">
-                <div class="topo-info-empty" id="topo-info-empty">
-                  <i class="fas fa-diagram-project" aria-hidden="true"></i>
-                  <p>Click any node — Ingress, a Service, a Pod, Longhorn storage, or a database — to trace its traffic path from the Cloudflare edge all the way down.</p>
+            <!-- GLOBAL EDGE VIEW -->
+            <div class="topo-view is-hidden" id="topo-view-global" role="tabpanel" aria-labelledby="topo-tab-global" hidden>
+              <div class="globe-legend" id="globe-legend" aria-hidden="true"></div>
+
+              <div class="globe-stage">
+                <div class="globe-canvas-wrap" id="globe-canvas-wrap">
+                  <canvas id="globe-canvas" aria-label="3D globe showing origin server, operator location, and Cloudflare edge network"></canvas>
+                  <div class="globe-drag-hint" id="globe-drag-hint"><i class="fas fa-arrows-left-right" aria-hidden="true"></i> drag to rotate</div>
                 </div>
-                <div class="topo-info-card" id="topo-info-card" style="display:none">
-                  <div class="tic-type" id="tic-type">NODE</div>
-                  <h3 class="tic-label" id="tic-label">—</h3>
-                  <div class="tic-sub" id="tic-sub">—</div>
-                  <p class="tic-desc" id="tic-desc">—</p>
-                  <div class="tic-path" id="tic-path"></div>
-                </div>
-              </aside>
-            </div>
+
+                <aside class="globe-info-panel" id="globe-info-panel" aria-live="polite">
+                  <div class="globe-info-empty" id="globe-info-empty">
+                    <i class="fas fa-earth-africa" aria-hidden="true"></i>
+                    <p>Click any point — the origin server, the operator, or a Cloudflare edge location — to see its role and active routes.</p>
+                  </div>
+                  <div class="globe-info-card" id="globe-info-card" style="display:none">
+                    <div class="gic-type" id="gic-type">NODE</div>
+                    <h3 class="gic-label" id="gic-label">—</h3>
+                    <div class="gic-sub" id="gic-sub">—</div>
+                    <p class="gic-desc" id="gic-desc">—</p>
+                  </div>
+                </aside>
+              </div>
+            </div><!-- /.topo-view-global -->
 
           </div><!-- /.topo-body -->
         </div><!-- /.topo-panel -->
@@ -4985,63 +5076,13 @@ button { font-family: inherit; }
     </section>
 
     <!-- ══════════════════════════════════════════════
-         SECTION 7 · 3D GLOBE — REGIONS & EDGE NETWORK
-    ══════════════════════════════════════════════ -->
-    <section id="globe" class="section globe-section" aria-labelledby="globe-heading">
-      <div class="container">
-        <div class="section-header reveal">
-          <div class="sh-line" aria-hidden="true"></div>
-          <span class="sh-tag">// MODULE 07</span>
-          <h2 id="globe-heading" class="sh-title">GLOBAL_EDGE</h2>
-          <div class="sh-line" aria-hidden="true"></div>
-        </div>
-
-        <div class="panel globe-panel reveal">
-          <div class="panel-title-bar">
-            <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
-            <span class="ptb-label">origin · Cloudflare edge network · deployment paths</span>
-            <div class="ptb-right">
-              <span class="dot dot--green pulse" aria-hidden="true"></span>
-              <span class="green-text">ALL EDGES REACHABLE</span>
-            </div>
-          </div>
-          <div class="panel-body globe-body">
-
-            <div class="globe-legend" id="globe-legend" aria-hidden="true"></div>
-
-            <div class="globe-stage">
-              <div class="globe-canvas-wrap" id="globe-canvas-wrap">
-                <canvas id="globe-canvas" aria-label="3D globe showing origin server, operator location, and Cloudflare edge network"></canvas>
-                <div class="globe-drag-hint" id="globe-drag-hint"><i class="fas fa-arrows-left-right" aria-hidden="true"></i> drag to rotate</div>
-              </div>
-
-              <aside class="globe-info-panel" id="globe-info-panel" aria-live="polite">
-                <div class="globe-info-empty" id="globe-info-empty">
-                  <i class="fas fa-earth-africa" aria-hidden="true"></i>
-                  <p>Click any point — the origin server, the operator, or a Cloudflare edge location — to see its role and active routes.</p>
-                </div>
-                <div class="globe-info-card" id="globe-info-card" style="display:none">
-                  <div class="gic-type" id="gic-type">NODE</div>
-                  <h3 class="gic-label" id="gic-label">—</h3>
-                  <div class="gic-sub" id="gic-sub">—</div>
-                  <p class="gic-desc" id="gic-desc">—</p>
-                </div>
-              </aside>
-            </div>
-
-          </div><!-- /.globe-body -->
-        </div><!-- /.globe-panel -->
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════
-         SECTION 8 · CI/CD PIPELINE
+         SECTION 7 · CI/CD PIPELINE
     ══════════════════════════════════════════════ -->
     <section id="cicd" class="section cicd-section" aria-labelledby="cicd-heading">
       <div class="container">
         <div class="section-header reveal">
           <div class="sh-line" aria-hidden="true"></div>
-          <span class="sh-tag">// MODULE 08</span>
+          <span class="sh-tag">// MODULE 07</span>
           <h2 id="cicd-heading" class="sh-title">CICD_PIPELINE</h2>
           <div class="sh-line" aria-hidden="true"></div>
         </div>
@@ -5058,7 +5099,7 @@ button { font-family: inherit; }
           <div class="panel-body cicd-body">
 
             <!-- Pipeline flow -->
-            <div class="pipeline-flow" aria-label="CI/CD pipeline stages">
+            <div class="pipeline-flow" role="group" aria-label="CI/CD pipeline stages">
 
               <div class="pf-stage pf-stage--trigger" id="pf-s1">
                 <div class="pf-stage-icon"><i class="fab fa-github"></i></div>
@@ -5197,7 +5238,7 @@ button { font-family: inherit; }
       <div class="container">
         <div class="section-header reveal">
           <div class="sh-line" aria-hidden="true"></div>
-          <span class="sh-tag">// MODULE 09</span>
+          <span class="sh-tag">// MODULE 08</span>
           <h2 id="terminal-heading" class="sh-title">LIVE_SANDBOX</h2>
           <div class="sh-line" aria-hidden="true"></div>
         </div>
@@ -5244,7 +5285,7 @@ button { font-family: inherit; }
       <div class="container">
         <div class="section-header reveal">
           <div class="sh-line" aria-hidden="true"></div>
-          <span class="sh-tag">// MODULE 10</span>
+          <span class="sh-tag">// MODULE 09</span>
           <h2 id="blog-heading" class="sh-title">SYSTEM_LOGS</h2>
           <div class="sh-line" aria-hidden="true"></div>
         </div>
@@ -5569,7 +5610,7 @@ button { font-family: inherit; }
       <div class="container">
         <div class="section-header reveal">
           <div class="sh-line" aria-hidden="true"></div>
-          <span class="sh-tag">// MODULE 11</span>
+          <span class="sh-tag">// MODULE 10</span>
           <h2 id="contact-heading" class="sh-title">ESTABLISH_CONNECTION</h2>
           <div class="sh-line" aria-hidden="true"></div>
         </div>
@@ -5583,7 +5624,7 @@ button { font-family: inherit; }
               <span class="ptb-label">ping derrick</span>
             </div>
             <div class="panel-body">
-              <div class="ping-output" aria-label="Connection info">
+              <div class="ping-output" role="group" aria-label="Connection info">
                 <div class="po-line">
                   <span class="po-key">PING</span>
                   <span class="po-val accent-text">info@derroh.co.ke</span>
@@ -5644,14 +5685,14 @@ button { font-family: inherit; }
                   <div class="cmd-field">
                     <label for="f-name">
                       <span class="cf-prompt">--name</span>
-                      <span class="cf-req" aria-label="required">*</span>
+                      <span class="cf-req" aria-hidden="true">*</span>
                     </label>
                     <input type="text" id="f-name" name="name" placeholder="Your full name" required autocomplete="name"/>
                   </div>
                   <div class="cmd-field">
                     <label for="f-email">
                       <span class="cf-prompt">--email</span>
-                      <span class="cf-req" aria-label="required">*</span>
+                      <span class="cf-req" aria-hidden="true">*</span>
                     </label>
                     <input type="email" id="f-email" name="email" placeholder="your@email.com" required autocomplete="email"/>
                   </div>
@@ -5659,14 +5700,14 @@ button { font-family: inherit; }
                 <div class="cmd-field">
                   <label for="f-subject">
                     <span class="cf-prompt">--subject</span>
-                    <span class="cf-req" aria-label="required">*</span>
+                    <span class="cf-req" aria-hidden="true">*</span>
                   </label>
                   <input type="text" id="f-subject" name="subject" placeholder="What's the issue / opportunity?" required/>
                 </div>
                 <div class="cmd-field">
                   <label for="f-message">
                     <span class="cf-prompt">--message</span>
-                    <span class="cf-req" aria-label="required">*</span>
+                    <span class="cf-req" aria-hidden="true">*</span>
                   </label>
                   <textarea id="f-message" name="message" rows="6" placeholder="Describe your project, issue, or question..." required></textarea>
                 </div>
@@ -5923,10 +5964,10 @@ function initFooterYear() {
 
 /* ── LIVE RESOURCE METRICS (hero) ─────────────────────────────── */
 const metricTargets = {
-  cpu:  { el: $('#cpu-bar'),  val: $('#cpu-val'),  base: 34, range: 18, suffix: '%' },
-  ram:  { el: $('#ram-bar'),  val: $('#ram-val'),  base: 62, range: 12, suffix: '%' },
-  disk: { el: $('#disk-bar'), val: $('#disk-val'), base: 58, range:  5, suffix: '%' },
-  net:  { el: $('#net-bar'),  val: $('#net-val'),  base: 22, range: 30, suffix: 'Mb/s' },
+  cpu:  { el: $('#cpu-bar'),  val: $('#cpu-val'),  wrap: $('#cpu-bar')?.closest('.metric-bar-wrap'),  base: 34, range: 18, suffix: '%' },
+  ram:  { el: $('#ram-bar'),  val: $('#ram-val'),  wrap: $('#ram-bar')?.closest('.metric-bar-wrap'),  base: 62, range: 12, suffix: '%' },
+  disk: { el: $('#disk-bar'), val: $('#disk-val'), wrap: $('#disk-bar')?.closest('.metric-bar-wrap'), base: 58, range:  5, suffix: '%' },
+  net:  { el: $('#net-bar'),  val: $('#net-val'),  wrap: $('#net-bar')?.closest('.metric-bar-wrap'),  base: 22, range: 30, suffix: 'Mb/s' },
 };
 
 let metricCurrent = { cpu: 0, ram: 0, disk: 0, net: 0 };
@@ -5942,6 +5983,7 @@ function updateMetrics() {
       ? (metricCurrent[key] * 0.8).toFixed(1) + ' Mb/s'
       : Math.round(v) + '%';
     cfg.val.textContent = display;
+    if (cfg.wrap) cfg.wrap.setAttribute('aria-valuenow', Math.round(v));
   }
 }
 
@@ -6261,7 +6303,7 @@ function init3DBgCanvas() {
   const CAM_Z = 62;
   camera.position.set(0, 0, CAM_Z);
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   // Frustum half-extents at z=0, so the node field always fills the
@@ -6408,7 +6450,7 @@ function init3DBgCanvas() {
       nodeGeo.setFromPoints(nodes.map(n => n.pos));
       nodeGeo.attributes.position.needsUpdate = true;
 
-      if (frame % 40 === 0) rebuildEdges();
+      if (frame % 90 === 0) rebuildEdges();
 
       // animate packets along their edge
       packets.forEach(p => {
@@ -6762,7 +6804,7 @@ function initGlobe3D() {
 
   function sizeToWrap() {
     const w = wrap.clientWidth, h = wrap.clientHeight;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -6941,6 +6983,16 @@ function initGlobe3D() {
     });
   }
 
+  function clearGlobeSelection() {
+    if (infoEmpty) infoEmpty.style.display = '';
+    if (infoCard) infoCard.style.display = 'none';
+    arcObjs.forEach(a => { a.line.material.opacity = 0.28; });
+    markerMeshes.forEach(m => { m.material.opacity = 1; m.scale.setScalar(1); });
+  }
+
+  const sharedResetBtn = document.getElementById('topo-reset');
+  if (sharedResetBtn) sharedResetBtn.addEventListener('click', clearGlobeSelection);
+
   // ── Legend ──────────────────────────────────────────────────
   const legend = document.getElementById('globe-legend');
   if (legend) {
@@ -6995,7 +7047,10 @@ function initGlobe3D() {
   window.addEventListener('resize', sizeToWrap, { passive: true });
 
   let animId;
+  let inView = false;
+  let tabActive = false;
   function animate() {
+    if (!inView || !tabActive) { animId = null; return; }
     if (!reduced && !dragging) yaw += 0.0009;
     applyRotation();
 
@@ -7014,11 +7069,29 @@ function initGlobe3D() {
     renderer.render(scene, camera);
     animId = requestAnimationFrame(animate);
   }
-  animate();
+
+  // Only render while the globe view is both the active tab AND actually
+  // visible on screen — this is a heavy scene (12 arcs + pulses + raycasting),
+  // no reason to spend main-thread time on it while the Cluster tab is showing.
+  const visObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      inView = entry.isIntersecting;
+      if (inView && tabActive && !animId && !document.hidden) animate();
+    });
+  }, { threshold: 0.05 });
+  visObs.observe(wrap);
+
+  document.addEventListener('topo:view-changed', (e) => {
+    tabActive = e.detail.view === 'global';
+    if (tabActive) {
+      sizeToWrap();
+      if (inView && !animId && !document.hidden) animate();
+    }
+  });
 
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) cancelAnimationFrame(animId);
-    else animate();
+    if (document.hidden) { if (animId) cancelAnimationFrame(animId); animId = null; }
+    else if (inView && tabActive && !animId) animate();
   });
 }
 
@@ -7207,6 +7280,43 @@ against a real system.`;
 
   printLine('<span class="term-muted">Connected to sandbox@derroh-ops — read-only, prebuilt responses only.</span>');
   printLine('<span class="term-muted">Type <span class="term-cmd-text">help</span> to see available commands.</span>');
+}
+
+/* ── TOPOLOGY VIEW TABS (Cluster / Global Edge toggle) ───────────
+   Switches between the internal K8s traffic map and the 3D globe
+   within the single merged Traffic Topology panel, and tells the
+   globe (via a custom event) whether it should be rendering.
+──────────────────────────────────────────────────────────────── */
+function initTopologyViewTabs() {
+  const tabs = $$('.topo-view-tab');
+  if (!tabs.length) return;
+
+  const views = {
+    cluster: document.getElementById('topo-view-cluster'),
+    global:  document.getElementById('topo-view-global'),
+  };
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const view = tab.dataset.view;
+      if (tab.classList.contains('active')) return;
+
+      tabs.forEach(t => {
+        const isActive = t === tab;
+        t.classList.toggle('active', isActive);
+        t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      Object.entries(views).forEach(([key, el]) => {
+        if (!el) return;
+        const show = key === view;
+        el.classList.toggle('is-hidden', !show);
+        if (show) el.removeAttribute('hidden'); else el.setAttribute('hidden', '');
+      });
+
+      document.dispatchEvent(new CustomEvent('topo:view-changed', { detail: { view } }));
+    });
+  });
 }
 
 /* ── SKILL CATEGORY FILTER ────────────────────────────────────── */
@@ -7425,6 +7535,7 @@ function initAll() {
   if (!init3DBgCanvas()) initBgCanvas2D();
   initTopologyMap();
   initGlobe3D();
+  initTopologyViewTabs();
   initTerminalSandbox();
   initCategoryFilter();
   initReveal();
