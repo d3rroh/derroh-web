@@ -78,7 +78,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   </noscript>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+  <!-- three.js is loaded lazily via JS (see loadThreeJS()) so it never
+       competes with first paint / LCP, especially on throttled mobile. -->
   <style>
 /* ═══════════════════════════════════════════════════════════════
    DERRICK-OPS  |  style.css
@@ -93,7 +94,6 @@
   --bg-2:       #09141b;
   --bg-panel:   #0b1a1f;
   --bg-panel-h: #0d2029;
-  --bg-nav:     rgba(5,12,15,0.94);
 
   --red:        #00d4c8;
   --red-bright: #00ffd4;
@@ -125,7 +125,8 @@
 
   --status-h:   28px;
   --nav-h:      60px;
-  --top-offset: calc(var(--status-h) + var(--nav-h));
+  --nav-gap:    12px;
+  --top-offset: calc(var(--nav-gap) + var(--status-h) + var(--nav-h) + 14px);
 
   --t-fast:     0.15s ease;
   --t-base:     0.28s ease;
@@ -336,6 +337,7 @@ button { font-family: inherit; }
 }
 
 .panel-body { padding: 1.25rem; }
+.hero-identity-panel .panel-body { min-height: 280px; }
 
 /* ── BUTTONS ──────────────────────────────────────────────────── */
 .btn {
@@ -392,14 +394,50 @@ button { font-family: inherit; }
 
 .btn-full { width: 100%; justify-content: center; }
 
-/* ── STATUS BAR ───────────────────────────────────────────────── */
-.status-bar {
+/* ── UNIFIED FLOATING GLASS SHELL (status row + nav row) ──────── */
+.nav-shell {
   position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1000;
+  top: var(--nav-gap);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 990;
+  width: min(calc(100% - 1.5rem), var(--container));
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 45%),
+    rgba(6,14,18,0.55);
+  border: 1px solid rgba(255,255,255,0.09);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.05) inset,
+    0 18px 40px -14px rgba(0,0,0,0.6),
+    0 0 28px rgba(0,212,200,0.05);
+  overflow: hidden;
+  transition: border-color var(--t-base), box-shadow var(--t-base), background var(--t-base);
+}
+
+.nav-shell.scrolled {
+  border-color: var(--red-border);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 45%),
+    rgba(6,14,18,0.7);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.06) inset,
+    0 22px 48px -14px rgba(0,0,0,0.7),
+    0 0 38px rgba(0,212,200,0.12);
+}
+
+@media (max-width: 560px) {
+  .nav-shell { width: calc(100% - 1rem); border-radius: 14px; }
+}
+
+/* ── STATUS BAR (top row of the shell) ───────────────────────── */
+.status-bar {
+  position: static;
   height: var(--status-h);
-  background: rgba(0,0,0,0.85);
-  border-bottom: 1px solid var(--border);
+  background: transparent;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -408,7 +446,6 @@ button { font-family: inherit; }
   font-size: 0.68rem;
   letter-spacing: 0.08em;
   color: var(--text-3);
-  backdrop-filter: blur(8px);
 }
 
 .status-bar-left, .status-bar-right {
@@ -423,30 +460,18 @@ button { font-family: inherit; }
   gap: 0.35rem;
 }
 
-/* ── NAVIGATION ───────────────────────────────────────────────── */
+/* ── NAVIGATION (bottom row of the shell) ────────────────────── */
 .nav-header {
-  position: fixed;
-  top: var(--status-h);
-  left: 0; right: 0;
-  z-index: 990;
-  height: var(--nav-h);
-  background: var(--bg-nav);
-  border-bottom: 1px solid var(--border-2);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: border-color var(--t-base), box-shadow var(--t-base);
-}
-
-.nav-header.scrolled {
-  border-bottom-color: var(--red-border);
-  box-shadow: 0 4px 30px rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .nav-inner {
   max-width: var(--container);
   margin-inline: auto;
   padding-inline: clamp(1rem, 4vw, 2.5rem);
-  height: 100%;
+  height: var(--nav-h);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -731,6 +756,8 @@ button { font-family: inherit; }
   line-height: 1.75;
   color: var(--text-2);
   min-height: 280px;
+  max-height: 280px;
+  overflow: hidden;
 }
 
 .tbo-line { display: flex; align-items: baseline; gap: 0.4rem; }
@@ -1081,6 +1108,7 @@ button { font-family: inherit; }
 .gauges-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-auto-rows: 214px;
   gap: 1rem;
 }
 
@@ -2651,16 +2679,95 @@ button { font-family: inherit; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   NEW GAUGE VARIANTS  (containers category)
+   FEATURE CARDS (2×2) — Kubernetes, Docker, CI/CD, Cloudflare
 ═══════════════════════════════════════════════════════════════ */
 .gauge-panel--featured {
+  grid-column: span 2;
+  grid-row: span 2;
+  padding: 1.5rem;
+  justify-content: space-between;
   border-color: rgba(64,196,255,0.2);
-  background: linear-gradient(135deg, rgba(11,26,31,0.5) 0%, rgba(64,196,255,0.07) 100%);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 42%),
+    linear-gradient(135deg, rgba(11,26,31,0.5) 0%, rgba(64,196,255,0.07) 100%);
 }
 
 .gauge-panel--featured:hover {
   border-color: rgba(64,196,255,0.45);
   box-shadow: 0 0 0 1px rgba(64,196,255,0.08), 0 16px 48px rgba(0,0,0,0.5), 0 0 24px rgba(64,196,255,0.1);
+}
+
+.gauge-panel--featured .gp-icon  { font-size: 1.35rem; }
+.gauge-panel--featured .gp-name  { font-size: 0.95rem; letter-spacing: 0.08em; }
+.gauge-panel--featured .gp-cat   { font-size: 0.65rem; padding: 2px 7px; }
+.gauge-panel--featured .gauge-svg { width: 190px; height: 190px; }
+.gauge-panel--featured .gp-pct   { font-size: 2.3rem; }
+.gauge-panel--featured .gp-unit  { font-size: 1.15rem; }
+.gauge-panel--featured .gp-sublabel { font-size: 0.72rem; margin-top: 5px; }
+.gauge-panel--featured .gp-sparkline { height: 50px; }
+
+@media (max-width: 560px) {
+  .gauge-panel--featured { grid-row: span 1; padding: 1rem; }
+  .gauge-panel--featured .gauge-svg { width: 110px; height: 110px; }
+  .gauge-panel--featured .gp-pct { font-size: 1.3rem; }
+  .gauge-panel--featured .gp-unit { font-size: 0.8rem; }
+  .gauge-panel--featured .gp-sparkline { height: 28px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WIDE CARDS (2×1) — live monitoring / deployment / traffic
+═══════════════════════════════════════════════════════════════ */
+.gauge-panel--wide {
+  grid-column: span 2;
+  grid-row: span 1;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.gauge-panel--wide .gp-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  width: auto;
+}
+
+.gp-wide-body {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.gp-wide-stat { flex-shrink: 0; min-width: 100px; }
+
+.gp-wide-num {
+  display: block;
+  font-family: var(--font-hud);
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1;
+}
+
+.gp-wide-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  color: var(--text-3);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.gp-sparkline--wide { flex: 1; height: 50px; min-width: 0; }
+
+@media (max-width: 700px) {
+  .gauge-panel--wide { flex-direction: column; align-items: stretch; }
+  .gauge-panel--wide .gp-header { flex-direction: row; align-items: center; width: 100%; }
+  .gp-wide-body { flex-wrap: wrap; }
 }
 
 .gp-icon--blue  { color: var(--blue); }
@@ -3473,71 +3580,74 @@ button { font-family: inherit; }
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
   <!-- ── TOP STATUS BAR ───────────────────────────── -->
-  <div class="status-bar" role="banner" aria-label="System status bar">
-    <div class="status-bar-left">
-      <span class="sb-item">
-        <span class="dot dot--green pulse" aria-hidden="true"></span>
-        <span>SYS: OPERATIONAL</span>
-      </span>
-      <span class="sb-item sb-hide-sm">
-        <span class="dot dot--yellow" aria-hidden="true"></span>
-        <span>UPTIME: <span id="uptime-counter" class="accent-text">00:00:00</span></span>
-      </span>
-      <span class="sb-item sb-hide-sm">
-        <i class="fas fa-server" aria-hidden="true"></i>
-        <span>SERVERS: <span class="accent-text">ONLINE</span></span>
-      </span>
-    </div>
-    <div class="status-bar-right">
-      <span class="sb-item sb-hide-sm">
-        <i class="fas fa-shield-halved" aria-hidden="true"></i>
-        <span>FIREWALL: <span class="green-text">ACTIVE</span></span>
-      </span>
-      <span class="sb-item">
-        <i class="fas fa-clock" aria-hidden="true"></i>
-        <span id="live-clock" class="accent-text">--:--:--</span>
-      </span>
-    </div>
+  <div class="nav-shell" id="nav-shell">
+    <!-- ── NAVIGATION (combined floating glass bar) ──── -->
+    <header class="nav-header" id="nav-header">
+      <div class="status-bar" role="banner" aria-label="System status bar">
+        <div class="status-bar-left">
+          <span class="sb-item">
+            <span class="dot dot--green pulse" aria-hidden="true"></span>
+            <span>SYS: OPERATIONAL</span>
+          </span>
+          <span class="sb-item sb-hide-sm">
+            <span class="dot dot--yellow" aria-hidden="true"></span>
+            <span>UPTIME: <span id="uptime-counter" class="accent-text">00:00:00</span></span>
+          </span>
+          <span class="sb-item sb-hide-sm">
+            <i class="fas fa-server" aria-hidden="true"></i>
+            <span>SERVERS: <span class="accent-text">ONLINE</span></span>
+          </span>
+        </div>
+        <div class="status-bar-right">
+          <span class="sb-item sb-hide-sm">
+            <i class="fas fa-shield-halved" aria-hidden="true"></i>
+            <span>FIREWALL: <span class="green-text">ACTIVE</span></span>
+          </span>
+          <span class="sb-item">
+            <i class="fas fa-clock" aria-hidden="true"></i>
+            <span id="live-clock" class="accent-text">--:--:--</span>
+          </span>
+        </div>
+      </div>
+
+      <nav class="nav-inner" aria-label="Main navigation">
+        <a href="#home" class="nav-brand" aria-label="Home">
+          <span class="brand-bracket">[</span>
+          <span class="brand-name">DERRICK</span>
+          <span class="brand-dash">-</span>
+          <span class="brand-ops">OPS</span>
+          <span class="brand-bracket">]</span>
+        </a>
+
+        <div class="nav-center sb-hide-sm">
+          <span class="nav-system-tag">
+            <span class="dot dot--green pulse" aria-hidden="true"></span>
+            ALL SYSTEMS NOMINAL
+          </span>
+        </div>
+
+        <div class="nav-controls">
+          <ul class="nav-links" id="nav-links" role="list">
+            <li><a href="#home"     class="nl active" data-s="home">_HOME</a></li>
+            <li><a href="#about"    class="nl" data-s="about">_ABOUT</a></li>
+            <li><a href="#skills"   class="nl" data-s="skills">_METRICS</a></li>
+            <li><a href="#activity" class="nl" data-s="activity">_PULSE</a></li>
+            <li><a href="#projects" class="nl" data-s="projects">_CASES</a></li>
+            <li><a href="#stack"    class="nl" data-s="stack">_STACK</a></li>
+            <li><a href="#topology" class="nl" data-s="topology">_TOPOLOGY</a></li>
+            <li><a href="#cicd"     class="nl" data-s="cicd">_CICD</a></li>
+            <li><a href="#terminal" class="nl" data-s="terminal">_TERMINAL</a></li>
+            <li><a href="#blog"     class="nl" data-s="blog">_LOGS</a></li>
+            <li><a href="#contact"  class="nl nl--cta" data-s="contact">_CONNECT</a></li>
+          </ul>
+          <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </nav>
+    </header>
   </div>
 
-  <!-- ── NAVIGATION ───────────────────────────────── -->
-  <header class="nav-header" id="nav-header">
-    <nav class="nav-inner" aria-label="Main navigation">
-      <a href="#home" class="nav-brand" aria-label="Home">
-        <span class="brand-bracket">[</span>
-        <span class="brand-name">DERRICK</span>
-        <span class="brand-dash">-</span>
-        <span class="brand-ops">OPS</span>
-        <span class="brand-bracket">]</span>
-      </a>
-
-      <div class="nav-center sb-hide-sm">
-        <span class="nav-system-tag">
-          <span class="dot dot--green pulse" aria-hidden="true"></span>
-          ALL SYSTEMS NOMINAL
-        </span>
-      </div>
-
-      <div class="nav-controls">
-        <ul class="nav-links" id="nav-links" role="list">
-          <li><a href="#home"     class="nl active" data-s="home">_HOME</a></li>
-          <li><a href="#about"    class="nl" data-s="about">_ABOUT</a></li>
-          <li><a href="#skills"   class="nl" data-s="skills">_METRICS</a></li>
-          <li><a href="#activity" class="nl" data-s="activity">_PULSE</a></li>
-          <li><a href="#projects" class="nl" data-s="projects">_CASES</a></li>
-          <li><a href="#stack"    class="nl" data-s="stack">_STACK</a></li>
-          <li><a href="#topology" class="nl" data-s="topology">_TOPOLOGY</a></li>
-          <li><a href="#cicd"     class="nl" data-s="cicd">_CICD</a></li>
-          <li><a href="#terminal" class="nl" data-s="terminal">_TERMINAL</a></li>
-          <li><a href="#blog"     class="nl" data-s="blog">_LOGS</a></li>
-          <li><a href="#contact"  class="nl nl--cta" data-s="contact">_CONNECT</a></li>
-        </ul>
-        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </nav>
-  </header>
 
   <main id="main-content">
 
@@ -3893,6 +4003,22 @@ button { font-family: inherit; }
             <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
           </div>
 
+          <!-- ── Wide card: deployment history ── -->
+          <div class="gauge-panel gauge-panel--wide reveal" data-cat="monitoring">
+            <div class="gp-header">
+              <span class="gp-icon gp-icon--green"><i class="fas fa-rocket"></i></span>
+              <span class="gp-name">DEPLOY_HISTORY</span>
+              <span class="gp-cat gp-cat--green">activity</span>
+            </div>
+            <div class="gp-wide-body">
+              <div class="gp-wide-stat">
+                <span class="gp-wide-num" data-count="47">0</span>
+                <span class="gp-wide-label">deploys · 90 days</span>
+              </div>
+              <div class="gp-sparkline gp-sparkline--wide" aria-hidden="true"><canvas class="spark-canvas" data-pct="82"></canvas></div>
+            </div>
+          </div>
+
           <!-- ── DevOps ── -->
           <div class="gauge-panel reveal" data-cat="devops">
             <div class="gp-header">
@@ -4200,6 +4326,22 @@ button { font-family: inherit; }
               </div>
             </div>
             <div class="gp-sparkline" aria-hidden="true"><canvas class="spark-canvas"></canvas></div>
+          </div>
+
+          <!-- ── Wide card: live traffic ── -->
+          <div class="gauge-panel gauge-panel--wide reveal" data-cat="monitoring">
+            <div class="gp-header">
+              <span class="gp-icon gp-icon--blue"><i class="fas fa-chart-line"></i></span>
+              <span class="gp-name">TRAFFIC_VOLUME</span>
+              <span class="gp-cat gp-cat--blue">activity</span>
+            </div>
+            <div class="gp-wide-body">
+              <div class="gp-wide-stat">
+                <span class="gp-wide-num" data-count="1200">0</span>
+                <span class="gp-wide-label">requests/min · sample</span>
+              </div>
+              <div class="gp-sparkline gp-sparkline--wide" aria-hidden="true"><canvas class="spark-canvas" data-pct="65"></canvas></div>
+            </div>
           </div>
 
         </div><!-- /#gauges-grid -->
@@ -6025,31 +6167,49 @@ function initGauges() {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
       const panel = entry.target;
+
+      // Circular gauge (standard + featured cards)
       const circle = $('.gauge-fill', panel);
       const pctEl  = $('.gp-pct', panel);
-      if (!circle || !pctEl) return;
+      if (circle && pctEl) {
+        const pct  = parseInt(circle.dataset.pct, 10) || 80;
+        const dash = circumference - (pct / 100) * circumference;
 
-      const pct  = parseInt(circle.dataset.pct, 10) || 80;
-      const dash = circumference - (pct / 100) * circumference;
+        requestAnimationFrame(() => {
+          circle.style.strokeDashoffset = dash;
+          circle.classList.add('animated');
+        });
 
-      requestAnimationFrame(() => {
-        circle.style.strokeDashoffset = dash;
-        circle.classList.add('animated');
-      });
+        let current = 0;
+        const steps = 60;
+        const step  = pct / steps;
+        const timer = setInterval(() => {
+          current = Math.min(current + step, pct);
+          pctEl.innerHTML = Math.round(current) + '<span class="gp-unit">%</span>';
+          if (current >= pct) clearInterval(timer);
+        }, 1400 / steps);
+      }
 
-      // Animate number
-      let current = 0;
-      const steps = 60;
-      const step  = pct / steps;
-      const timer = setInterval(() => {
-        current = Math.min(current + step, pct);
-        pctEl.innerHTML = Math.round(current) + '<span class="gp-unit">%</span>';
-        if (current >= pct) clearInterval(timer);
-      }, 1400 / steps);
+      // Wide-card headline stat count-up
+      const wideNum = $('.gp-wide-num', panel);
+      if (wideNum) {
+        const target = parseInt(wideNum.dataset.count, 10) || 0;
+        let current = 0;
+        const steps = 50;
+        const step  = target / steps;
+        const timer = setInterval(() => {
+          current = Math.min(current + step, target);
+          wideNum.textContent = Math.round(current).toLocaleString();
+          if (current >= target) clearInterval(timer);
+        }, 1200 / steps);
+      }
 
-      // Draw sparkline
+      // Sparkline — draws for any card that has one, gauge or not
       const canvas = $('.spark-canvas', panel);
-      if (canvas) drawSparkline(canvas, pct);
+      if (canvas) {
+        const basePct = parseInt((circle && circle.dataset.pct) || canvas.dataset.pct, 10) || 70;
+        drawSparkline(canvas, basePct);
+      }
 
       obs.unobserve(panel);
     });
@@ -6782,6 +6942,33 @@ function initTopologyMap() {
    animated arcs. Drag to rotate, click a marker to trace its
    routes. Falls back gracefully if Three.js/WebGL is unavailable.
 ──────────────────────────────────────────────────────────────── */
+/* ── LAZY GLOBE LOADER ────────────────────────────────────────────
+   The globe (3D scene construction: geometry, 12 arcs, markers,
+   raycasting) is real work. Most visitors never click the Global
+   Edge tab, so don't pay for any of it — including the three.js
+   fetch itself — until they actually do.
+──────────────────────────────────────────────────────────────── */
+function initGlobeLazy() {
+  const globeTab = document.getElementById('topo-tab-global');
+  if (!globeTab) return;
+
+  let started = false;
+  globeTab.addEventListener('click', async () => {
+    if (started) return;
+    started = true;
+    try {
+      await loadThreeJS();
+      initGlobe3D();
+      // The view-tab switcher already dispatched 'topo:view-changed' for
+      // this click before the scene existed to hear it — re-signal now
+      // that the globe's own listener is actually attached.
+      document.dispatchEvent(new CustomEvent('topo:view-changed', { detail: { view: 'global' } }));
+    } catch (e) {
+      started = false; // allow retry on a flaky connection
+    }
+  });
+}
+
 function initGlobe3D() {
   const wrap   = document.getElementById('globe-canvas-wrap');
   const canvas = document.getElementById('globe-canvas');
@@ -7411,7 +7598,7 @@ function initMobileNav() {
 
 /* ── SCROLL EFFECTS (header + back-to-top) ────────────────────── */
 function initScrollEffects() {
-  const header  = $('#nav-header');
+  const header  = $('#nav-shell');
   const btt     = $('#back-to-top');
 
   let ticking = false;
@@ -7522,8 +7709,37 @@ function initCardTilt() {
   });
 }
 
+/* ── LAZY THREE.JS LOADER ─────────────────────────────────────────
+   three.js (~600KB) is fetched via a dynamically-injected script tag
+   instead of a blocking/deferred <script> in <head>. This keeps it
+   completely off the critical path for first paint / LCP — the
+   fetch is kicked off early (in parallel with the boot animation)
+   but nothing waits on it until a 3D scene actually needs THREE.
+──────────────────────────────────────────────────────────────── */
+let threeLoadPromise = null;
+function loadThreeJS() {
+  if (threeLoadPromise) return threeLoadPromise;
+  threeLoadPromise = new Promise((resolve, reject) => {
+    if (typeof THREE !== 'undefined') { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('three.js failed to load'));
+    document.head.appendChild(s);
+  });
+  threeLoadPromise.catch(() => { threeLoadPromise = null; }); // allow a later retry on failure
+  return threeLoadPromise;
+}
+
+// A full WebGL node-graph background adds real CPU/GPU cost for very
+// little visual payoff on small phone screens — skip it there and use
+// the much cheaper 2D canvas fallback instead.
+function shouldUse3DBackground() {
+  return window.innerWidth >= 640;
+}
+
 /* ── INIT ALL ─────────────────────────────────────────────────── */
-function initAll() {
+async function initAll() {
   initClock();
   initUptime();
   initFooterYear();
@@ -7532,9 +7748,7 @@ function initAll() {
   initGauges();
   initHeartbeat();
   initHeatmap();
-  if (!init3DBgCanvas()) initBgCanvas2D();
   initTopologyMap();
-  initGlobe3D();
   initTopologyViewTabs();
   initTerminalSandbox();
   initCategoryFilter();
@@ -7546,11 +7760,26 @@ function initAll() {
   initContactForm();
   initCardTilt();
   initCaseFileFilter();
+
+  // Everything above is cheap and renders immediately. The 3D scenes
+  // wait on the (already in-flight, non-blocking) three.js fetch.
+  if (shouldUse3DBackground()) {
+    try {
+      await loadThreeJS();
+      if (!init3DBgCanvas()) initBgCanvas2D();
+    } catch (e) {
+      initBgCanvas2D();
+    }
+  } else {
+    initBgCanvas2D();
+  }
+  initGlobeLazy();
 }
 
 /* ── BOOT ─────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   document.body.style.overflow = 'hidden'; // lock scroll during boot
+  if (shouldUse3DBackground()) loadThreeJS().catch(() => {}); // fire-and-forget, runs alongside the boot animation
   runBoot();
 });
 
