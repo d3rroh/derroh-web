@@ -32,26 +32,345 @@
 
   <!-- Structured data (Person) for rich results / knowledge panel eligibility -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Derrick Abila",
-    "url": "https://derroh.co.ke/",
-    "image": "https://derroh.co.ke/android-chrome-512x512.png",
-    "jobTitle": "DevOps Engineer & Linux Systems Administrator",
-    "description": "DevOps Engineer and Linux Systems Administrator specializing in Kubernetes, Docker, CI/CD pipelines, and Linux server security.",
-    "email": "mailto:info@derroh.co.ke",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Nairobi",
-      "addressCountry": "KE"
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://derroh.co.ke/#person",
+      "name": "Derrick Abila",
+      "url": "https://derroh.co.ke/",
+      "image": "https://derroh.co.ke/android-chrome-512x512.png",
+      "jobTitle": "DevOps Engineer & Linux Systems Administrator",
+      "description": "DevOps Engineer and Linux Systems Administrator specializing in Kubernetes, Docker, CI/CD pipelines, and Linux server security.",
+      "email": "mailto:info@derroh.co.ke",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Nairobi",
+        "addressCountry": "KE"
+      },
+      "sameAs": [
+        "https://github.com/d3rroh",
+        "https://ke.linkedin.com/in/derrick-abila-a3b985204"
+      ],
+      "knowsAbout": [
+        "Kubernetes",
+        "Docker",
+        "CI/CD",
+        "Linux System Administration",
+        "Cloud Infrastructure",
+        "Network Security",
+        "Incident Response"
+      ]
     },
-    "sameAs": [
-      "https://github.com/d3rroh",
-      "https://ke.linkedin.com/in/derrick-abila-a3b985204"
-    ],
-    "knowsAbout": ["Kubernetes", "Docker", "CI/CD", "Linux System Administration", "Cloud Infrastructure", "Network Security", "Incident Response"]
-  }
+    {
+      "@type": "WebSite",
+      "@id": "https://derroh.co.ke/#website",
+      "url": "https://derroh.co.ke/",
+      "name": "Derrick — DevOps Command Center",
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "Blog",
+      "@id": "https://derroh.co.ke/#blog",
+      "name": "System Logs",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "blogPost": [
+        {
+          "@id": "https://derroh.co.ke/#log-1"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-2"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-3"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-4"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-5"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-6"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-7"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-8"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-9"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-10"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-11"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-12"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-13"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-14"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-15"
+        }
+      ]
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-1",
+      "headline": "Migrating from Docker Compose to k3s: What Actually Breaks",
+      "description": "A real account of migrating a full production stack to Kubernetes on a bare Contabo VPS — port conflicts, CNI surprises, LoadBalancer gotchas, and why nginx-ingress + Cloudflare is the clean path.",
+      "datePublished": "2026-06-10T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-2",
+      "headline": "Kubernetes PVC Permissions: fsGroup, Init Containers, and www-data",
+      "description": "The definitive fix for Laravel storage permission errors in Kubernetes — why fsGroup: 33 works, when you need an init container with runAsUser: 0, and making entrypoints self-healing.",
+      "datePublished": "2026-05-28T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-3",
+      "headline": "Detecting OPcache-Disguised Webshells in WordPress",
+      "description": "How attackers hide PHP webshells as legitimate OPcache files, the filesystem patterns that give them away, and a complete remediation playbook including permission hardening.",
+      "datePublished": "2026-05-12T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-4",
+      "headline": "GitHub Actions → Docker Hub → kubectl: A Real CI/CD Pipeline",
+      "description": "Building a complete zero-downtime deployment pipeline for multiple apps — secrets management, multi-arch builds, rollout restart strategy, and wiring it all to a k3s cluster on a bare VPS.",
+      "datePublished": "2026-04-19T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-5",
+      "headline": "Zero-Downtime IMAP Migration with imapsync",
+      "description": "Migrating a full mailbox from Zoho to cPanel Dovecot with zero message loss — folder mapping, flag preservation, pre/post count validation, and the MX cutover timing that keeps users unaware.",
+      "datePublished": "2026-03-31T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-6",
+      "headline": "Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts",
+      "description": "Why editing dovecot.conf inside a running docker-mailserver container loses the fix on restart, and the correct override mechanism using user-patches.sh to make it stick permanently.",
+      "datePublished": "2026-03-08T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-7",
+      "headline": "Hardening Your Linux Server: A Practical Checklist",
+      "description": "SSH key enforcement, fail2ban tuning, kernel parameter hardening, unattended-upgrades, and CIS benchmark essentials — the checklist every production server needs before going live.",
+      "datePublished": "2026-02-21T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-8",
+      "headline": "Case File INC-2026-001 — cPanel RCE Malware Attack & Multi-Server Breach Response",
+      "description": "Active exploitation of CVE-2026-29205 across multiple shared hosting accounts — forensic analysis across 12+ servers, malicious payload removal, credential rotation, and full client-notification documentation. Contained in under 4 hours with zero data loss.",
+      "datePublished": "2026-01-30T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-cve",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-9",
+      "headline": "Case File INC-2025-004 — Active SSH Compromise & Backdoor Removal",
+      "description": "Discovered unauthorized SSH keys and a backdoored /tmp/.bashrc planted by an intruder. Evicted the attacker, audited every session, rotated all keys, and hardened the SSH config against re-entry.",
+      "datePublished": "2026-01-14T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-ssh",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-10",
+      "headline": "Case File INC-2025-003 — CentOS Cryptominer Eradication & Root Compromise Cleanup",
+      "description": "Identified and eradicated CSPUpdate cryptominer binaries with malicious cron.d persistence on a compromised CentOS server. Traced the root-level access, removed every foothold, and hardened the system end to end.",
+      "datePublished": "2025-12-19T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-crypto",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-11",
+      "headline": "Case File INC-2025-002 — WordPress OPcache-Disguised Webshell Remediation",
+      "description": "Discovered and removed a sophisticated PHP webshell disguised as a legitimate OPcache file across 3 sites. Full filesystem audit, persistent backdoor removal, and permission hardening to close the vector for good.",
+      "datePublished": "2025-12-02T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-opcache",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-12",
+      "headline": "Case File PRJ-2025-007 — AlmaLinux VPS Non-Standard Gateway Recovery",
+      "description": "Restored networking on an OVH/Hetzner VPS running a non-standard gateway configuration using raw ip commands, then engineered systemd-networkd persistence so the fix survives every reboot.",
+      "datePublished": "2025-11-18T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-net",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-13",
+      "headline": "Case File PRJ-2025-006 — Zero-Loss IMAP Migration: Zoho Mail → cPanel via imapsync",
+      "description": "Orchestrated a complete mailbox migration from Zoho Mail to a cPanel Dovecot mail server using imapsync — every folder migrated, message flags preserved, pre/post counts validated, and a live DNS MX cutover with zero loss.",
+      "datePublished": "2025-10-25T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-imap",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-14",
+      "headline": "Case File PRJ-2025-008 — Node.js App Deployment on cPanel LiteSpeed",
+      "description": "Resolved a cascade of Node.js deployment failures on cPanel/LiteSpeed shared hosting: ESM/CJS module conflicts, process limits blocking npm install, hardcoded localhost API URLs, and Express 5 route syntax breaks.",
+      "datePublished": "2025-10-09T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-node",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-15",
+      "headline": "Case File PRJ-2024-005 — ownCloud + MinIO S3 Self-Hosted Stack on Docker & Kubernetes",
+      "description": "Deployed a full self-hosted ownCloud instance backed by MinIO S3-compatible storage, running across Docker Compose and later migrated to Kubernetes. Resolved entrypoint config rewrites, GuzzleHttp dependency gaps, and duplicate config conflicts.",
+      "datePublished": "2025-09-21T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-owncloud",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    }
+  ]
+}
   </script>
 
   <!-- Favicons -->
@@ -63,7 +382,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png"/>
   <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png"/>
   <link rel="manifest" href="/site.webmanifest"/>
-  <meta name="theme-color" content="#050c0f"/>
+  <meta name="theme-color" content="#091419"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -89,11 +408,11 @@
 
 /* ── CUSTOM PROPERTIES ────────────────────────────────────────── */
 :root {
-  --bg-0:       #050c0f;
-  --bg-1:       #060e12;
-  --bg-2:       #09141b;
-  --bg-panel:   #0b1a1f;
-  --bg-panel-h: #0d2029;
+  --bg-0:       #091419;
+  --bg-1:       #0a161c;
+  --bg-2:       #0f2028;
+  --bg-panel:   #13242c;
+  --bg-panel-h: #152933;
 
   --red:        #00d4c8;
   --red-bright: #00ffd4;
@@ -244,7 +563,7 @@ button { font-family: inherit; }
 .panel {
   background:
     linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.52);
+    rgba(19,36,44,0.52);
   backdrop-filter: blur(20px) saturate(150%);
   -webkit-backdrop-filter: blur(20px) saturate(150%);
   border: 1px solid var(--border-2);
@@ -405,27 +724,36 @@ button { font-family: inherit; }
   border-radius: 16px;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 45%),
-    rgba(6,14,18,0.55);
+    rgba(10,22,28,0.5);
   border: 1px solid rgba(255,255,255,0.09);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
   box-shadow:
     0 1px 0 rgba(255,255,255,0.05) inset,
     0 18px 40px -14px rgba(0,0,0,0.6),
     0 0 28px rgba(0,212,200,0.05);
   overflow: hidden;
-  transition: border-color var(--t-base), box-shadow var(--t-base), background var(--t-base);
+  transition: border-color var(--t-base), box-shadow var(--t-base), background var(--t-base),
+              backdrop-filter 0.45s ease, -webkit-backdrop-filter 0.45s ease;
 }
 
 .nav-shell.scrolled {
   border-color: var(--red-border);
   background:
     linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 45%),
-    rgba(6,14,18,0.7);
+    rgba(10,22,28,0.72);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
   box-shadow:
     0 1px 0 rgba(255,255,255,0.06) inset,
     0 22px 48px -14px rgba(0,0,0,0.7),
     0 0 38px rgba(0,212,200,0.12);
+}
+
+.nav-shell:not(.scrolled):hover {
+  backdrop-filter: blur(22px) saturate(165%);
+  -webkit-backdrop-filter: blur(22px) saturate(165%);
+  border-color: rgba(255,255,255,0.14);
 }
 
 @media (max-width: 560px) {
@@ -484,8 +812,18 @@ button { font-family: inherit; }
   font-weight: 700;
   letter-spacing: 0.12em;
   color: var(--text-1);
-  transition: color var(--t-fast);
+  transition: color var(--t-fast), text-shadow var(--t-fast);
   white-space: nowrap;
+}
+
+.nav-brand:hover {
+  color: var(--text-1);
+  text-shadow: 0 0 16px rgba(0,212,200,0.5);
+}
+
+.nav-brand:hover .brand-bracket,
+.nav-brand:hover .brand-ops {
+  color: var(--red-bright);
 }
 
 .brand-bracket { color: var(--red); font-weight: 400; }
@@ -526,7 +864,9 @@ button { font-family: inherit; }
   color: var(--text-3);
   padding: 0.4rem 0.7rem;
   border-radius: var(--r);
-  transition: all var(--t-fast);
+  transition: color var(--t-fast), background var(--t-fast), border-color var(--t-fast), transform 0.12s ease-out;
+  transform-origin: center bottom;
+  will-change: transform;
   position: relative;
   white-space: nowrap;
 }
@@ -801,8 +1141,25 @@ button { font-family: inherit; }
 }
 
 .hi-name-glow {
-  color: var(--red);
+  background: linear-gradient(
+    100deg,
+    var(--red) 0%, var(--red) 45%,
+    #eafffb 50%,
+    var(--red) 55%, var(--red) 100%
+  );
+  background-size: 300% 100%;
+  background-position: 220% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
   text-shadow: 0 0 30px rgba(0,212,200,0.5), 0 0 60px rgba(0,212,200,0.2);
+  animation: nameShimmer 6.5s ease-in-out infinite;
+}
+
+@keyframes nameShimmer {
+  0%, 68%, 100% { background-position: 220% 0; }
+  86%           { background-position: -90% 0; }
 }
 
 .hi-title {
@@ -819,12 +1176,59 @@ button { font-family: inherit; }
 
 .hi-sep { color: var(--red); }
 
+.hi-role-cycle { color: var(--text-2); }
+
+.hi-cursor {
+  color: var(--red-bright);
+  font-weight: 700;
+  animation: blink 1s step-end infinite;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .hi-tagline {
   font-size: 1rem;
   color: var(--text-2);
   line-height: 1.8;
-  margin-bottom: 2rem;
+  margin-bottom: 1.1rem;
   max-width: 540px;
+}
+
+.hi-activity {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-3);
+  margin-bottom: 2rem;
+  min-height: 1.2em;
+}
+
+.hi-activity-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  flex-shrink: 0;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.hi-activity-text {
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.hi-activity-text.is-fading {
+  opacity: 0;
+  transform: translateY(3px);
 }
 
 .hi-actions {
@@ -966,7 +1370,7 @@ button { font-family: inherit; }
 }
 
 /* ── ABOUT SECTION ────────────────────────────────────────────── */
-.about-section { background: rgba(6,14,18,0.88); }
+.about-section { background: rgba(10,22,28,0.88); }
 
 .about-grid {
   display: grid;
@@ -1074,7 +1478,7 @@ button { font-family: inherit; }
 .cap-desc { color: var(--text-3); font-size: 0.72rem; }
 
 /* ── SKILLS / GAUGES ──────────────────────────────────────────── */
-.skills-section { background: rgba(5,12,15,0.88); }
+.skills-section { background: rgba(9,20,25,0.88); }
 
 .skills-categories {
   display: flex;
@@ -1115,7 +1519,7 @@ button { font-family: inherit; }
 .gauge-panel {
   background:
     linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.5);
+    rgba(19,36,44,0.5);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   border: 1px solid var(--border-2);
@@ -1264,7 +1668,7 @@ button { font-family: inherit; }
 }
 
 /* ── ACTIVITY / HEARTBEAT ─────────────────────────────────────── */
-.activity-section { background: rgba(6,14,18,0.88); }
+.activity-section { background: rgba(10,22,28,0.88); }
 
 .heartbeat-panel {}
 
@@ -1423,7 +1827,7 @@ button { font-family: inherit; }
 .cs-4 { background: var(--red); }
 
 /* ── PROJECTS / SERVICES ──────────────────────────────────────── */
-.projects-section { background: rgba(5,12,15,0.88); }
+.projects-section { background: rgba(9,20,25,0.88); }
 
 .projects-grid {
   display: grid;
@@ -1526,7 +1930,7 @@ button { font-family: inherit; }
 /* ═══════════════════════════════════════════════════════════════
    LIVE TERMINAL SANDBOX SECTION
 ═══════════════════════════════════════════════════════════════ */
-.terminal-section { background: rgba(5,12,15,0.9); }
+.terminal-section { background: rgba(9,20,25,0.9); }
 
 .term-body { display: flex; flex-direction: column; gap: 0.85rem; }
 
@@ -1616,7 +2020,7 @@ button { font-family: inherit; }
 .term-chip:hover { color: var(--red-bright); border-color: var(--red-border); background: var(--red-glow); }
 
 /* ── BLOG / LOG STREAM ────────────────────────────────────────── */
-.blog-section { background: rgba(6,14,18,0.88); }
+.blog-section { background: rgba(10,22,28,0.88); }
 
 .log-body {
   display: flex;
@@ -1717,6 +2121,12 @@ button { font-family: inherit; }
   background: var(--border);
   padding: 1px 6px;
   border-radius: 2px;
+  transition: all var(--t-fast);
+}
+
+.log-tag:hover {
+  color: var(--red-bright);
+  background: var(--red-glow);
 }
 
 .log-read-more {
@@ -1749,7 +2159,7 @@ button { font-family: inherit; }
 }
 
 /* ── CONTACT ──────────────────────────────────────────────────── */
-.contact-section { background: rgba(5,12,15,0.9); }
+.contact-section { background: rgba(9,20,25,0.9); }
 
 .contact-grid {
   display: grid;
@@ -1795,7 +2205,7 @@ button { font-family: inherit; }
   padding: 0.7rem 0.9rem;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0) 50%),
-    rgba(9,20,27,0.5);
+    rgba(15,32,40,0.5);
   backdrop-filter: blur(12px) saturate(140%);
   -webkit-backdrop-filter: blur(12px) saturate(140%);
   border: 1px solid var(--border-2);
@@ -2027,7 +2437,7 @@ button { font-family: inherit; }
     position: fixed;
     top: var(--top-offset);
     left: 0; right: 0; bottom: 0;
-    background: rgba(5,12,15,0.97);
+    background: rgba(9,20,25,0.97);
     backdrop-filter: blur(20px);
     flex-direction: column;
     align-items: center;
@@ -2153,7 +2563,7 @@ button { font-family: inherit; }
   position: relative;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.5);
+    rgba(19,36,44,0.5);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   border: 1px solid var(--border-2);
@@ -2541,6 +2951,12 @@ button { font-family: inherit; }
   color: var(--text-2);
 }
 
+.ict:hover {
+  border-color: var(--red-border);
+  color: var(--red-bright);
+  background: var(--red-glow);
+}
+
 /* ── INCIDENT TIMELINE ────────────────────────────────────────── */
 .ic-timeline {
   padding-top: 0.85rem;
@@ -2582,6 +2998,14 @@ button { font-family: inherit; }
   border: 2px solid var(--border-2);
   background: var(--bg-2);
   transition: all var(--t-base);
+  cursor: default;
+}
+
+.itl-node:hover {
+  border-color: var(--red-bright);
+  background: var(--red-glow);
+  box-shadow: 0 0 10px rgba(0,212,200,0.4);
+  transform: scale(1.25);
 }
 
 .itl-line {
@@ -2689,7 +3113,7 @@ button { font-family: inherit; }
   border-color: rgba(64,196,255,0.2);
   background:
     linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 42%),
-    linear-gradient(135deg, rgba(11,26,31,0.5) 0%, rgba(64,196,255,0.07) 100%);
+    linear-gradient(135deg, rgba(19,36,44,0.5) 0%, rgba(64,196,255,0.07) 100%);
 }
 
 .gauge-panel--featured:hover {
@@ -2785,7 +3209,7 @@ button { font-family: inherit; }
 /* ═══════════════════════════════════════════════════════════════
    LIVE STACK SECTION
 ═══════════════════════════════════════════════════════════════ */
-.stack-section { background: rgba(6,14,18,0.88); }
+.stack-section { background: rgba(10,22,28,0.88); }
 
 .stack-body { display: flex; flex-direction: column; gap: 1.5rem; }
 
@@ -2968,7 +3392,7 @@ button { font-family: inherit; }
 /* ═══════════════════════════════════════════════════════════════
    TRAFFIC TOPOLOGY MAP SECTION
 ═══════════════════════════════════════════════════════════════ */
-.topology-section { background: rgba(6,14,18,0.88); }
+.topology-section { background: rgba(10,22,28,0.88); }
 
 .topo-reset-btn {
   display: inline-flex;
@@ -3050,6 +3474,12 @@ button { font-family: inherit; }
 .topo-node.is-active rect.tn-box { stroke: var(--red-bright); stroke-width: 2; filter: drop-shadow(0 0 6px rgba(0,255,212,0.35)); }
 .topo-node.is-dim { opacity: 0.28; }
 
+.topo-node:not(.is-dim):hover rect.tn-box {
+  stroke: var(--red-bright);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 5px rgba(0,255,212,0.3));
+}
+
 .topo-edge { fill: none; stroke: var(--border-2); stroke-width: 1.3; transition: stroke var(--t-fast), opacity var(--t-base); }
 .topo-edge.is-dashed { stroke-dasharray: 3 3; }
 .topo-edge.is-dim { opacity: 0.15; }
@@ -3065,7 +3495,7 @@ button { font-family: inherit; }
   flex: 0 0 260px;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.5);
+    rgba(19,36,44,0.5);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   border: 1px solid var(--border);
@@ -3198,7 +3628,7 @@ button { font-family: inherit; }
   font-family: var(--font-mono);
   font-size: 0.65rem;
   color: var(--text-3);
-  background: rgba(5,12,15,0.7);
+  background: rgba(9,20,25,0.7);
   border: 1px solid var(--border-2);
   border-radius: var(--r);
   padding: 0.25rem 0.6rem;
@@ -3214,7 +3644,7 @@ button { font-family: inherit; }
   flex: 0 0 260px;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.5);
+    rgba(19,36,44,0.5);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   border: 1px solid var(--border);
@@ -3258,7 +3688,7 @@ button { font-family: inherit; }
 /* ═══════════════════════════════════════════════════════════════
    CI/CD PIPELINE SECTION
 ═══════════════════════════════════════════════════════════════ */
-.cicd-section { background: rgba(5,12,15,0.9); }
+.cicd-section { background: rgba(9,20,25,0.9); }
 
 .cicd-body { display: flex; flex-direction: column; gap: 2rem; }
 
@@ -3281,7 +3711,7 @@ button { font-family: inherit; }
   padding: 1.1rem 1rem;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 42%),
-    rgba(11,26,31,0.5);
+    rgba(19,36,44,0.5);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   border: 1px solid var(--border-2);
@@ -3305,7 +3735,7 @@ button { font-family: inherit; }
 
 .pf-stage--final {
   border-color: rgba(0,230,118,0.35);
-  background: linear-gradient(135deg, rgba(11,26,31,0.5), rgba(0,230,118,0.08));
+  background: linear-gradient(135deg, rgba(19,36,44,0.5), rgba(0,230,118,0.08));
   animation: final-glow 3s ease-in-out infinite;
 }
 
@@ -3679,14 +4109,17 @@ button { font-family: inherit; }
                   <span class="hi-name-glow">DERRICK</span>
                 </h1>
                 <div class="hi-title">
-                  <span class="hi-role">DevOps Engineer</span>
-                  <span class="hi-sep" aria-hidden="true">|</span>
-                  <span class="hi-role">Linux Systems Administrator</span>
+                  <span class="hi-role-cycle" id="hi-role-cycle" aria-hidden="true">DevOps Engineer</span><span class="hi-cursor" aria-hidden="true">_</span>
+                  <span class="sr-only">DevOps Engineer, Linux Systems Administrator, Kubernetes Operator, and Incident Responder.</span>
                 </div>
                 <p class="hi-tagline">
                   Building reliable infrastructure, automating deployments,<br/>
                   and maintaining secure Linux server environments.
                 </p>
+                <div class="hi-activity" id="hi-activity" aria-hidden="true">
+                  <span class="hi-activity-dot"></span>
+                  <span class="hi-activity-text" id="hi-activity-text">Deployed milestone-app · 2m ago</span>
+                </div>
                 <div class="hi-actions">
                   <a href="#projects" class="btn btn-primary">
                     <i class="fas fa-server" aria-hidden="true"></i> View Services
@@ -5971,6 +6404,7 @@ async function runBoot() {
     overlay.classList.add('done');
     if (heroOut) heroOut.style.display = 'none';
     if (heroId)  heroId.style.display  = 'block';
+    initHeroAnimations();
     initAll();
     return;
   }
@@ -6015,6 +6449,67 @@ const HERO_SEQUENCE = [
   { type: 'ready' },
 ];
 
+/* ── HERO ANIMATIONS (rotating role + activity ticker) ───────────
+   Kicks off once the identity panel is revealed (after the boot
+   typewriter finishes). Respects prefers-reduced-motion by just
+   showing the first/static values with no cycling.
+──────────────────────────────────────────────────────────────── */
+function initHeroAnimations() {
+  const roleEl = document.getElementById('hi-role-cycle');
+  const actEl  = document.getElementById('hi-activity-text');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const ROLES = ['DevOps Engineer', 'Linux Systems Administrator', 'Kubernetes Operator', 'Incident Responder'];
+  const ACTIVITY = [
+    'Deployed milestone-app · 2m ago',
+    'SSL certificate renewed · 14m ago',
+    'Kubernetes rollout completed · 26m ago',
+    'Backup snapshot verified · 41m ago',
+    'Firewall rules synced · 1h ago',
+  ];
+
+  if (roleEl && !reduced) {
+    let idx = 0;
+    const TYPE_MS = 55, DELETE_MS = 32, HOLD_MS = 2200, GAP_MS = 400;
+
+    async function cycle() {
+      const word = ROLES[idx];
+      for (let i = 1; i <= word.length; i++) {
+        roleEl.textContent = word.slice(0, i);
+        await delay(TYPE_MS);
+      }
+      await delay(HOLD_MS);
+      for (let i = word.length; i >= 0; i--) {
+        roleEl.textContent = word.slice(0, i);
+        await delay(DELETE_MS);
+      }
+      await delay(GAP_MS);
+      idx = (idx + 1) % ROLES.length;
+      cycle();
+    }
+    roleEl.textContent = '';
+    cycle();
+  } else if (roleEl) {
+    roleEl.textContent = ROLES[0];
+  }
+
+  if (actEl) {
+    if (reduced) {
+      actEl.textContent = ACTIVITY[0];
+    } else {
+      let idx = 0;
+      setInterval(() => {
+        actEl.classList.add('is-fading');
+        setTimeout(() => {
+          idx = (idx + 1) % ACTIVITY.length;
+          actEl.textContent = ACTIVITY[idx];
+          actEl.classList.remove('is-fading');
+        }, 350);
+      }, 4200);
+    }
+  }
+}
+
 async function runHeroTerminal(container, identityEl) {
   if (!container) return;
   container.innerHTML = '';
@@ -6025,6 +6520,7 @@ async function runHeroTerminal(container, identityEl) {
       await delay(300);
       container.style.display = 'none';
       if (identityEl) identityEl.style.display = 'block';
+      initHeroAnimations();
       return;
     }
 
@@ -7152,7 +7648,10 @@ function initGlobe3D() {
   const gicSub = document.getElementById('gic-sub');
   const gicDesc = document.getElementById('gic-desc');
 
+  let selectedId = null;
+
   function selectLocation(loc) {
+    selectedId = loc.id;
     if (infoEmpty) infoEmpty.style.display = 'none';
     if (infoCard) infoCard.style.display = '';
     if (gicType) gicType.textContent = TYPE_META[loc.type].label;
@@ -7171,6 +7670,7 @@ function initGlobe3D() {
   }
 
   function clearGlobeSelection() {
+    selectedId = null;
     if (infoEmpty) infoEmpty.style.display = '';
     if (infoCard) infoCard.style.display = 'none';
     arcObjs.forEach(a => { a.line.material.opacity = 0.28; });
@@ -7228,6 +7728,28 @@ function initGlobe3D() {
     raycaster.setFromCamera(mouseVec, camera);
     const hits = raycaster.intersectObjects(markerMeshes);
     if (hits.length) selectLocation(hits[0].object.userData);
+  });
+
+  let hoveredMesh = null;
+  wrap.addEventListener('pointermove', (e) => {
+    if (dragging) return;
+    const rect = wrap.getBoundingClientRect();
+    mouseVec.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouseVec.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouseVec, camera);
+    const hits = raycaster.intersectObjects(markerMeshes);
+    const hit = hits.length ? hits[0].object : null;
+
+    if (hit === hoveredMesh) return;
+    if (hoveredMesh && hoveredMesh.userData.id !== selectedId) hoveredMesh.scale.setScalar(1);
+    hoveredMesh = hit;
+    if (hoveredMesh && hoveredMesh.userData.id !== selectedId) hoveredMesh.scale.setScalar(1.35);
+    wrap.style.cursor = hoveredMesh ? 'pointer' : 'grab';
+  });
+  wrap.addEventListener('pointerleave', () => {
+    if (hoveredMesh && hoveredMesh.userData.id !== selectedId) hoveredMesh.scale.setScalar(1);
+    hoveredMesh = null;
+    wrap.style.cursor = 'grab';
   });
 
   sizeToWrap();
@@ -7564,33 +8086,105 @@ function initActiveNav() {
 }
 
 /* ── MOBILE NAV ───────────────────────────────────────────────── */
+/* ── DOCK-STYLE NAV HOVER (macOS-esque magnification) ─────────────
+   As the pointer moves along the nav links, the nearest link scales
+   up and lifts slightly, with neighbors scaling by falloff distance
+   — same feel as hovering the macOS dock. Desktop/mouse only:
+   skipped on touch devices and when reduced-motion is requested.
+──────────────────────────────────────────────────────────────── */
+function initDockNav() {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) return;
+
+  const container = document.getElementById('nav-links');
+  if (!container) return;
+  const items = $$('.nl', container);
+  if (!items.length) return;
+
+  const MAX_SCALE = 1.22;
+  const SIGMA     = 60; // px — falloff radius, smaller = tighter magnification
+  const LIFT_PX   = 9;  // max upward lift at full magnification
+
+  let raf = null, pendingX = null;
+
+  function apply(mouseX) {
+    items.forEach(item => {
+      const rect = item.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const dist = mouseX - centerX;
+      const scale = 1 + (MAX_SCALE - 1) * Math.exp(-(dist * dist) / (2 * SIGMA * SIGMA));
+      const lift = (scale - 1) / (MAX_SCALE - 1) * LIFT_PX;
+      item.style.transform = `translateY(${-lift}px) scale(${scale.toFixed(3)})`;
+    });
+  }
+
+  function reset() {
+    items.forEach(item => { item.style.transform = ''; });
+  }
+
+  container.addEventListener('mousemove', (e) => {
+    if (window.innerWidth <= 820) return; // mobile fullscreen menu layout — skip
+    pendingX = e.clientX;
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      apply(pendingX);
+      raf = null;
+    });
+  });
+
+  container.addEventListener('mouseleave', () => {
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    reset();
+  });
+}
+
 function initMobileNav() {
   const toggle = $('#nav-toggle');
   const menu   = $('#nav-links');
   if (!toggle || !menu) return;
 
+  // The nav shell has backdrop-filter, which creates a new containing
+  // block for position:fixed descendants — left in place, the mobile
+  // fullscreen menu would position/clip itself against the small
+  // floating bar instead of the real viewport. So while open, move it
+  // to a direct child of <body> (a "portal"), then put it back on close
+  // so desktop's inline flex layout is unaffected.
+  const menuHome     = menu.parentElement;
+  const menuNextSibl = menu.nextElementSibling;
+
+  function openMenu() {
+    document.body.appendChild(menu);
+    menu.classList.add('open');
+    toggle.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    menu.classList.remove('open');
+    toggle.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    // Return it to its original spot once the close transition finishes
+    // so it doesn't visually jump mid-animation.
+    setTimeout(() => {
+      if (!menu.classList.contains('open')) {
+        if (menuNextSibl) menuHome.insertBefore(menu, menuNextSibl);
+        else menuHome.appendChild(menu);
+      }
+    }, 400);
+  }
+
   toggle.addEventListener('click', () => {
-    const open = menu.classList.toggle('open');
-    toggle.classList.toggle('open', open);
-    toggle.setAttribute('aria-expanded', String(open));
-    document.body.style.overflow = open ? 'hidden' : '';
+    if (menu.classList.contains('open')) closeMenu(); else openMenu();
   });
 
   $$('.nl', menu).forEach(l => {
-    l.addEventListener('click', () => {
-      menu.classList.remove('open');
-      toggle.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-    });
+    l.addEventListener('click', closeMenu);
   });
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && menu.classList.contains('open')) {
-      menu.classList.remove('open');
-      toggle.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
+      closeMenu();
       toggle.focus();
     }
   });
@@ -7755,6 +8349,7 @@ async function initAll() {
   initReveal();
   initActiveNav();
   initMobileNav();
+  initDockNav();
   initScrollEffects();
   initAnchors();
   initContactForm();
