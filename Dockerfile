@@ -1,6 +1,8 @@
 FROM golang:1.22-alpine AS build
 WORKDIR /src
-COPY server/ .
+COPY server/go.mod server/go.sum ./
+RUN go mod download
+COPY server/main.go .
 RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/contact-server .
 
 FROM nginx:1.27-alpine-slim
