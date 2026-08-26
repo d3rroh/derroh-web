@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://derroh.co.ke/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://derroh.co.ke/cv.html</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
   <url><loc>https://derroh.co.ke/blog/migrating-docker-compose-to-k3s.html</loc><priority>0.7</priority></url>
   <url><loc>https://derroh.co.ke/blog/kubernetes-pvc-permissions-fsgroup.html</loc><priority>0.7</priority></url>
   <url><loc>https://derroh.co.ke/blog/detecting-opcache-webshells-wordpress.html</loc><priority>0.7</priority></url>
