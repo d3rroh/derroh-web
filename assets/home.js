@@ -1033,9 +1033,10 @@ window.addEventListener('resize', () => {
       }, 300);
       return;
     }
+    var delay = lines[step].delay;
     addLine(lines[step]);
     updateBar();
-    setTimeout(runStep, lines[step].delay);
+    setTimeout(runStep, delay);
   }
 
   runStep();
