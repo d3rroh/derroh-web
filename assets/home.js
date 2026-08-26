@@ -70,6 +70,7 @@ const HeroBackground = (function() {
     stars: [],
     nebulaLayers: [],
     filmGrain: null,
+    canvas: null,
   };
   
   // Core classes
@@ -886,7 +887,7 @@ const HeroBackground = (function() {
   function animate(timestamp) {
     if (state.isPaused) return;
     
-    const ctx = canvas.getContext('2d');
+    const ctx = state.canvas.getContext('2d');
     ctx.clearRect(0, 0, state.width, state.height);
     
     // Apply camera animation
@@ -929,6 +930,7 @@ const HeroBackground = (function() {
   // Public API
   return {
     init,
+    setCanvas: (c) => { state.canvas = c; },
     pause: () => { state.isPaused = true; },
     resume: () => { state.isPaused = false; animate(performance.now()); },
     setMousePosition: (x, y) => {
@@ -956,7 +958,7 @@ document.addEventListener('DOMContentLoaded', () => {
     heroSection.appendChild(canvas);
   }
   
-  HeroBackground.canvas = canvas;
+  HeroBackground.setCanvas(canvas);
   HeroBackground.init();
   HeroBackground.animate(performance.now());
 });
@@ -964,6 +966,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // Handle mouse movement
 let mouseMoveTimeout;
 document.addEventListener('mousemove', (e) => {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
   const rect = canvas.getBoundingClientRect();
   const x = (e.clientX - rect.left) / rect.width;
   const y = (e.clientY - rect.top) / rect.height;
