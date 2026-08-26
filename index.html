@@ -32,38 +32,357 @@
 
   <!-- Structured data (Person) for rich results / knowledge panel eligibility -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Derrick Abila",
-    "url": "https://derroh.co.ke/",
-    "image": "https://derroh.co.ke/android-chrome-512x512.png",
-    "jobTitle": "DevOps Engineer & Linux Systems Administrator",
-    "description": "DevOps Engineer and Linux Systems Administrator specializing in Kubernetes, Docker, CI/CD pipelines, and Linux server security.",
-    "email": "mailto:info@derroh.co.ke",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Nairobi",
-      "addressCountry": "KE"
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://derroh.co.ke/#person",
+      "name": "Derrick Abila",
+      "url": "https://derroh.co.ke/",
+      "image": "https://derroh.co.ke/android-chrome-512x512.png",
+      "jobTitle": "DevOps Engineer & Linux Systems Administrator",
+      "description": "DevOps Engineer and Linux Systems Administrator specializing in Kubernetes, Docker, CI/CD pipelines, and Linux server security.",
+      "email": "mailto:info@derroh.co.ke",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Nairobi",
+        "addressCountry": "KE"
+      },
+      "sameAs": [
+        "https://github.com/d3rroh",
+        "https://ke.linkedin.com/in/derrick-abila-a3b985204"
+      ],
+      "knowsAbout": [
+        "Kubernetes",
+        "Docker",
+        "CI/CD",
+        "Linux System Administration",
+        "Cloud Infrastructure",
+        "Network Security",
+        "Incident Response"
+      ]
     },
-    "sameAs": [
-      "https://github.com/d3rroh",
-      "https://ke.linkedin.com/in/derrick-abila-a3b985204"
-    ],
-    "knowsAbout": ["Kubernetes", "Docker", "CI/CD", "Linux System Administration", "Cloud Infrastructure", "Network Security", "Incident Response"]
-  }
+    {
+      "@type": "WebSite",
+      "@id": "https://derroh.co.ke/#website",
+      "url": "https://derroh.co.ke/",
+      "name": "Derrick — DevOps Command Center",
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "Blog",
+      "@id": "https://derroh.co.ke/#blog",
+      "name": "System Logs",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "blogPost": [
+        {
+          "@id": "https://derroh.co.ke/#log-1"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-2"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-3"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-4"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-5"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-6"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-7"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-8"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-9"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-10"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-11"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-12"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-13"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-14"
+        },
+        {
+          "@id": "https://derroh.co.ke/#log-15"
+        }
+      ]
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-1",
+      "headline": "Migrating from Docker Compose to k3s: What Actually Breaks",
+      "description": "A real account of migrating a full production stack to Kubernetes on a bare Contabo VPS — port conflicts, CNI surprises, LoadBalancer gotchas, and why nginx-ingress + Cloudflare is the clean path.",
+      "datePublished": "2026-06-10T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-2",
+      "headline": "Kubernetes PVC Permissions: fsGroup, Init Containers, and www-data",
+      "description": "The definitive fix for Laravel storage permission errors in Kubernetes — why fsGroup: 33 works, when you need an init container with runAsUser: 0, and making entrypoints self-healing.",
+      "datePublished": "2026-05-28T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-3",
+      "headline": "Detecting OPcache-Disguised Webshells in WordPress",
+      "description": "How attackers hide PHP webshells as legitimate OPcache files, the filesystem patterns that give them away, and a complete remediation playbook including permission hardening.",
+      "datePublished": "2026-05-12T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-4",
+      "headline": "GitHub Actions → Docker Hub → kubectl: A Real CI/CD Pipeline",
+      "description": "Building a complete zero-downtime deployment pipeline for multiple apps — secrets management, multi-arch builds, rollout restart strategy, and wiring it all to a k3s cluster on a bare VPS.",
+      "datePublished": "2026-04-19T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-5",
+      "headline": "Zero-Downtime IMAP Migration with imapsync",
+      "description": "Migrating a full mailbox from Zoho to cPanel Dovecot with zero message loss — folder mapping, flag preservation, pre/post count validation, and the MX cutover timing that keeps users unaware.",
+      "datePublished": "2026-03-31T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-6",
+      "headline": "Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts",
+      "description": "Why editing dovecot.conf inside a running docker-mailserver container loses the fix on restart, and the correct override mechanism using user-patches.sh to make it stick permanently.",
+      "datePublished": "2026-03-08T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://derroh.co.ke/#log-7",
+      "headline": "Hardening Your Linux Server: A Practical Checklist",
+      "description": "SSH key enforcement, fail2ban tuning, kernel parameter hardening, unattended-upgrades, and CIS benchmark essentials — the checklist every production server needs before going live.",
+      "datePublished": "2026-02-21T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#blog",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-8",
+      "headline": "Case File INC-2026-001 — cPanel RCE Malware Attack & Multi-Server Breach Response",
+      "description": "Active exploitation of CVE-2026-29205 across multiple shared hosting accounts — forensic analysis across 12+ servers, malicious payload removal, credential rotation, and full client-notification documentation. Contained in under 4 hours with zero data loss.",
+      "datePublished": "2026-01-30T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-cve",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-9",
+      "headline": "Case File INC-2025-004 — Active SSH Compromise & Backdoor Removal",
+      "description": "Discovered unauthorized SSH keys and a backdoored /tmp/.bashrc planted by an intruder. Evicted the attacker, audited every session, rotated all keys, and hardened the SSH config against re-entry.",
+      "datePublished": "2026-01-14T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-ssh",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-10",
+      "headline": "Case File INC-2025-003 — CentOS Cryptominer Eradication & Root Compromise Cleanup",
+      "description": "Identified and eradicated CSPUpdate cryptominer binaries with malicious cron.d persistence on a compromised CentOS server. Traced the root-level access, removed every foothold, and hardened the system end to end.",
+      "datePublished": "2025-12-19T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-crypto",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-11",
+      "headline": "Case File INC-2025-002 — WordPress OPcache-Disguised Webshell Remediation",
+      "description": "Discovered and removed a sophisticated PHP webshell disguised as a legitimate OPcache file across 3 sites. Full filesystem audit, persistent backdoor removal, and permission hardening to close the vector for good.",
+      "datePublished": "2025-12-02T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-opcache",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-12",
+      "headline": "Case File PRJ-2025-007 — AlmaLinux VPS Non-Standard Gateway Recovery",
+      "description": "Restored networking on an OVH/Hetzner VPS running a non-standard gateway configuration using raw ip commands, then engineered systemd-networkd persistence so the fix survives every reboot.",
+      "datePublished": "2025-11-18T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-net",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-13",
+      "headline": "Case File PRJ-2025-006 — Zero-Loss IMAP Migration: Zoho Mail → cPanel via imapsync",
+      "description": "Orchestrated a complete mailbox migration from Zoho Mail to a cPanel Dovecot mail server using imapsync — every folder migrated, message flags preserved, pre/post counts validated, and a live DNS MX cutover with zero loss.",
+      "datePublished": "2025-10-25T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-imap",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-14",
+      "headline": "Case File PRJ-2025-008 — Node.js App Deployment on cPanel LiteSpeed",
+      "description": "Resolved a cascade of Node.js deployment failures on cPanel/LiteSpeed shared hosting: ESM/CJS module conflicts, process limits blocking npm install, hardcoded localhost API URLs, and Express 5 route syntax breaks.",
+      "datePublished": "2025-10-09T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-node",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://derroh.co.ke/#log-15",
+      "headline": "Case File PRJ-2024-005 — ownCloud + MinIO S3 Self-Hosted Stack on Docker & Kubernetes",
+      "description": "Deployed a full self-hosted ownCloud instance backed by MinIO S3-compatible storage, running across Docker Compose and later migrated to Kubernetes. Resolved entrypoint config rewrites, GuzzleHttp dependency gaps, and duplicate config conflicts.",
+      "datePublished": "2025-09-21T00:00:00+03:00",
+      "url": "https://derroh.co.ke/#ic-owncloud",
+      "author": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "publisher": {
+        "@id": "https://derroh.co.ke/#person"
+      },
+      "mainEntityOfPage": "https://derroh.co.ke/",
+      "inLanguage": "en"
+    }
+  ]
+}
   </script>
 
   <!-- Favicons -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png"/>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"/>
-  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png"/>
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/>
-  <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png"/>
-  <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png"/>
-  <link rel="manifest" href="site.webmanifest"/>
-  <meta name="theme-color" content="#050c0f"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png"/>
+  <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png"/>
+  <link rel="manifest" href="/site.webmanifest"/>
+  <meta name="theme-color" content="#091419"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
