@@ -2599,7 +2599,13 @@
       <div class="container">
         <div class="section-header reveal">
           <div class="sh-line" aria-hidden="true"></div>
-          <span class="sh-tag">// MODULE 10</span>
+          <span class="sh-tag">
+            <span class="sh-tag-branch">// MODULE 10</span>
+            <span class="sh-online">
+              <span class="dot dot--red pulse" aria-hidden="true"></span>
+              <span>ONLINE</span>
+            </span>
+          </span>
           <h2 id="contact-heading" class="sh-title">ESTABLISH_CONNECTION</h2>
           <div class="sh-line" aria-hidden="true"></div>
         </div>
@@ -2620,7 +2626,10 @@
                 </div>
                 <div class="po-line">
                   <span class="po-key">STATUS</span>
-                  <span class="po-val green-text">REACHABLE</span>
+                  <span class="po-val green-text po-status">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span>REACHABLE</span>
+                  </span>
                 </div>
                 <div class="po-line">
                   <span class="po-key">LOCATION</span>
@@ -2633,6 +2642,28 @@
                 <div class="po-line">
                   <span class="po-key">AVAIL</span>
                   <span class="po-val accent-text">Open to opportunities</span>
+                </div>
+              </div>
+
+              <div class="svcst" role="group" aria-label="Contact service status">
+                <div class="svcst-cmd">$ systemctl status contact.service</div>
+                <div class="svcst-body">
+                  <div class="svcst-line svcst-line--title">
+                    <span class="dot dot--green pulse" aria-hidden="true"></span>
+                    <span class="svcst-name">contact.service</span>
+                  </div>
+                  <div class="svcst-line svcst-line--detail">
+                    <span class="svcst-key">Active:</span>
+                    <span class="svcst-val green-text">active (running)</span>
+                  </div>
+                  <div class="svcst-line svcst-line--detail">
+                    <span class="svcst-key">Response:</span>
+                    <span class="svcst-val">&lt;24h</span>
+                  </div>
+                  <div class="svcst-line svcst-line--detail">
+                    <span class="svcst-key">Channel:</span>
+                    <span class="svcst-val accent-text">secure</span>
+                  </div>
                 </div>
               </div>
 
@@ -2662,54 +2693,93 @@
             </div>
           </div>
 
-          <!-- Command form -->
-          <div class="panel contact-form-panel reveal">
-            <div class="panel-title-bar">
-              <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
-              <span class="ptb-label">send-message --to derrick</span>
-            </div>
-            <div class="panel-body">
-              <form class="cmd-form" id="contact-form" method="post" action="/api/contact" aria-label="Contact form">
-                <input type="text" name="_website" id="f-website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;opacity:0"/>
-                <input type="hidden" id="f-csrf" name="_csrf" value=""/>
-                <div class="cmd-form-row">
-                  <div class="cmd-field">
-                    <label for="f-name">
-                      <span class="cf-prompt">--name</span>
-                      <span class="cf-req" aria-hidden="true">*</span>
-                    </label>
-                    <input type="text" id="f-name" name="name" placeholder="Your full name" required autocomplete="name"/>
-                  </div>
-                  <div class="cmd-field">
-                    <label for="f-email">
-                      <span class="cf-prompt">--email</span>
-                      <span class="cf-req" aria-hidden="true">*</span>
-                    </label>
-                    <input type="email" id="f-email" name="email" placeholder="your@email.com" required autocomplete="email"/>
-                  </div>
-                </div>
-                <div class="cmd-field">
-                  <label for="f-subject">
-                    <span class="cf-prompt">--subject</span>
-                    <span class="cf-req" aria-hidden="true">*</span>
-                  </label>
-                  <input type="text" id="f-subject" name="subject" placeholder="What's the issue / opportunity?" required/>
-                </div>
-                <div class="cmd-field">
-                  <label for="f-message">
-                    <span class="cf-prompt">--message</span>
-                    <span class="cf-req" aria-hidden="true">*</span>
-                  </label>
-                  <textarea id="f-message" name="message" rows="6" placeholder="Describe your project, issue, or question..." required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary btn-full" id="form-submit">
-                  <i class="fas fa-paper-plane" aria-hidden="true"></i>
-                  <span>./send-message.sh</span>
-                </button>
-                <div class="form-status" id="form-status" aria-live="polite" role="status"></div>
-              </form>
-            </div>
+<!-- Command form -->
+        <div class="panel contact-form-panel reveal">
+          <div class="ctl-glow" aria-hidden="true"></div>
+          <div class="panel-title-bar">
+            <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="ptb-label">send-message --to derrick</span>
           </div>
+          <div class="panel-body">
+            <div class="cmd-secure" role="group" aria-label="Secure channel status">
+              <span class="cs-key">SECURE CHANNEL</span>
+              <span class="cs-state">
+                <span class="dot dot--green pulse" aria-hidden="true"></span>
+                <span>READY</span>
+              </span>
+              <span class="cs-tls">TLS / ENCRYPTED</span>
+            </div>
+            <form class="cmd-form" id="contact-form" method="post" action="/api/contact" aria-label="Contact form" novalidate>
+              <input type="text" name="_website" id="f-website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;opacity:0"/>
+              <input type="hidden" id="f-csrf" name="_csrf" value=""/>
+              <div class="cmd-form-row">
+                <div class="cmd-field" data-field="name">
+                  <label for="f-name">
+                    <span class="cf-prompt">--name</span>
+                    <span class="cf-req" aria-hidden="true">*</span>
+                  </label>
+                  <div class="cf-wrap">
+                    <input type="text" id="f-name" name="name" placeholder="Your full name" required autocomplete="name" aria-describedby="f-name-msg"/>
+                    <span class="cf-valid" aria-hidden="true"></span>
+                  </div>
+                  <span class="cmd-field-error" id="f-name-msg"></span>
+                </div>
+                <div class="cmd-field" data-field="email">
+                  <label for="f-email">
+                    <span class="cf-prompt">--email</span>
+                    <span class="cf-req" aria-hidden="true">*</span>
+                  </label>
+                  <div class="cf-wrap">
+                    <input type="email" id="f-email" name="email" placeholder="your@email.com" required autocomplete="email" aria-describedby="f-email-msg"/>
+                    <span class="cf-valid" aria-hidden="true"></span>
+                  </div>
+                  <span class="cmd-field-error" id="f-email-msg"></span>
+                </div>
+              </div>
+              <div class="cmd-field" data-field="subject">
+                <label for="f-subject">
+                  <span class="cf-prompt">--subject</span>
+                  <span class="cf-req" aria-hidden="true">*</span>
+                </label>
+                <div class="cf-wrap">
+                  <input type="text" id="f-subject" name="subject" placeholder="What's the issue / opportunity?" required aria-describedby="f-subject-msg"/>
+                  <span class="cf-valid" aria-hidden="true"></span>
+                </div>
+                <span class="cmd-field-error" id="f-subject-msg"></span>
+              </div>
+              <div class="cmd-field" data-field="message">
+                <label for="f-message">
+                  <span class="cf-prompt">--message</span>
+                  <span class="cf-req" aria-hidden="true">*</span>
+                </label>
+                <div class="cf-wrap">
+                  <textarea id="f-message" name="message" rows="6" placeholder="Describe your project, issue, or question..." required aria-describedby="f-message-msg"></textarea>
+                  <span class="cf-valid cf-valid--ta" aria-hidden="true"></span>
+                </div>
+                <span class="cmd-field-error" id="f-message-msg"></span>
+              </div>
+              <button type="submit" class="btn btn-primary btn-full btn-cmdrun" id="form-submit">
+                <span class="btn-icon" aria-hidden="true">➤</span>
+                <span class="btn-cmd">./send-message.sh</span>
+                <span class="btn-cursor" aria-hidden="true">▌</span>
+              </button>
+              <div class="form-overlay" id="form-overlay" hidden>
+                <div class="fo-console" id="fo-console" role="status" aria-live="polite"></div>
+                <div class="fo-success" id="fo-success" hidden>
+                  <p class="fo-title">MESSAGE TRANSMITTED</p>
+                  <p class="fo-sub">I'll get back to you as soon as possible.</p>
+                  <button type="button" class="btn btn-outline btn-full" id="fo-again">[ SEND ANOTHER MESSAGE ]</button>
+                </div>
+                <div class="fo-error" id="fo-error" hidden>
+                  <p class="fo-title fo-title--err">! transmission failed</p>
+                  <p class="fo-sub" id="fo-err-msg">Unable to establish communication channel.<br/>Please try again.</p>
+                  <button type="button" class="btn btn-outline btn-full" id="fo-retry">[ RETRY ]</button>
+                </div>
+              </div>
+              <div class="form-status" id="form-status" aria-live="polite" role="status"></div>
+            </form>
+          </div>
+        </div>
 
         </div>
       </div>
