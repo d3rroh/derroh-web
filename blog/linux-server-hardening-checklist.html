@@ -80,15 +80,15 @@
       <span class="ict">hardening</span>
     </div>
     <div class="post-body">
-      <p>Before any server goes into production, it goes through the same hardening checklist. None of these steps are individually exotic, but skipping any one of them is consistently how servers get compromised.</p>
+      <p>Every server I put into production goes through the same hardening checklist first. Nothing on it is exotic, but skipping any one item is, again and again, how servers end up compromised.</p>
       <h2>SSH</h2>
-      <p>Key-based authentication enforced, password auth disabled entirely, root login disabled, and a non-standard port where it makes sense for the environment.</p>
+      <p>Keys only. Password authentication is switched off completely, root can't log in, and SSH moves to a non-standard port where that makes sense for the environment.</p>
       <h2>fail2ban</h2>
-      <p>Tuned ban thresholds and jail times appropriate to the service mix on the box — mail servers and web servers see very different attack patterns and need different fail2ban jail configs, not a one-size-fits-all default.</p>
-      <h2>Kernel Parameters</h2>
-      <p>Sysctl hardening covering things like disabling IP source routing, enabling SYN cookies, and restricting core dumps — the standard set of network and process hardening flags relevant to a public-facing server.</p>
-      <h2>Unattended Upgrades &amp; CIS Benchmarks</h2>
-      <p>Security patches applied automatically rather than relying on manual patching cadence, plus a pass against relevant CIS benchmark essentials for the distro in use — covering file permission baselines, unnecessary service removal, and audit logging.</p>
+      <p>I tune the ban thresholds and jail times to whatever services the box runs. Mail servers and web servers see very different attack patterns, so they need different jail configs rather than one default for everything.</p>
+      <h2>Kernel parameters</h2>
+      <p>The usual sysctl hardening for a public-facing server: IP source routing disabled, SYN cookies enabled, core dumps restricted, and the rest of the standard network and process flags.</p>
+      <h2>Unattended upgrades and CIS benchmarks</h2>
+      <p>Security patches install automatically, so nothing depends on someone remembering to patch. I also go through the relevant CIS benchmark essentials for the distro in use, mainly file permission baselines, removing services the server doesn't need, and audit logging.</p>
     </div>
   </main>
 </body>

@@ -74,13 +74,13 @@
       <span class="ict">opcache</span>
     </div>
     <div class="post-body">
-      <p>One of the more effective WordPress persistence techniques I've encountered in incident response is a PHP webshell disguised as a legitimate OPcache-related file, placed deep enough in the filesystem to avoid a casual look.</p>
-      <h2>How the Disguise Works</h2>
-      <p>Attackers name the malicious file to closely resemble OPcache cache artifacts or core WordPress files, and place it in a directory depth where administrators rarely browse manually. Combined with a file upload bypass as the initial entry vector, this can sit undetected for a long time.</p>
-      <h2>Filesystem Patterns That Give It Away</h2>
-      <ul><li>File modification timestamps that don't align with the last legitimate WordPress core or plugin update</li><li>PHP files present in upload directories that should only ever contain media</li><li>Files with names that are near-identical to legitimate system files but subtly off</li><li>Unexpected outbound connections traced back to a specific file when checked against server logs</li></ul>
-      <h2>Remediation Playbook</h2>
-      <p>A full filesystem audit combining signature-based scanning (ClamAV) with manual review catches what automated tools alone miss — disguised webshells are specifically designed to evade generic scanners. Once found, remove the backdoor, then harden upload restrictions and file permissions so the same entry vector can't be reused.</p>
+      <p>One of the more effective WordPress persistence tricks I've run into during incident response is a PHP webshell dressed up as an OPcache file, buried deep enough in the filesystem that a quick look won't find it.</p>
+      <h2>How the disguise works</h2>
+      <p>The attacker names the file so it looks like an OPcache cache artifact or a core WordPress file, then drops it in a directory most admins never browse by hand. Pair that with a file upload bypass as the way in, and it can sit there unnoticed for a long time.</p>
+      <h2>What gives it away</h2>
+      <ul><li>Modification times that don't line up with the last real WordPress core or plugin update</li><li>PHP files in upload directories, which should only ever hold media</li><li>Names that are nearly identical to legitimate system files, but slightly off</li><li>Outbound connections you didn't expect, which the server logs trace back to one specific file</li></ul>
+      <h2>Cleaning it up</h2>
+      <p>These shells are built specifically to slip past generic scanners, so automated tools alone will miss them. I run a full filesystem audit that pairs signature scanning (ClamAV) with manual review. Once the backdoor is found and removed, tighten upload restrictions and file permissions so the same way in can't be used again.</p>
     </div>
   </main>
 </body>

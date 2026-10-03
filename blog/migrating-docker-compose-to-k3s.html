@@ -80,15 +80,15 @@
       <span class="ict">nginx-ingress</span>
     </div>
     <div class="post-body">
-      <p>Migrating a full production stack — derroh-web, docker-mailserver, kimberley-web, n8n, and more — from Docker Compose to a k3s cluster on a bare Contabo VPS looked straightforward on paper. In practice, several assumptions from the Compose world didn't carry over cleanly.</p>
-      <h2>Port Conflicts</h2>
-      <p>Compose services binding directly to host ports don't translate 1:1 into Kubernetes. Every service needed to be rethought as a ClusterIP Service behind an Ingress, rather than assuming a direct host-port mapping — which meant auditing every port binding in the original Compose files before writing a single manifest.</p>
-      <h2>CNI Surprises</h2>
-      <p>On a single-node bare VPS, the default CNI behavior isn't always what you'd expect coming from Compose's simpler bridge networking. Pod-to-pod communication that "just worked" in Compose needed explicit verification once workloads moved into k3s's networking model.</p>
-      <h2>LoadBalancer Gotchas</h2>
-      <p>Standard Kubernetes <code>LoadBalancer</code> services expect a cloud provider to hand out an external IP — which doesn't exist on a bare VPS. The clean path was routing everything through <code>nginx-ingress</code> as the ingress controller, with Cloudflare handling SSL/CDN in front of the single VPS IP, rather than fighting Kubernetes for cloud-native load balancing it can't actually provide here.</p>
-      <h2>Takeaway</h2>
-      <p>For a single-node bare-metal-style cluster, nginx-ingress + Cloudflare is the pragmatic setup — it avoids the LoadBalancer problem entirely and gives you SSL termination and CDN for free.</p>
+      <p>I moved my whole production stack (derroh-web, docker-mailserver, kimberley-web, n8n and a few others) from Docker Compose to a k3s cluster on a bare Contabo VPS. On paper it looked simple. In practice, several things I'd taken for granted in Compose didn't come along cleanly.</p>
+      <h2>Port conflicts</h2>
+      <p>In Compose, services bind straight to host ports. Kubernetes doesn't map that 1:1, so every service had to become a ClusterIP Service sitting behind an Ingress. Before writing a single manifest, I went through every port binding in the old Compose files, because each one needed rethinking.</p>
+      <h2>CNI surprises</h2>
+      <p>Compose's bridge networking is simple. On a single-node VPS, k3s's default CNI doesn't always behave the way you'd expect coming from that, so pod-to-pod traffic that "just worked" in Compose had to be checked properly once the workloads moved over.</p>
+      <h2>LoadBalancer gotchas</h2>
+      <p>A Kubernetes <code>LoadBalancer</code> service expects a cloud provider to hand it an external IP. A bare VPS has no such thing. Rather than fight Kubernetes for load balancing it can't provide here, I routed everything through <code>nginx-ingress</code> and put Cloudflare in front of the VPS's single IP for SSL and CDN.</p>
+      <h2>What I'd do again</h2>
+      <p>For a single-node, bare-metal-style cluster, nginx-ingress plus Cloudflare is the practical setup. You skip the LoadBalancer problem entirely, and you get SSL termination and a CDN for free.</p>
     </div>
   </main>
 </body>

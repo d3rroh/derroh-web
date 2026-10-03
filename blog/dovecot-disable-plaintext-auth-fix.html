@@ -80,11 +80,11 @@
       <span class="ict">containers</span>
     </div>
     <div class="post-body">
-      <p>A common mistake when hardening a <code>docker-mailserver</code> instance is editing <code>dovecot.conf</code> directly inside the running container — the fix works immediately, then silently disappears the next time the container restarts or is recreated from the image.</p>
-      <h2>Why It Disappears</h2>
-      <p>Container filesystem changes outside a mounted volume don't persist across container recreation. <code>docker-mailserver</code> regenerates or overwrites parts of its config from the base image on startup, so a manual in-container edit to <code>disable_plaintext_auth</code> gets clobbered the moment the container restarts.</p>
-      <h2>The Correct Fix</h2>
-      <p>The reliable approach is using <code>docker-mailserver</code>'s supported override mechanism — a <code>user-patches.sh</code> script that runs on every container start and re-applies the configuration change idempotently, rather than relying on a manual edit surviving. This makes the fix part of the container's startup process instead of a one-time change that silently regresses.</p>
+      <p>A common mistake when hardening <code>docker-mailserver</code> is editing <code>dovecot.conf</code> inside the running container. The fix works straight away, then quietly disappears the next time the container restarts or is recreated from the image.</p>
+      <h2>Why it disappears</h2>
+      <p>Changes to a container's filesystem outside a mounted volume don't survive the container being recreated. On top of that, <code>docker-mailserver</code> regenerates or overwrites parts of its config from the base image at startup. So a hand edit to <code>disable_plaintext_auth</code> is gone the moment the container restarts.</p>
+      <h2>The fix that sticks</h2>
+      <p>Use the override mechanism <code>docker-mailserver</code> already supports: a <code>user-patches.sh</code> script. It runs on every container start and re-applies the change idempotently. The setting becomes part of how the container starts up, instead of a one-off edit you're hoping will survive.</p>
     </div>
   </main>
 </body>

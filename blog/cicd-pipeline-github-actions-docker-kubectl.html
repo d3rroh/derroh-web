@@ -80,13 +80,13 @@
       <span class="ict">cicd</span>
     </div>
     <div class="post-body">
-      <p>The CI/CD pipeline powering derroh-web, milestone-tracker, and kimberley-web follows the same shape: a push to <code>main</code> triggers a GitHub Actions workflow, which builds a Docker image, pushes it to Docker Hub, and then rolls it out to the k3s cluster with zero downtime.</p>
-      <h2>Pipeline Stages</h2>
-      <p>Each workflow runs through: git push → Actions trigger (<code>.github/workflows/deploy.yml</code>) → Docker build (<code>--no-cache</code> to avoid stale layer issues) → push to Docker Hub → <code>kubectl rollout restart</code> against the target deployment — with each stage gating the next so a failed build never reaches the cluster.</p>
-      <h2>Secrets Management</h2>
-      <p>Docker Hub credentials and the cluster's kubeconfig are stored as encrypted GitHub Actions secrets rather than committed anywhere, injected only at the deploy step of the workflow.</p>
-      <h2>Zero-Downtime Rollouts</h2>
-      <p>Using <code>kubectl rollout restart</code> against a Deployment with a sane readiness probe means Kubernetes brings up the new pod, confirms it's healthy, and only then terminates the old one — no traffic gap for end users during a deploy.</p>
+      <p>derroh-web, milestone-tracker and kimberley-web all deploy the same way. A push to <code>main</code> starts a GitHub Actions workflow, which builds a Docker image, pushes it to Docker Hub and rolls it out to the k3s cluster without downtime.</p>
+      <h2>The stages</h2>
+      <p>A git push triggers <code>.github/workflows/deploy.yml</code>. The workflow builds the image with <code>--no-cache</code> so stale layers can't sneak in, pushes it to Docker Hub, then runs <code>kubectl rollout restart</code> against the target deployment. Each stage has to pass before the next one runs, so a failed build never reaches the cluster.</p>
+      <h2>Secrets</h2>
+      <p>The Docker Hub credentials and the cluster's kubeconfig live in encrypted GitHub Actions secrets. They aren't committed anywhere, and the workflow only injects them at the deploy step.</p>
+      <h2>Zero-downtime rollouts</h2>
+      <p>With a sensible readiness probe on the Deployment, <code>kubectl rollout restart</code> does the right thing: Kubernetes starts the new pod, waits for it to report healthy, and only then terminates the old one. Users don't see a gap in traffic while a deploy goes out.</p>
     </div>
   </main>
 </body>

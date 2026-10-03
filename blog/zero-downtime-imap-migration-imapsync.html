@@ -80,13 +80,13 @@
       <span class="ict">dns</span>
     </div>
     <div class="post-body">
-      <p><code>imapsync</code> is the tool of choice for mailbox migrations where zero message loss is non-negotiable — and getting a fully clean migration means treating folder mapping, flag preservation, and MX cutover timing as separate, deliberate steps rather than a single sync-and-hope operation.</p>
-      <h2>Folder Mapping &amp; Flags</h2>
-      <p>Source and destination folder structures rarely match exactly out of the box, so mapping needs to be explicit rather than assumed. Message flags — read/unread, flagged, replied — need to survive the sync too, or the user opens their new inbox to a pile of everything marked unread.</p>
+      <p>When a mailbox migration can't lose a single message, I reach for <code>imapsync</code>. Getting a fully clean migration out of it means treating folder mapping, flag preservation and MX cutover timing as separate, deliberate steps, not one big sync and a hope for the best.</p>
+      <h2>Folder mapping and flags</h2>
+      <p>The source and destination folder structures rarely line up out of the box, so I map them explicitly instead of assuming. Message flags (read/unread, flagged, replied) have to come across too. Otherwise the user opens their new inbox and finds everything marked unread.</p>
       <h2>Validation</h2>
-      <p>Before calling a migration complete, I always run a pre/post message count comparison per folder. Any mismatch gets investigated before cutover, not after.</p>
-      <h2>The MX Cutover</h2>
-      <p>Once the migration is validated, the DNS MX cutover is the moment that actually matters to the end user. Timing it right — after a final delta sync to catch anything that arrived during migration — is what makes the whole process invisible to them.</p>
+      <p>Before I call a migration complete, I compare message counts per folder before and after. Any mismatch gets investigated before cutover, not after.</p>
+      <h2>The MX cutover</h2>
+      <p>Once everything checks out, the DNS MX cutover is the moment that matters to the user. I run a final delta sync first to catch anything that arrived during the migration, then switch MX. Get that timing right and the whole move is invisible to them.</p>
     </div>
   </main>
 </body>

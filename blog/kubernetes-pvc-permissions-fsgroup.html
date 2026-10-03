@@ -80,13 +80,13 @@
       <span class="ict">fsgroup</span>
     </div>
     <div class="post-body">
-      <p>Laravel storage permission errors are one of the most common headaches when moving a PHP app onto a Kubernetes PersistentVolumeClaim. The web server runs as <code>www-data</code>, but volumes mounted into a pod don't automatically carry the right ownership.</p>
-      <h2>The fsGroup Fix</h2>
-      <p>Setting <code>fsGroup: 33</code> (the standard <code>www-data</code> GID on Debian-based images) in the pod's <code>securityContext</code> tells Kubernetes to change group ownership of the mounted volume to match, so the web server process can actually write to <code>storage/</code> and <code>bootstrap/cache/</code> without manual chown steps.</p>
-      <h2>When fsGroup Isn't Enough</h2>
-      <p>On some storage backends, <code>fsGroup</code> alone doesn't retroactively fix ownership on a volume that already has files with the wrong permissions. In those cases, an init container running as <code>runAsUser: 0</code> that does an explicit <code>chown -R</code> pass before the main container starts is the reliable fallback.</p>
-      <h2>Making It Self-Healing</h2>
-      <p>The last piece is making sure the container's entrypoint script re-asserts correct permissions on every startup rather than assuming they'll persist — so a pod restart, rescheduling to a different node, or a fresh PVC mount doesn't reintroduce the same permission errors.</p>
+      <p>Storage permission errors are one of the most common headaches when you move a Laravel app onto a Kubernetes PersistentVolumeClaim. The web server runs as <code>www-data</code>, but a volume mounted into a pod doesn't automatically come with the right ownership.</p>
+      <h2>The fsGroup fix</h2>
+      <p>Set <code>fsGroup: 33</code> in the pod's <code>securityContext</code>. 33 is the standard <code>www-data</code> GID on Debian-based images, and with it set, Kubernetes changes the mounted volume's group ownership to match. The web server can then write to <code>storage/</code> and <code>bootstrap/cache/</code> without any manual chown.</p>
+      <h2>When fsGroup isn't enough</h2>
+      <p>On some storage backends, <code>fsGroup</code> won't retroactively fix a volume that already has files with the wrong permissions. For those, the reliable fallback is an init container running as <code>runAsUser: 0</code> that does an explicit <code>chown -R</code> before the main container starts.</p>
+      <h2>Making it self-healing</h2>
+      <p>Last, don't assume the permissions will stick. Have the container's entrypoint script set them again on every start, so a pod restart, a reschedule onto another node or a fresh PVC mount can't bring the same errors back.</p>
     </div>
   </main>
 </body>
