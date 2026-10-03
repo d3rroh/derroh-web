@@ -128,14 +128,22 @@ function initHeroAnimations() {
 
   const ROLES = ['DevOps Engineer', 'Linux Systems Administrator', 'Kubernetes Operator', 'Incident Responder'];
   const ACTIVITY = [
-    'Deployed milestone-app · 2m ago',
-    'SSL certificate renewed · 14m ago',
-    'Kubernetes rollout completed · 26m ago',
-    'Backup snapshot verified · 41m ago',
-    'Firewall rules synced · 1h ago',
+    'Deployed milestone-app',
+    'SSL certificate renewed',
+    'Kubernetes rollout completed',
+    'Backup snapshot verified',
+    'Firewall rules synced',
   ];
 
   if (roleEl && !reduced) {
+    // The markup holds just the first role so no-JS renders it once. While
+    // it's being typed/deleted, hide it from AT and expose the full list.
+    roleEl.setAttribute('aria-hidden', 'true');
+    const srRoles = document.createElement('span');
+    srRoles.className = 'sr-only';
+    srRoles.textContent = ROLES.slice(0, -1).join(', ') + ', and ' + ROLES[ROLES.length - 1] + '.';
+    roleEl.parentElement.appendChild(srRoles);
+
     let idx = 0;
     const TYPE_MS = 55, DELETE_MS = 32, HOLD_MS = 2200, GAP_MS = 400;
 
@@ -301,32 +309,55 @@ function initMetrics() {
   setInterval(updateMetrics, 2200);
 }
 
-/* ── STAT COUNTERS (hero) ─────────────────────────────────────── */
+/* ── STAT COUNTERS (hero) ─────────────────────────────────────────
+   The final values live in the markup; the count-up is enhancement
+   only, so it's skipped entirely under prefers-reduced-motion.
+──────────────────────────────────────────────────────────────── */
 function initStatCounters() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const els = $$('.stat-num[data-target]');
+  const fmt = el => v => v.toFixed(parseInt(el.dataset.decimals, 10) || 0);
+
   const obs = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
       const el     = entry.target;
-      const target = parseInt(el.dataset.target, 10);
+      const target = parseFloat(el.dataset.target);
+      const format = fmt(el);
       const dur    = 1600;
       const steps  = 50;
       const stepMs = dur / steps;
       let i = 0;
       const timer = setInterval(() => {
         i++;
-        el.textContent = Math.round(target * (i / steps));
-        if (i >= steps) { el.textContent = target; clearInterval(timer); }
+        el.textContent = format(target * (i / steps));
+        if (i >= steps) { el.textContent = format(target); clearInterval(timer); }
       }, stepMs);
       obs.unobserve(el);
     });
   }, { threshold: 0.5 });
 
-  $$('.stat-val').forEach(el => obs.observe(el));
+  els.forEach(el => {
+    el.textContent = fmt(el)(0);
+    obs.observe(el);
+  });
 }
 
-/* ── RADIAL GAUGE ANIMATIONS ──────────────────────────────────── */
+/* ── RADIAL GAUGE ANIMATIONS ──────────────────────────────────────
+   Each ring's value is an inline --pct and its final % is in the
+   markup; CSS draws the full ring from --pct. Under html.js the ring
+   starts empty until .animated is added here, and the numbers are
+   reset to 0 and counted up — unless reduced motion is requested.
+──────────────────────────────────────────────────────────────── */
 function initGauges() {
-  const circumference = 2 * Math.PI * 50; // r=50
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const gaugePct = circle => parseFloat(circle.style.getPropertyValue('--pct')) || 80;
+
+  if (!reduced) {
+    $$('.gauge-panel .gp-pct').forEach(el => { el.innerHTML = '0<span class="gp-unit">%</span>'; });
+    $$('.gauge-panel .gp-wide-num').forEach(el => { el.textContent = '0'; });
+  }
 
   const obs = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -336,15 +367,9 @@ function initGauges() {
       // Circular gauge (standard + featured cards)
       const circle = $('.gauge-fill', panel);
       const pctEl  = $('.gp-pct', panel);
-      if (circle && pctEl) {
-        const pct  = parseInt(circle.dataset.pct, 10) || 80;
-        const dash = circumference - (pct / 100) * circumference;
-
-        requestAnimationFrame(() => {
-          circle.style.strokeDashoffset = dash;
-          circle.classList.add('animated');
-        });
-
+      if (circle) requestAnimationFrame(() => circle.classList.add('animated'));
+      if (circle && pctEl && !reduced) {
+        const pct = gaugePct(circle);
         let current = 0;
         const steps = 60;
         const step  = pct / steps;
@@ -357,7 +382,7 @@ function initGauges() {
 
       // Wide-card headline stat count-up
       const wideNum = $('.gp-wide-num', panel);
-      if (wideNum) {
+      if (wideNum && !reduced) {
         const target = parseInt(wideNum.dataset.count, 10) || 0;
         let current = 0;
         const steps = 50;
@@ -372,7 +397,7 @@ function initGauges() {
       // Sparkline — draws for any card that has one, gauge or not
       const canvas = $('.spark-canvas', panel);
       if (canvas) {
-        const basePct = parseInt((circle && circle.dataset.pct) || canvas.dataset.pct, 10) || 70;
+        const basePct = (circle ? gaugePct(circle) : parseInt(canvas.dataset.pct, 10)) || 70;
         drawSparkline(canvas, basePct);
       }
 
@@ -1605,7 +1630,7 @@ function initDockNav() {
   }
 
   container.addEventListener('mousemove', (e) => {
-    if (window.innerWidth <= 820) return; // mobile fullscreen menu layout — skip
+    if (NAV_COLLAPSE_MQ.matches) return; // collapsed fullscreen menu layout — skip
     pendingX = e.clientX;
     if (raf) return;
     raf = requestAnimationFrame(() => {
@@ -1619,6 +1644,9 @@ function initDockNav() {
     reset();
   });
 }
+
+// Must match the hamburger breakpoint in home.css.
+const NAV_COLLAPSE_MQ = window.matchMedia('(max-width: 1100px)');
 
 function initMobileNav() {
   const toggle = $('#nav-toggle');
@@ -1669,6 +1697,12 @@ function initMobileNav() {
       closeMenu();
       toggle.focus();
     }
+  });
+
+  // Widening past the breakpoint with the menu open would leave it
+  // portaled to <body> and scroll-locked — close it instead.
+  NAV_COLLAPSE_MQ.addEventListener('change', e => {
+    if (!e.matches && menu.classList.contains('open')) closeMenu();
   });
 }
 
