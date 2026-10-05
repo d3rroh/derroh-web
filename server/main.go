@@ -1,17 +1,23 @@
 package main
 
 import (
+	"crypto/hmac"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"log"
+	"mime"
+	"net"
 	"net/http"
 	"net/smtp"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
+	"unicode"
 )
 
 // ── Models ──────────────────────────────────────────────────
@@ -35,10 +41,15 @@ func envOr(key, def string) string {
 	return def
 }
 
-// sanitizeHeader strips CR and LF from values used in SMTP headers
-// to prevent email header injection attacks.
+// sanitizeHeader strips CR, LF and every other control character from
+// values used in SMTP headers to prevent email header injection.
 func sanitizeHeader(s string) string {
-	return strings.NewReplacer("\r", "", "\n", "").Replace(s)
+	return strings.Map(func(r rune) rune {
+		if unicode.IsControl(r) {
+			return -1
+		}
+		return r
+	}, s)
 }
 
 // sanitizeLog removes newlines from log output to prevent log injection.
@@ -48,48 +59,64 @@ func sanitizeLog(s string) string {
 	return s
 }
 
-// ── CSRF ────────────────────────────────────────────────────
+// ── CSRF / form token ───────────────────────────────────────
+//
+// Each visitor gets a stateless token: "<unix-ts>.<hmac(ts)>". It expires
+// after tokenTTL, and a submit is refused if it arrives sooner than
+// tokenMinAge after the token was issued (humans don't fill a form in
+// under a few seconds; scripted floods do). The signing key is random per
+// process unless CSRF_SECRET is set, so a restart invalidates old tokens —
+// the client simply fetches a new one.
 
-var (
-	csrfToken   string
-	csrfCreated time.Time
-	csrfMu      sync.RWMutex
+const (
+	tokenTTL    = 2 * time.Hour
+	tokenMinAge = 3 * time.Second
 )
 
-const csrfTTL = 24 * time.Hour
-
-func getCSRFToken() string {
-	csrfMu.RLock()
-	if csrfToken != "" && time.Since(csrfCreated) < csrfTTL {
-		defer csrfMu.RUnlock()
-		return csrfToken
+var tokenKey = func() []byte {
+	if k := os.Getenv("CSRF_SECRET"); len(k) >= 32 {
+		return []byte(k)
 	}
-	csrfMu.RUnlock()
-
-	csrfMu.Lock()
-	defer csrfMu.Unlock()
-
-	// Double-check after acquiring write lock
-	if csrfToken != "" && time.Since(csrfCreated) < csrfTTL {
-		return csrfToken
-	}
-
 	b := make([]byte, 32)
 	if _, err := rand.Read(b); err != nil {
-		log.Printf("csfr: failed to generate token: %v", err)
-		return ""
+		log.Fatalf("csrf: failed to generate key: %v", err)
 	}
-	csrfToken = hex.EncodeToString(b)
-	csrfCreated = time.Now()
-	return csrfToken
+	return b
+}()
+
+func signToken(ts int64) string {
+	mac := hmac.New(sha256.New, tokenKey)
+	mac.Write([]byte(strconv.FormatInt(ts, 10)))
+	return hex.EncodeToString(mac.Sum(nil))
 }
 
-func verifyCSRF(r *http.Request) bool {
-	token := r.Header.Get("X-CSRF-Token")
-	if token == "" {
-		return false
+func newCSRFToken() string {
+	ts := time.Now().Unix()
+	return strconv.FormatInt(ts, 10) + "." + signToken(ts)
+}
+
+// verifyCSRF returns "" when the token is valid, otherwise a short reason.
+func verifyCSRF(r *http.Request) string {
+	tsStr, sig, ok := strings.Cut(r.Header.Get("X-CSRF-Token"), ".")
+	if !ok {
+		return "missing"
 	}
-	return token == getCSRFToken()
+	ts, err := strconv.ParseInt(tsStr, 10, 64)
+	if err != nil {
+		return "malformed"
+	}
+	// Constant-time comparison of the signature.
+	if !hmac.Equal([]byte(sig), []byte(signToken(ts))) {
+		return "bad signature"
+	}
+	age := time.Since(time.Unix(ts, 0))
+	if age > tokenTTL {
+		return "expired"
+	}
+	if age < tokenMinAge {
+		return "too fast"
+	}
+	return ""
 }
 
 // ── Rate Limiting ───────────────────────────────────────────
@@ -105,12 +132,58 @@ type visit struct {
 }
 
 const (
-	rateLimit    = 10            // max requests per window
-	rateWindow   = 1 * time.Hour // sliding window
-	rateCleanup  = 5 * time.Minute
+	rateLimit   = 10            // max requests per client per window
+	rateWindow  = 1 * time.Hour // window length
+	rateCleanup = 5 * time.Minute
 )
 
 var rl = &rateLimiter{visitors: make(map[string]*visit)}
+
+// Global ceiling across all clients, so rotating IPs can't flood the
+// inbox (or the fallback log file). CONTACT_GLOBAL_LIMIT overrides it.
+var globalLimit = func() int {
+	if n, err := strconv.Atoi(os.Getenv("CONTACT_GLOBAL_LIMIT")); err == nil && n > 0 {
+		return n
+	}
+	return 60
+}()
+
+var (
+	globalMu     sync.Mutex
+	globalCount  int
+	globalWindow time.Time
+)
+
+func allowGlobal() bool {
+	globalMu.Lock()
+	defer globalMu.Unlock()
+	if time.Since(globalWindow) > rateWindow {
+		globalWindow, globalCount = time.Now(), 0
+	}
+	if globalCount >= globalLimit {
+		return false
+	}
+	globalCount++
+	return true
+}
+
+// clientIP picks the address to rate-limit on. X-Forwarded-For is NOT
+// used: its first entry is whatever the client sent, so trusting it lets
+// anyone dodge the limit by changing one header.
+//  1. CF-Connecting-IP — set (and overwritten) by Cloudflare.
+//  2. X-Real-IP        — set by our nginx from $remote_addr.
+//  3. RemoteAddr       — without the port, which changes per connection.
+func clientIP(r *http.Request) string {
+	for _, h := range []string{"CF-Connecting-IP", "X-Real-IP"} {
+		if v := strings.TrimSpace(r.Header.Get(h)); net.ParseIP(v) != nil {
+			return v
+		}
+	}
+	if host, _, err := net.SplitHostPort(r.RemoteAddr); err == nil {
+		return host
+	}
+	return r.RemoteAddr
+}
 
 func init() {
 	go func() {
@@ -163,24 +236,23 @@ func handleContact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Rate limit
-	ip := r.RemoteAddr
-	if fwd := r.Header.Get("X-Forwarded-For"); fwd != "" {
-		ip = strings.Split(fwd, ",")[0]
-	}
-	if !rl.allow(strings.TrimSpace(ip)) {
-		http.Error(w, "rate limit exceeded", http.StatusTooManyRequests)
-		return
-	}
-
-	// CSRF verification
-	if !verifyCSRF(r) {
+	// CSRF / form token first: it's cheap and stops blind floods before
+	// they consume anyone's rate-limit budget.
+	if reason := verifyCSRF(r); reason != "" {
 		http.Error(w, "invalid csrf token", http.StatusForbidden)
 		return
 	}
 
-	// Body size limit: 1MB
-	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+	// Rate limit: per client, then globally.
+	ip := clientIP(r)
+	if !rl.allow(ip) || !allowGlobal() {
+		log.Printf("contact: rate limited %s", sanitizeLog(ip))
+		http.Error(w, "rate limit exceeded", http.StatusTooManyRequests)
+		return
+	}
+
+	// Body size limit: the largest valid message is ~10.6KB.
+	r.Body = http.MaxBytesReader(w, r.Body, 64<<10)
 
 	var m message
 	if err := json.NewDecoder(r.Body).Decode(&m); err != nil {
@@ -225,13 +297,14 @@ func writeOK(w http.ResponseWriter, msg string) {
 // ── CSRF Token Endpoint ─────────────────────────────────────
 
 func handleCSRFToken(w http.ResponseWriter, r *http.Request) {
-	token := getCSRFToken()
-	if token == "" {
-		http.Error(w, "token generation failed", http.StatusInternalServerError)
+	if r.Method != http.MethodGet {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"token": token})
+	// Never let Cloudflare or a browser cache a token.
+	w.Header().Set("Cache-Control", "no-store")
+	json.NewEncoder(w).Encode(map[string]string{"token": newCSRFToken()})
 }
 
 // ── Email Delivery ──────────────────────────────────────────
@@ -261,7 +334,7 @@ func deliver(m message) error {
 
 	msg := "From: " + from + "\n" +
 		"To: " + to + "\n" +
-		"Subject: " + safeSubject + "\n" +
+		"Subject: " + mime.QEncoding.Encode("utf-8", safeSubject) + "\n" +
 		"Date: " + time.Now().Format(time.RFC1123Z) + "\n" +
 		"Reply-To: " + safeEmail + "\n" +
 		"MIME-Version: 1.0\n" +

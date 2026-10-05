@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Derrick — DevOps Engineer & Linux Systems Administrator | Nairobi, Kenya</title>
   <meta name="description" content="Derrick is a DevOps Engineer and Linux Systems Administrator based in Nairobi, Kenya, specializing in Kubernetes, Docker, CI/CD pipelines, and Linux server security. 5+ years managing production infrastructure and resolving critical security incidents."/>
-  <meta name="keywords" content="DevOps Engineer Kenya, DevOps Engineer Nairobi, Linux Systems Administrator Kenya, Linux server administration Nairobi, Kubernetes, Docker, CI/CD, server security Kenya, incident response, k3s"/>
   <meta name="author" content="Derrick Abila"/>
   <meta name="robots" content="index, follow, max-image-preview:large"/>
   <link rel="canonical" href="https://derroh.co.ke/"/>
@@ -48,7 +47,7 @@
       "@id": "https://derroh.co.ke/#person",
       "name": "Derrick Abila",
       "url": "https://derroh.co.ke/",
-      "image": "https://derroh.co.ke/android-chrome-512x512.png",
+      "image": "https://derroh.co.ke/og-image.png",
       "jobTitle": "DevOps Engineer & Linux Systems Administrator",
       "description": "DevOps Engineer and Linux Systems Administrator specializing in Kubernetes, Docker, CI/CD pipelines, and Linux server security.",
       "email": "mailto:info@derroh.co.ke",
@@ -66,8 +65,18 @@
         "Kubernetes",
         "Docker",
         "CI/CD",
+        "GitHub Actions",
         "Linux System Administration",
-        "Cloud Infrastructure",
+        "Nginx",
+        "Apache",
+        "Cloudflare",
+        "DNS",
+        "SSL/TLS",
+        "Firewall Configuration",
+        "MySQL",
+        "Database Migration",
+        "Bash",
+        "WordPress Security",
         "Network Security",
         "Incident Response"
       ],
@@ -558,7 +567,16 @@
        competes with first paint / LCP, especially on throttled mobile. -->
   <!-- Flags that JS is running so the CSS can hide things it will animate in
        (boot overlay, reveals, counters); without it everything renders final. -->
-  <script>document.documentElement.classList.add('js');</script>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js');
+      // Skip the boot overlay for reduced motion and for repeat visits this session.
+      var skip = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      try { skip = skip || sessionStorage.getItem('derroh-boot-seen') === '1'; } catch (e) {}
+      if (skip) root.classList.add('boot-skip');
+    })();
+  </script>
   <link rel="stylesheet" href="assets/home.css"/>
 </head>
 <body>
@@ -633,14 +651,14 @@
           <ul class="nav-links" id="nav-links" role="list">
             <li><a href="#home"     class="nl active" data-s="home">_HOME</a></li>
             <li><a href="#about"    class="nl" data-s="about">_ABOUT</a></li>
-            <li><a href="#skills"   class="nl" data-s="skills">_METRICS</a></li>
-            <li><a href="#activity" class="nl" data-s="activity">_PULSE</a></li>
-            <li><a href="#projects" class="nl" data-s="projects">_CASES</a></li>
+            <li><a href="#skills"   class="nl" data-s="skills">_SKILLS</a></li>
+            <li><a href="#activity" class="nl" data-s="activity">_ACTIVITY</a></li>
+            <li><a href="#projects" class="nl" data-s="projects">_WORK</a></li>
             <li><a href="#stack"    class="nl" data-s="stack">_STACK</a></li>
             <li><a href="#topology" class="nl" data-s="topology">_TOPOLOGY</a></li>
             <li><a href="#cicd"     class="nl" data-s="cicd">_CICD</a></li>
             <li><a href="#terminal" class="nl" data-s="terminal">_TERMINAL</a></li>
-            <li><a href="#blog"     class="nl" data-s="blog">_LOGS</a></li>
+            <li><a href="#blog"     class="nl" data-s="blog">_BLOG</a></li>
             <li><a href="#contact"  class="nl nl--cta" data-s="contact">_CONNECT</a></li>
           </ul>
           <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-controls="nav-links" aria-expanded="false">
@@ -846,10 +864,9 @@
               <div class="nf-info">
                 <div class="nf-row"><span class="nf-key">operator</span><span class="nf-sep">@</span><span class="nf-val">devops-server</span></div>
                 <div class="nf-divider" aria-hidden="true">───────────────────────</div>
-                <div class="nf-row"><span class="nf-key">OS</span><span class="nf-val">Ubuntu 22.04.3 LTS x86_64</span></div>
+                <div class="nf-row"><span class="nf-key">OS</span><span class="nf-val">Ubuntu 22.04 LTS</span></div>
                 <div class="nf-row"><span class="nf-key">Host</span><span class="nf-val">Linux Infrastructure</span></div>
-                <div class="nf-row"><span class="nf-key">Kernel</span><span class="nf-val">5.15.0-91-generic</span></div>
-                <div class="nf-row"><span class="nf-key">Shell</span><span class="nf-val">bash 5.1.16</span></div>
+                <div class="nf-row"><span class="nf-key">Shell</span><span class="nf-val">bash 5</span></div>
                 <div class="nf-row"><span class="nf-key">WEB</span><span class="nf-val">Nginx · Apache</span></div>
                 <div class="nf-row"><span class="nf-key">DB</span><span class="nf-val">MySQL · MariaDB</span></div>
                 <div class="nf-row"><span class="nf-key">DNS</span><span class="nf-val">BIND9 · Cloudflare</span></div>
@@ -1366,28 +1383,19 @@
         <div class="panel heartbeat-panel reveal">
           <div class="panel-title-bar">
             <span class="ptb-dots" aria-hidden="true"><span></span><span></span><span></span></span>
-            <span class="ptb-label">GITHUB ACTIVITY MONITOR — 52W</span>
-            <div class="ptb-right">
-              <span class="dot dot--red pulse" aria-hidden="true"></span>
-              <span class="accent-text">LIVE FEED</span>
-            </div>
+            <span class="ptb-label">GITHUB ACTIVITY</span>
+            <span class="ptb-status" data-stats="generated" hidden>as of <!--stats:generated--><!--/stats:generated--></span>
           </div>
           <div class="panel-body hb-body">
-            <div class="hb-stats-row" role="group" aria-label="Activity statistics">
-              <div class="hb-stat">
-                <span class="hb-stat-val accent-text" id="hb-commits">847</span>
-                <span class="hb-stat-label">COMMITS</span>
+            <!-- Filled from the GitHub API by scripts/build_stats.py at build time;
+                 stays hidden if that step fails. -->
+            <div class="hb-stats-row" role="group" aria-label="Activity statistics" data-stats="activity" hidden>
+              <div class="hb-stat" data-stats="repos" hidden>
+                <span class="hb-stat-val" id="hb-repos"><!--stats:repos--><!--/stats:repos--></span>
+                <span class="hb-stat-label">PUBLIC REPOS</span>
               </div>
-              <div class="hb-stat">
-                <span class="hb-stat-val green-text" id="hb-streak">23</span>
-                <span class="hb-stat-label">DAY STREAK</span>
-              </div>
-              <div class="hb-stat">
-                <span class="hb-stat-val" id="hb-repos">18</span>
-                <span class="hb-stat-label">REPOS</span>
-              </div>
-              <div class="hb-stat">
-                <span class="hb-stat-val" id="hb-prs">42</span>
+              <div class="hb-stat" data-stats="prs" hidden>
+                <span class="hb-stat-val" id="hb-prs"><!--stats:prs--><!--/stats:prs--></span>
                 <span class="hb-stat-label">PULL REQ.</span>
               </div>
             </div>
@@ -1408,20 +1416,6 @@
               <div class="hb-months" id="hb-months" aria-hidden="true"></div>
             </div>
 
-            <!-- Contribution heatmap strip -->
-            <div class="contribution-strip" role="img" aria-label="Contribution heatmap">
-              <div class="cs-label">CONTRIBUTION MAP</div>
-              <div class="cs-grid" id="cs-grid" aria-hidden="true"></div>
-              <div class="cs-legend" aria-hidden="true">
-                <span>LESS</span>
-                <span class="cs-dot cs-0"></span>
-                <span class="cs-dot cs-1"></span>
-                <span class="cs-dot cs-2"></span>
-                <span class="cs-dot cs-3"></span>
-                <span class="cs-dot cs-4"></span>
-                <span>MORE</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -2019,21 +2013,21 @@
                   <div class="pod-row">
                     <span class="dot dot--green pulse" aria-hidden="true"></span>
                     <span class="pod-name">milestone-app</span>
-                    <span class="pod-img">d3rroh/milestone:latest</span>
+                    <span class="pod-img">d3rroh/milestone</span>
                     <span class="pod-status green-text">Running</span>
                     <span class="pod-meta">php-fpm · Apache · Laravel</span>
                   </div>
                   <div class="pod-row">
                     <span class="dot dot--green pulse" aria-hidden="true"></span>
                     <span class="pod-name">milestone-db</span>
-                    <span class="pod-img">mysql:8.0</span>
+                    <span class="pod-img">mysql</span>
                     <span class="pod-status green-text">Running</span>
                     <span class="pod-meta">PVC: milestone-storage</span>
                   </div>
                   <div class="pod-row">
                     <span class="dot dot--green pulse" aria-hidden="true"></span>
                     <span class="pod-name">milestone-queue</span>
-                    <span class="pod-img">d3rroh/milestone:latest</span>
+                    <span class="pod-img">d3rroh/milestone</span>
                     <span class="pod-status green-text">Running</span>
                     <span class="pod-meta">Laravel Queue Worker</span>
                   </div>
@@ -2051,9 +2045,9 @@
                   <div class="pod-row">
                     <span class="dot dot--green pulse" aria-hidden="true"></span>
                     <span class="pod-name">derroh-web</span>
-                    <span class="pod-img">d3rroh/derroh-web:latest</span>
+                    <span class="pod-img">d3rroh/derroh-web</span>
                     <span class="pod-status green-text">Running</span>
-                    <span class="pod-meta">nginx:alpine · Static Site</span>
+                    <span class="pod-meta">nginx · Static Site</span>
                   </div>
                 </div>
               </div>
@@ -2069,9 +2063,9 @@
                   <div class="pod-row">
                     <span class="dot dot--green pulse" aria-hidden="true"></span>
                     <span class="pod-name">kimberley-web</span>
-                    <span class="pod-img">d3rroh/kimberley-web:latest</span>
+                    <span class="pod-img">d3rroh/kimberley-web</span>
                     <span class="pod-status green-text">Running</span>
-                    <span class="pod-meta">nginx:alpine · Static Site</span>
+                    <span class="pod-meta">nginx · Static Site</span>
                   </div>
                 </div>
               </div>
@@ -2177,7 +2171,7 @@
                 <aside class="topo-info-panel" id="topo-info-panel" aria-live="polite">
                   <div class="topo-info-empty" id="topo-info-empty">
                     <i class="fas fa-diagram-project" aria-hidden="true"></i>
-                    <p>Click any node — Ingress, a Service, a Pod, Longhorn storage, or a database — to trace its traffic path from the Cloudflare edge all the way down.</p>
+                    <p>Click any node — Ingress, a Service, a Pod, local-path storage, or a database — to trace its traffic path from the Cloudflare edge all the way down.</p>
                   </div>
                   <div class="topo-info-card" id="topo-info-card" style="display:none">
                     <div class="tic-type" id="tic-type">NODE</div>
@@ -2268,7 +2262,7 @@
                 <div class="pf-stage-info">
                   <span class="pf-stage-num">02</span>
                   <span class="pf-stage-name">ACTIONS TRIGGER</span>
-                  <span class="pf-stage-detail">.github/workflows/deploy.yml</span>
+                  <span class="pf-stage-detail">.github/workflows/docker-build.yml</span>
                 </div>
                 <div class="pf-stage-status pf-done">
                   <span class="dot dot--green" aria-hidden="true"></span> passed
@@ -2285,7 +2279,7 @@
                 <div class="pf-stage-info">
                   <span class="pf-stage-num">03</span>
                   <span class="pf-stage-name">DOCKER BUILD</span>
-                  <span class="pf-stage-detail">docker build --no-cache</span>
+                  <span class="pf-stage-detail">docker buildx · tag :sha + :latest</span>
                 </div>
                 <div class="pf-stage-status pf-done">
                   <span class="dot dot--green" aria-hidden="true"></span> passed
@@ -2318,8 +2312,8 @@
                 <div class="pf-stage-icon"><i class="fas fa-dharmachakra"></i></div>
                 <div class="pf-stage-info">
                   <span class="pf-stage-num">05</span>
-                  <span class="pf-stage-name">KUBECTL ROLLOUT</span>
-                  <span class="pf-stage-detail">kubectl rollout restart</span>
+                  <span class="pf-stage-name">KUBECTL SET IMAGE</span>
+                  <span class="pf-stage-detail">set image :sha · rollout status</span>
                 </div>
                 <div class="pf-stage-status pf-done">
                   <span class="dot dot--green" aria-hidden="true"></span> passed
@@ -2336,7 +2330,7 @@
                 <div class="pf-stage-info">
                   <span class="pf-stage-num">06</span>
                   <span class="pf-stage-name">LIVE</span>
-                  <span class="pf-stage-detail">Pods healthy · 0 downtime</span>
+                  <span class="pf-stage-detail">Pods healthy</span>
                 </div>
                 <div class="pf-stage-status pf-live">
                   <span class="dot dot--green pulse" aria-hidden="true"></span> live
@@ -2346,29 +2340,11 @@
             </div><!-- /.pipeline-flow -->
 
             <!-- Active pipelines table -->
-            <div class="cicd-runs">
+            <!-- Filled from the GitHub API by scripts/build_stats.py at build time;
+                 stays hidden if that step fails. -->
+            <div class="cicd-runs" data-stats="runs" hidden>
               <div class="cicd-runs-header">RECENT PIPELINE RUNS</div>
-              <div class="cicd-run-row">
-                <span class="crr-dot dot dot--green" aria-hidden="true"></span>
-                <span class="crr-id">#247</span>
-                <span class="crr-ref">main · d3rroh/derroh-web</span>
-                <span class="crr-time">2m 14s</span>
-                <span class="crr-status crr-pass">passed</span>
-              </div>
-              <div class="cicd-run-row">
-                <span class="crr-dot dot dot--green" aria-hidden="true"></span>
-                <span class="crr-id">#246</span>
-                <span class="crr-ref">main · d3rroh/milestone</span>
-                <span class="crr-time">3m 41s</span>
-                <span class="crr-status crr-pass">passed</span>
-              </div>
-              <div class="cicd-run-row">
-                <span class="crr-dot dot dot--green" aria-hidden="true"></span>
-                <span class="crr-id">#245</span>
-                <span class="crr-ref">main · d3rroh/kimberley-web</span>
-                <span class="crr-time">1m 58s</span>
-                <span class="crr-status crr-pass">passed</span>
-              </div>
+              <!--stats:runs--><!--/stats:runs-->
             </div>
 
           </div><!-- /.cicd-body -->
@@ -2404,7 +2380,7 @@
               <div class="term-input-row">
                 <span class="term-prompt" aria-hidden="true">guest@derroh-ops:~$</span>
                 <input type="text" id="term-input" class="term-input" autocomplete="off"
-                       autocapitalize="off" spellcheck="false" aria-label="Terminal command input"
+                       autocapitalize="off" spellcheck="false" maxlength="200" aria-label="Terminal command input"
                        placeholder="type a command…"/>
               </div>
             </div>
@@ -2449,7 +2425,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-1">
               <div class="log-meta">
-                <span class="log-ts">Jun 10 09:14:22</span>
+                <span class="log-ts">2026-06-10 09:14:22</span>
                 <span class="log-sev log-warn">WARN</span>
                 <span class="log-src">blog.derrick</span>
               </div>
@@ -2468,7 +2444,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-2">
               <div class="log-meta">
-                <span class="log-ts">May 28 14:33:07</span>
+                <span class="log-ts">2026-05-28 14:33:07</span>
                 <span class="log-sev log-info">INFO</span>
                 <span class="log-src">blog.derrick</span>
               </div>
@@ -2487,7 +2463,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-3">
               <div class="log-meta">
-                <span class="log-ts">May 12 11:08:55</span>
+                <span class="log-ts">2026-05-12 11:08:55</span>
                 <span class="log-sev log-warn">WARN</span>
                 <span class="log-src">blog.derrick</span>
               </div>
@@ -2506,7 +2482,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-4">
               <div class="log-meta">
-                <span class="log-ts">Apr 19 08:47:31</span>
+                <span class="log-ts">2026-04-19 08:47:31</span>
                 <span class="log-sev log-info">INFO</span>
                 <span class="log-src">blog.derrick</span>
               </div>
@@ -2525,7 +2501,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-5">
               <div class="log-meta">
-                <span class="log-ts">Mar 31 16:22:44</span>
+                <span class="log-ts">2026-03-31 16:22:44</span>
                 <span class="log-sev log-debug">DEBUG</span>
                 <span class="log-src">blog.derrick</span>
               </div>
@@ -2544,7 +2520,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-6">
               <div class="log-meta">
-                <span class="log-ts">Mar 08 14:22:11</span>
+                <span class="log-ts">2026-03-08 14:22:11</span>
                 <span class="log-sev log-info">INFO</span>
                 <span class="log-src">blog.derrick</span>
               </div>
@@ -2563,7 +2539,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-7">
               <div class="log-meta">
-                <span class="log-ts">Feb 21 09:45:33</span>
+                <span class="log-ts">2026-02-21 09:45:33</span>
                 <span class="log-sev log-warn">WARN</span>
                 <span class="log-src">blog.derrick</span>
               </div>
@@ -2582,7 +2558,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-8">
               <div class="log-meta">
-                <span class="log-ts">Jan 30 03:52:18</span>
+                <span class="log-ts">2026-01-30 03:52:18</span>
                 <span class="log-sev log-crit">CRIT</span>
                 <span class="log-src">case-files.derrick</span>
               </div>
@@ -2601,7 +2577,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-9">
               <div class="log-meta">
-                <span class="log-ts">Jan 14 21:07:44</span>
+                <span class="log-ts">2026-01-14 21:07:44</span>
                 <span class="log-sev log-crit">CRIT</span>
                 <span class="log-src">case-files.derrick</span>
               </div>
@@ -2620,7 +2596,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-10">
               <div class="log-meta">
-                <span class="log-ts">Dec 19 04:38:02</span>
+                <span class="log-ts">2025-12-19 04:38:02</span>
                 <span class="log-sev log-crit">CRIT</span>
                 <span class="log-src">case-files.derrick</span>
               </div>
@@ -2639,7 +2615,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-11">
               <div class="log-meta">
-                <span class="log-ts">Dec 02 16:11:29</span>
+                <span class="log-ts">2025-12-02 16:11:29</span>
                 <span class="log-sev log-warn">HIGH</span>
                 <span class="log-src">case-files.derrick</span>
               </div>
@@ -2658,7 +2634,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-12">
               <div class="log-meta">
-                <span class="log-ts">Nov 18 09:26:57</span>
+                <span class="log-ts">2025-11-18 09:26:57</span>
                 <span class="log-sev log-info">INFO</span>
                 <span class="log-src">case-files.derrick</span>
               </div>
@@ -2677,7 +2653,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-13">
               <div class="log-meta">
-                <span class="log-ts">Oct 25 12:44:15</span>
+                <span class="log-ts">2025-10-25 12:44:15</span>
                 <span class="log-sev log-info">INFO</span>
                 <span class="log-src">case-files.derrick</span>
               </div>
@@ -2696,7 +2672,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-14">
               <div class="log-meta">
-                <span class="log-ts">Oct 09 18:03:41</span>
+                <span class="log-ts">2025-10-09 18:03:41</span>
                 <span class="log-sev log-info">INFO</span>
                 <span class="log-src">case-files.derrick</span>
               </div>
@@ -2715,7 +2691,7 @@
 
             <article class="log-entry reveal" aria-labelledby="log-15">
               <div class="log-meta">
-                <span class="log-ts">Sep 21 07:59:33</span>
+                <span class="log-ts">2025-09-21 07:59:33</span>
                 <span class="log-sev log-info">INFO</span>
                 <span class="log-src">case-files.derrick</span>
               </div>
@@ -2732,17 +2708,6 @@
               <a href="case-studies/owncloud-minio-s3-kubernetes-stack.html" class="log-read-more" aria-label="View case file: ownCloud Stack">view case file <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
             </article>
 
-            <div class="log-entry log-pending">
-              <div class="log-meta">
-                <span class="log-ts" id="log-ts-live">loading...</span>
-                <span class="log-sev log-info">INFO</span>
-                <span class="log-src">blog.derrick</span>
-              </div>
-              <span class="log-pending-text">
-                Next post initializing<span class="blink-cursor">▌</span>
-              </span>
-              <a href="#contact" class="log-read-more">subscribe <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
-            </div>
 
           </div>
         </div>
@@ -2759,7 +2724,7 @@
           <span class="sh-tag">
             <span class="sh-tag-branch">// MODULE 10</span>
             <span class="sh-online">
-              <span class="dot dot--red pulse" aria-hidden="true"></span>
+              <span class="dot sh-online-dot" aria-hidden="true"></span>
               <span>ONLINE</span>
             </span>
           </span>
@@ -2877,9 +2842,9 @@
                   </label>
                   <div class="cf-wrap">
                     <input type="text" id="f-name" name="name" placeholder="Your full name" required autocomplete="name" aria-describedby="f-name-msg"/>
-                    <span class="cf-valid" aria-hidden="true"></span>
+                    <span class="cf-valid" aria-hidden="true">&#10003;</span>
                   </div>
-                  <span class="cmd-field-error" id="f-name-msg"></span>
+                  <span class="cmd-field-error" id="f-name-msg" aria-live="polite"></span>
                 </div>
                 <div class="cmd-field" data-field="email">
                   <label for="f-email">
@@ -2888,9 +2853,9 @@
                   </label>
                   <div class="cf-wrap">
                     <input type="email" id="f-email" name="email" placeholder="your@email.com" required autocomplete="email" aria-describedby="f-email-msg"/>
-                    <span class="cf-valid" aria-hidden="true"></span>
+                    <span class="cf-valid" aria-hidden="true">&#10003;</span>
                   </div>
-                  <span class="cmd-field-error" id="f-email-msg"></span>
+                  <span class="cmd-field-error" id="f-email-msg" aria-live="polite"></span>
                 </div>
               </div>
               <div class="cmd-field" data-field="subject">
@@ -2900,9 +2865,9 @@
                 </label>
                 <div class="cf-wrap">
                   <input type="text" id="f-subject" name="subject" placeholder="What's the issue / opportunity?" required aria-describedby="f-subject-msg"/>
-                  <span class="cf-valid" aria-hidden="true"></span>
+                  <span class="cf-valid" aria-hidden="true">&#10003;</span>
                 </div>
-                <span class="cmd-field-error" id="f-subject-msg"></span>
+                <span class="cmd-field-error" id="f-subject-msg" aria-live="polite"></span>
               </div>
               <div class="cmd-field" data-field="message">
                 <label for="f-message">
@@ -2911,26 +2876,26 @@
                 </label>
                 <div class="cf-wrap">
                   <textarea id="f-message" name="message" rows="6" placeholder="Describe your project, issue, or question..." required aria-describedby="f-message-msg"></textarea>
-                  <span class="cf-valid cf-valid--ta" aria-hidden="true"></span>
+                  <span class="cf-valid cf-valid--ta" aria-hidden="true">&#10003;</span>
                 </div>
-                <span class="cmd-field-error" id="f-message-msg"></span>
+                <span class="cmd-field-error" id="f-message-msg" aria-live="polite"></span>
               </div>
-              <button type="submit" class="btn btn-primary btn-full btn-cmdrun" id="form-submit">
+              <button type="submit" class="btn btn-primary btn-full btn-cmdrun" id="form-submit" aria-label="Send message">
                 <span class="btn-icon" aria-hidden="true">➤</span>
                 <span class="btn-cmd">./send-message.sh</span>
                 <span class="btn-cursor" aria-hidden="true">▌</span>
               </button>
               <div class="form-overlay" id="form-overlay" hidden>
-                <div class="fo-console" id="fo-console" role="status" aria-live="polite"></div>
+                <div class="fo-console" id="fo-console" role="log" aria-live="polite"></div>
                 <div class="fo-success" id="fo-success" hidden>
-                  <p class="fo-title">MESSAGE TRANSMITTED</p>
+                  <p class="fo-title" tabindex="-1">MESSAGE TRANSMITTED</p>
                   <p class="fo-sub">I'll get back to you as soon as possible.</p>
                   <button type="button" class="btn btn-outline btn-full" id="fo-again">[ SEND ANOTHER MESSAGE ]</button>
                 </div>
                 <div class="fo-error" id="fo-error" hidden>
-                  <p class="fo-title fo-title--err">! transmission failed</p>
+                  <p class="fo-title fo-title--err" tabindex="-1">! transmission failed</p>
                   <p class="fo-sub" id="fo-err-msg">Unable to establish communication channel.<br/>Please try again.</p>
-                  <button type="button" class="btn btn-outline btn-full" id="fo-retry">[ RETRY ]</button>
+                  <button type="button" class="btn btn-outline btn-full" id="fo-retry">[ RETRY TRANSMISSION ]</button>
                 </div>
               </div>
               <div class="form-status" id="form-status" aria-live="polite" role="status"></div>
@@ -2953,12 +2918,12 @@
       <nav class="footer-nav" aria-label="Footer navigation">
         <a href="#home">_HOME</a>
         <a href="#about">_ABOUT</a>
-        <a href="#skills">_METRICS</a>
-        <a href="#activity">_PULSE</a>
-        <a href="#projects">_CASES</a>
+        <a href="#skills">_SKILLS</a>
+        <a href="#activity">_ACTIVITY</a>
+        <a href="#projects">_WORK</a>
         <a href="#stack">_STACK</a>
         <a href="#cicd">_CICD</a>
-        <a href="#blog">_LOGS</a>
+        <a href="#blog">_BLOG</a>
         <a href="#contact">_CONNECT</a>
       </nav>
       <div class="footer-sys">

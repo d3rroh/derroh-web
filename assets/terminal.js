@@ -2,6 +2,13 @@
    DERROH-OPS  |  Terminal Simulator
    Client-side DevOps command-line simulation
    All output is fictional — no server interaction.
+
+   Guarantees (keep these when adding commands):
+   - Nothing here touches the network: no fetch/XHR/WebSocket, no
+     eval, no dynamic script. Commands are matched against a fixed
+     table and answered with canned, locally generated text.
+   - Anything the visitor typed is HTML-escaped (esc) before it is
+     placed in output, and shell operators are rejected up front.
 ═══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -16,6 +23,7 @@
   const state = {
     history: [],
     historyIdx: -1,
+    audit: [],
     executing: false,
     session: Date.now().toString(36),
   };
@@ -141,6 +149,16 @@
     'iptables', 'ip6tables', 'ufw disable',
     'kill -9', 'killall', 'pkill',
     'dd', 'sync',
+    // Anything that would change state — the sandbox is read-only
+    'rm', 'mv', 'cp', 'touch', 'mkdir', 'rmdir', 'vi', 'vim', 'nano', 'tee',
+    'apt', 'apt-get', 'yum', 'dnf', 'pip', 'npm', 'git',
+    'kubectl apply', 'kubectl create', 'kubectl delete', 'kubectl edit',
+    'kubectl exec', 'kubectl patch', 'kubectl scale', 'kubectl rollout',
+    'kubectl port-forward', 'kubectl cp', 'kubectl logs',
+    'docker rm', 'docker rmi', 'docker stop', 'docker kill', 'docker pull',
+    'docker push', 'docker build', 'docker logs',
+    'systemctl start', 'systemctl stop', 'systemctl restart',
+    'systemctl reload', 'systemctl enable', 'systemctl disable',
   ];
 
   function isBlocked(cmd) {
@@ -161,7 +179,7 @@
     'security status', 'firewall status', 'ssl status',
     'audit log', 'incident list', 'health check',
     'projects', 'skills', 'stack', 'contact',
-    'neofetch',
+    'neofetch', 'pwd', 'ls', 'cat README.md', 'echo',
   ];
 
   /* ── Response generators ──────────────────────────────────── */
@@ -182,6 +200,9 @@
       '  free              Memory usage',
       '  top               Process overview',
       '  date              Current date/time',
+      '  pwd / ls / cd     Look around (read-only)',
+      '  cat README.md     About this sandbox',
+      '  echo &lt;text&gt;       Print text',
       '  neofetch          System info display',
       '',
       '<span class="term-bold">KUBERNETES</span>',
@@ -223,6 +244,27 @@
   }
 
   function cmdWhoami() { return 'guest'; }
+  function cmdPwd() { return '/home/guest'; }
+  function cmdLs(args) {
+    if (args.some(a => a.startsWith('/') && a !== '/home/guest')) {
+      return `ls: cannot open directory '${esc(args.find(a => a.startsWith('/')))}': Permission denied`;
+    }
+    return '<span class="term-cyan">projects/</span>  <span class="term-cyan">notes/</span>  README.md';
+  }
+  function cmdCat(args) {
+    const f = (args[0] || '').replace(/^\.\//, '');
+    if (!f) return 'cat: missing file operand';
+    if (f === 'README.md' || f === '~/README.md' || f === '/home/guest/README.md') {
+      return [
+        '# DERROH-OPS sandbox',
+        '',
+        'A read-only, simulated shell. Nothing typed here leaves your browser.',
+        'Run `help` for the command list.',
+      ].join('\n');
+    }
+    return `cat: ${esc(f)}: No such file or directory`;
+  }
+  function cmdEcho(raw) { return esc(raw.replace(/^echo\s?/i, '')); }
   function cmdHostname() { return 'derroh-sandbox'; }
   function cmdUptime() {
     return ` 14:32:07 up ${uptimeStr()},  1 user,  load average: 0.${rng(1,30)}, 0.${rng(5,40)}, 0.${rng(10,50)}`;
@@ -250,12 +292,13 @@
 
   function cmdTop() {
     const procs = [
-      ['1', 'root', '0.3', '0.2', '12432', '4096', 'S', 'nginx: master', '0:02.14'],
-      ['2', 'root', '1.2', '1.8', '342080', '148480', 'S', 'api-gateway', '0:18.72'],
-      ['3', 'root', '0.8', '1.2', '256128', '98304', 'S', 'web-frontend', '0:11.43'],
-      ['4', 'root', '0.1', '0.3', '18944', '24576', 'S', 'redis-server', '0:04.21'],
-      ['5', 'root', '0.2', '0.4', '42112', '32768', 'S', 'prometheus', '0:06.88'],
-      ['6', 'root', '0.1', '0.5', '54272', '40960', 'S', 'grafana-server', '0:03.15'],
+      // pid, user, virt, res, shr, state, %cpu, %mem, time, command
+      ['1',  'root', '12432',  '4096',   '2048',  'S', '0.3', '0.2', '0:02.14', 'nginx: master'],
+      ['42', 'app',  '342080', '148480', '18432', 'S', '1.2', '1.8', '0:18.72', 'api-gateway'],
+      ['57', 'app',  '256128', '98304',  '12288', 'S', '0.8', '1.2', '0:11.43', 'web-frontend'],
+      ['63', 'redis','18944',  '24576',  '4096',  'S', '0.1', '0.3', '0:04.21', 'redis-server'],
+      ['71', 'prom', '42112',  '32768',  '8192',  'S', '0.2', '0.4', '0:06.88', 'prometheus'],
+      ['88', 'graf', '54272',  '40960',  '10240', 'S', '0.1', '0.5', '0:03.15', 'grafana-server'],
     ];
     const header = `top - 14:32:07 up ${uptimeStr()},  1 user,  load avg: 0.${rng(1,30)}, 0.${rng(5,40)}, 0.${rng(10,50)}
 Tasks: ${rng(48,62)} total,   1 running, ${rng(44,58)} sleeping,   0 stopped,   0 zombie
@@ -265,7 +308,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
 
   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND`;
     const lines = procs.map(p =>
-      `    ${rpad(p[0], 4)} ${pad(p[1], 8)} 20   0 ${rpad(p[4], 8)} ${rpad(p[5], 8)} ${rpad(p[6], 5)} ${p[7]}  ${rpad(p[2], 4)}  ${rpad(p[3], 4)}   ${rpad(p[8], 8)} ${p[9]}`
+      `${rpad(p[0], 5)} ${pad(p[1], 8)}  20   0 ${rpad(p[2], 7)} ${rpad(p[3], 6)} ${rpad(p[4], 6)} ${p[5]} ${rpad(p[6], 5)} ${rpad(p[7], 5)} ${rpad(p[8], 9)} ${p[9]}`
     );
     return header + '\n' + lines.join('\n');
   }
@@ -293,7 +336,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
     if (resource === 'ingress' || resource === 'ing') return kubectlGetIngress();
     if (resource === 'nodes' || resource === 'no') return kubectlBlockedNodes();
     if (resource === 'secrets' || resource === 'sa' || resource === 'configmaps') return kubectlBlockedResource(resource);
-    return `error: unknown resource type "${resource || ''}"\n\nSupported: pods, svc, deployments, namespaces, ingress`;
+    return `error: unknown resource type "${esc(resource)}"\n\nSupported: pods, svc, deployments, namespaces, ingress`;
   }
 
   function kubectlGetPods() {
@@ -359,7 +402,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
   function kubectlBlockedResource(type) {
     return [
       '',
-      '  <span class="term-danger">Access denied: "' + type + '" is restricted in the public simulation.</span>',
+      '  <span class="term-danger">Access denied: "' + esc(type) + '" is restricted in the public simulation.</span>',
       '',
     ].join('\n');
   }
@@ -367,7 +410,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
   function cmdKubectlDescribe(podFragment) {
     if (!podFragment) return 'error: specify a pod name, e.g. kubectl describe pod <name>';
     const pod = findPod(podFragment);
-    if (!pod) return `error: pods "${podFragment}" not found\n\n<span class="term-dim">Tip: run "kubectl get pods" to see available pods.</span>`;
+    if (!pod) return `error: pods "${esc(podFragment)}" not found\n\n<span class="term-dim">Tip: run "kubectl get pods" to see available pods.</span>`;
     return [
       `<span class="term-bold">Name:</span>             ${pod.name}`,
       `<span class="term-bold">Namespace:</span>        ${pod.namespace}`,
@@ -495,7 +538,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
       },
     };
     const s = services[service];
-    if (!s) return `Unit ${service}.service could not be found.`;
+    if (!s) return `Unit ${esc(service)}.service could not be found.`;
     return [
       `○ ${s.name} - ${s.desc}`,
       `     Loaded: ${s.loaded}`,
@@ -600,19 +643,16 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
   }
 
   function cmdAuditLog() {
-    const entries = [
-      { time: '14:31:42', user: 'guest', action: 'login', result: '<span class="term-success">OK</span>', detail: 'session started' },
-      { time: '14:31:45', user: 'guest', action: 'cmd', result: '<span class="term-info">SIM</span>', detail: 'help' },
-      { time: '14:31:58', user: 'guest', action: 'cmd', result: '<span class="term-info">SIM</span>', detail: 'kubectl get pods' },
-      { time: '14:32:01', user: 'guest', action: 'cmd', result: '<span class="term-info">SIM</span>', detail: 'docker ps' },
-      { time: '14:32:15', user: 'guest', action: 'cmd', result: '<span class="term-danger">DENY</span>', detail: 'sudo su (blocked)' },
-      { time: '14:32:22', user: 'guest', action: 'cmd', result: '<span class="term-info">SIM</span>', detail: 'security status' },
-    ];
     const header = `<span class="term-bold">AUDIT LOG</span>  <span class="term-dim">── session ${state.session}</span>`;
-    const rows = entries.map(e =>
-      `  <span class="term-dim">${e.time}</span>  ${pad(e.user, 8)}  ${pad(e.action, 6)}  ${e.result.padEnd(28)}  ${e.detail}`
-    );
-    return header + '\n' + '<span class="term-dim">────────────────────────────────────────────────────────</span>\n' + rows.join('\n');
+    const rule = '<span class="term-dim">────────────────────────────────────────────────────────</span>';
+    if (!state.audit.length) return header + '\n' + rule + '\n  <span class="term-dim">(no commands yet this session)</span>';
+    const rows = state.audit.slice(-12).map(e => {
+      const result = e.denied
+        ? '<span class="term-danger">DENY</span>'
+        : '<span class="term-info">SIM </span>';
+      return `  <span class="term-dim">${e.time}</span>  guest     cmd     ${result}  ${esc(e.cmd)}`;
+    });
+    return header + '\n' + rule + '\n' + rows.join('\n');
   }
 
   function cmdIncidentList() {
@@ -629,7 +669,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
       '  <span class="term-info">PROJECT</span>   PRJ-2025-007  AlmaLinux Gateway Recovery',
       '  <span class="term-info">PROJECT</span>   PRJ-2025-008  Node.js App Deployment',
       '',
-      '  <span class="term-dim">Full case studies: <a href="#cases">derroh.co.ke/#cases</a></span>',
+      '  <span class="term-dim">Full case studies: <a href="#projects">derroh.co.ke/#projects</a></span>',
     ].join('\n');
   }
 
@@ -674,7 +714,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
       '  <span class="term-cyan">7.</span> CentOS Cryptominer Eradication & Server Hardening',
       '  <span class="term-cyan">8.</span> AlmaLinux VPS Gateway Recovery',
       '',
-      '  <span class="term-dim">Details: <a href="#cases">derroh.co.ke/#cases</a></span>',
+      '  <span class="term-dim">Details: <a href="#projects">derroh.co.ke/#projects</a></span>',
     ].join('\n');
   }
 
@@ -725,7 +765,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
       '  <span class="term-bold">Role:</span>     DevOps Engineer & Linux Sysadmin',
       '  <span class="term-bold">Location:</span> Nairobi, Kenya',
       '  <span class="term-bold">Web:</span>      <a href="https://derroh.co.ke">derroh.co.ke</a>',
-      '  <span class="term-bold">Email:</span>    <a href="mailto:derrick@derroh.co.ke">derrick@derroh.co.ke</a>',
+      '  <span class="term-bold">Email:</span>    <a href="mailto:info@derroh.co.ke">info@derroh.co.ke</a>',
       '',
       '  <span class="term-dim">Contact form: <a href="#contact">derroh.co.ke/#contact</a></span>',
     ].join('\n');
@@ -794,7 +834,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
     if (cmd.startsWith('rm ')) return BLOCKED_RESPONSES['rm -rf /'];
     if (cmd.startsWith('shutdown') || cmd.startsWith('reboot') || cmd.startsWith('halt') || cmd.startsWith('poweroff')) return BLOCKED_RESPONSES['shutdown'];
     if (cmd.startsWith('kubectl get secrets') || cmd.startsWith('kubectl get sa') || cmd.startsWith('kubectl config')) return kubectlBlockedNodes();
-    if (cmd.startsWith('docker exec') || cmd.startsWith('docker run')) return kubectlBlockedResource('docker ' + cmd.split(' ')[1]);
+    if (cmd.startsWith('docker exec') || cmd.startsWith('docker run')) return kubectlBlockedResource('docker ' + cmd.split(/\s+/)[1]);
     if (cmd.startsWith('ssh') || cmd.startsWith('scp') || cmd.startsWith('rsync')) return getBlockedResponse('default');
     if (cmd.startsWith('curl') || cmd.startsWith('wget') || cmd.startsWith('nc ') || cmd.startsWith('netcat')) return getBlockedResponse('default');
     if (cmd.startsWith('python') || cmd.startsWith('perl') || cmd.startsWith('ruby') || cmd.startsWith('node ') || cmd.startsWith('php')) return getBlockedResponse('default');
@@ -803,11 +843,27 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
   }
 
   /* ── MAIN COMMAND ROUTER ──────────────────────────────────── */
+  const MAX_INPUT = 200;
+  // Pipes, chaining, redirection, substitution and subshells — none of
+  // it means anything here, so it's refused before any matching.
+  const SHELL_OPERATORS = /[;&|<>`$(){}\\]/;
+
   function executeCommand(raw) {
     const cmd = raw.trim();
     if (!cmd) return null;
 
-    if (isBlocked(cmd)) return getBlockedResponse(cmd);
+    if (cmd.length > MAX_INPUT) {
+      return `<span class="term-warning">input too long</span> <span class="term-dim">(max ${MAX_INPUT} characters)</span>`;
+    }
+    if (SHELL_OPERATORS.test(cmd)) {
+      return [
+        '<span class="term-warning">shell operators are disabled in the sandbox</span>',
+        '<span class="term-dim">Pipes, redirects, chaining and substitution (; &amp; | &lt; &gt; $ ` ( ) { } \\) aren\'t supported.</span>',
+        '<span class="term-dim">Run one command at a time — type `help` for the list.</span>',
+      ].join('\n');
+    }
+
+    if (isBlocked(cmd)) return getBlockedResponse(cmd.toLowerCase());
 
     const parts = cmd.split(/\s+/);
     const base = parts[0].toLowerCase();
@@ -824,11 +880,21 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
     if (base === 'free')    return cmdFree();
     if (base === 'top')     return cmdTop();
     if (base === 'neofetch') return cmdNeofetch();
+    if (base === 'pwd')     return cmdPwd();
+    if (base === 'ls' || base === 'll') return cmdLs(parts.slice(1));
+    if (base === 'cat')     return cmdCat(parts.slice(1));
+    if (base === 'echo')    return cmdEcho(cmd);
+    if (base === 'cd')      return parts[1] && !['~', '.', '/home/guest'].includes(parts[1])
+      ? `bash: cd: ${esc(parts[1])}: Permission denied`
+      : '';
+    if (base === 'exit' || base === 'logout') {
+      return '<span class="term-dim">logout is disabled — this sandbox stays open. Try `help`.</span>';
+    }
 
     /* ── History command ──────────────────────────────────── */
     if (base === 'history') {
       if (state.history.length === 0) return '  <span class="term-dim">(no commands in history)</span>';
-      return state.history.map((h, i) => `  ${rpad(String(i + 1), 4)}  ${h}`).join('\n');
+      return state.history.map((h, i) => `  ${rpad(String(i + 1), 4)}  ${esc(h)}`).join('\n');
     }
 
     /* ── Kubernetes commands ──────────────────────────────── */
@@ -837,15 +903,15 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
       const sub = parts[1].toLowerCase();
       if (sub === 'get') {
         if (parts.length < 3) return 'kubectl get: usage: kubectl get <resource> [name]';
-        if (parts[2].toLowerCase() === 'pods' || parts[2].toLowerCase() === 'po') return cmdKubectlGetPods();
+        if (parts[2].toLowerCase() === 'pods' || parts[2].toLowerCase() === 'po') return kubectlGetPods();
         return cmdKubectlGet(parts.slice(2));
       }
       if (sub === 'describe') {
         if (parts.length < 4) return 'kubectl describe: usage: kubectl describe pod <name>';
-        if (parts[2].toLowerCase() !== 'pod') return `kubectl describe: unsupported resource "${parts[2]}"`;
+        if (parts[2].toLowerCase() !== 'pod') return `kubectl describe: unsupported resource "${esc(parts[2])}"`;
         return cmdKubectlDescribe(parts[3]);
       }
-      return `kubectl: unknown subcommand "${sub}"\n\n<span class="term-dim">Supported: get, describe</span>`;
+      return `kubectl: unknown subcommand "${esc(sub)}"\n\n<span class="term-dim">Supported: get, describe</span>`;
     }
 
     /* ── Docker commands ──────────────────────────────────── */
@@ -855,7 +921,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
       if (sub === 'ps') return cmdDockerPs();
       if (sub === 'images') return cmdDockerImages();
       if (sub === 'version') return cmdDockerVersion();
-      return `docker: unknown subcommand "${sub}"\n\n<span class="term-dim">Supported: ps, images, version</span>`;
+      return `docker: unknown subcommand "${esc(sub)}"\n\n<span class="term-dim">Supported: ps, images, version</span>`;
     }
 
     /* ── Systemctl commands ───────────────────────────────── */
@@ -864,7 +930,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
       const sub = parts[1].toLowerCase();
       const service = parts[2].toLowerCase().replace('.service', '');
       if (sub === 'status') return cmdSystemctlStatus(service);
-      return `systemctl: unknown subcommand "${sub}"\n\n<span class="term-dim">Supported: status</span>`;
+      return `systemctl: unknown subcommand "${esc(sub)}"\n\n<span class="term-dim">Supported: status</span>`;
     }
 
     /* ── Network commands ─────────────────────────────────── */
@@ -887,19 +953,29 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
 
     /* ── Unknown command ──────────────────────────────────── */
     if (cmd.startsWith('kubectl get nodes') || cmd.startsWith('kubectl get no')) return kubectlBlockedNodes();
-    return `bash: ${base}: command not found\n\n<span class="term-dim">Type \`help\` to see available commands.</span>`;
+    return `bash: ${esc(base)}: command not found\n\n<span class="term-dim">Type \`help\` to see available commands.</span>`;
   }
 
   /* ── OUTPUT RENDERING ─────────────────────────────────────── */
+  // The log is the scrolling element (max-height in home.css), not the screen.
   function scrollToBottom() {
-    screen.scrollTop = screen.scrollHeight;
+    log.scrollTop = log.scrollHeight;
   }
 
+  // Keep the DOM small in long sessions.
+  const MAX_LOG_NODES = 300;
+  function trimLog() {
+    while (log.childElementCount > MAX_LOG_NODES) log.firstElementChild.remove();
+  }
+
+  // `html` is built only from the canned templates above, with any
+  // visitor-typed text passed through esc() first.
   function appendOutput(html) {
     const pre = document.createElement('div');
     pre.className = 'term-pre';
     pre.innerHTML = html;
     log.appendChild(pre);
+    trimLog();
     scrollToBottom();
   }
 
@@ -908,6 +984,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
     line.className = 'term-line';
     line.innerHTML = `<span class="term-prompt-inline">guest@derroh-ops:~$</span> <span class="term-cmd-text">${escapeHtml(cmdText)}</span>`;
     log.appendChild(line);
+    scrollToBottom();
   }
 
   function appendWelcome() {
@@ -926,42 +1003,57 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
   }
 
   function escapeHtml(s) {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
+  const esc = escapeHtml;
 
   /* ── COMMAND EXECUTION ────────────────────────────────────── */
+  const MAX_HISTORY = 100;
+
+  function finish() {
+    state.executing = false;
+    input.disabled = false;
+    input.focus({ preventScroll: true });
+  }
+
   function runCommand(cmdText) {
     if (state.executing) return;
     state.executing = true;
     input.disabled = true;
 
-    /* Record in history */
-    if (cmdText.trim()) {
-      state.history.push(cmdText.trim());
+    const trimmed = cmdText.trim().slice(0, MAX_INPUT);
+    if (trimmed) {
+      state.history.push(trimmed);
+      if (state.history.length > MAX_HISTORY) state.history.shift();
+      state.audit.push({
+        time: new Date().toTimeString().slice(0, 8),
+        cmd: trimmed,
+        denied: isBlocked(trimmed) || SHELL_OPERATORS.test(trimmed),
+      });
+      if (state.audit.length > MAX_HISTORY) state.audit.shift();
     }
     state.historyIdx = -1;
 
-    /* Show the prompt + command */
     appendPromptLine(cmdText);
 
-    /* Execute */
-    const result = executeCommand(cmdText);
+    // A bug in one command must never leave the input disabled.
+    let result;
+    try {
+      result = executeCommand(cmdText);
+    } catch (err) {
+      result = '<span class="term-danger">sandbox error</span> <span class="term-dim">— that command failed to render. Try another.</span>';
+    }
 
     if (result === '__CLEAR__') {
       log.innerHTML = '';
+      finish();
     } else if (result) {
       /* Short delay for realism */
-      const delay = rng(30, 120);
-      setTimeout(() => {
-        appendOutput(result);
-        state.executing = false;
-        input.disabled = false;
-        input.focus();
-      }, delay);
+      setTimeout(() => { appendOutput(result); finish(); }, rng(30, 120));
     } else {
-      state.executing = false;
-      input.disabled = false;
-      input.focus();
+      finish();
     }
   }
 
@@ -1039,10 +1131,9 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
   /* ── QUICK COMMAND BUTTONS ────────────────────────────────── */
   document.querySelectorAll('.term-chip[data-cmd]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const cmd = btn.getAttribute('data-cmd');
-      input.value = cmd;
-      input.focus();
-      runCommand(cmd);
+      if (state.executing) return;
+      input.value = '';
+      runCommand(btn.getAttribute('data-cmd'));
     });
   });
 
@@ -1063,27 +1154,18 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4505.6 avail Mem
   });
 
   /* ── INITIALIZATION ───────────────────────────────────────── */
+  // No auto-focus: focusing the input on load scrolls the page down to
+  // the sandbox, and grabbing focus whenever it scrolls into view
+  // swallows Space/arrow-key scrolling and pops the mobile keyboard.
+  // Clicking the screen or a TRY chip focuses it instead.
   function initTerminal() {
     appendWelcome();
-    input.focus();
   }
 
-  /* Wait for DOM to be ready, then init when section is visible */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initTerminal);
   } else {
     initTerminal();
   }
-
-  /* Also re-focus when the terminal section scrolls into view */
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        input.focus();
-      }
-    });
-  }, { threshold: 0.3 });
-
-  observer.observe(screen);
 
 })();

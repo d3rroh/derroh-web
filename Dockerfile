@@ -17,6 +17,8 @@ COPY favicon.ico favicon-16x16.png favicon-32x32.png favicon-48x48.png apple-tou
 COPY assets/ /usr/share/nginx/html/assets/
 COPY blog/ /usr/share/nginx/html/blog/
 COPY case-studies/ /usr/share/nginx/html/case-studies/
+# GitHub stats from scripts/build_stats.py (directory may hold only .gitkeep)
+COPY data/ /usr/share/nginx/html/data/
 
 EXPOSE 80
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

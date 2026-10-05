@@ -55,6 +55,16 @@ function renderBootLine(line, container) {
   container.appendChild(el);
 }
 
+// How long the INITIALIZING sequence runs once it starts, including the
+// overlay's fade-out (.boot-overlay transition in home.css).
+const BOOT_MAX_MS  = 1200;
+const BOOT_FADE_MS = 250;
+const BOOT_SEEN_KEY = 'derroh-boot-seen';
+
+function markBootSeen() {
+  try { sessionStorage.setItem(BOOT_SEEN_KEY, '1'); } catch (e) { /* storage blocked */ }
+}
+
 async function runBoot() {
   const overlay  = $('#boot-overlay');
   const log      = $('#boot-log');
@@ -65,10 +75,11 @@ async function runBoot() {
 
   if (!overlay) return;
 
-  // Check reduced motion
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced) {
+  // Reduced motion or a repeat visit this session: the inline <head> script
+  // has already added .boot-skip so the overlay never painted.
+  if (document.documentElement.classList.contains('boot-skip')) {
     overlay.classList.add('done');
+    document.body.style.overflow = '';
     if (heroOut) heroOut.style.display = 'none';
     if (heroId)  heroId.style.display  = 'block';
     initHeroAnimations();
@@ -76,9 +87,16 @@ async function runBoot() {
     return;
   }
 
-  const total = BOOT_LINES.length;
+  markBootSeen();
+  document.documentElement.classList.add('boot-running'); // cancels the CSS safety net
+  // Lines are scheduled against the clock from when the sequence starts,
+  // so a busy main thread can't stretch it past BOOT_MAX_MS.
+  const t0     = performance.now();
+  const total  = BOOT_LINES.length;
+  const fadeAt = BOOT_MAX_MS - BOOT_FADE_MS;
+  const lineMs = (fadeAt - 150) / total;
   for (let i = 0; i < total; i++) {
-    await delay(reduced ? 0 : rand(40, 95));
+    await delay(Math.max(0, t0 + (i + 1) * lineMs - performance.now()));
     renderBootLine(BOOT_LINES[i], log);
     const progress = Math.round(((i + 1) / total) * 100);
     bar.style.width = progress + '%';
@@ -86,14 +104,14 @@ async function runBoot() {
     log.scrollTop = log.scrollHeight;
   }
 
-  await delay(420);
+  await delay(Math.max(0, t0 + fadeAt - performance.now()));
 
   // Fade out overlay
   overlay.classList.add('done');
   document.body.style.overflow = '';
 
   // Run terminal typewriter in hero
-  await delay(350);
+  await delay(BOOT_FADE_MS);
   runHeroTerminal(heroOut, heroId);
 
   initAll();
@@ -107,8 +125,8 @@ function delay(ms) {
 const HERO_SEQUENCE = [
   { type: 'cmd',  text: 'whoami',     delay: 300  },
   { type: 'out',  text: 'derrick — devops engineer · linux systems administrator', delay: 100 },
-  { type: 'cmd',  text: 'uname -a',   delay: 400  },
-  { type: 'out',  text: 'Linux devops-server 5.15.0-91-generic #101-Ubuntu SMP x86_64 GNU/Linux', delay: 80 },
+  { type: 'cmd',  text: 'uname -sm',  delay: 400  },
+  { type: 'out',  text: 'Linux x86_64', delay: 80 },
   { type: 'cmd',  text: 'systemctl is-active infrastructure', delay: 500 },
   { type: 'out',  text: '<span class="tbo-ok">active</span>', delay: 80 },
   { type: 'cmd',  text: 'cat ~/.profile_summary', delay: 400 },
@@ -126,7 +144,7 @@ function initHeroAnimations() {
   const actEl  = document.getElementById('hi-activity-text');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const ROLES = ['DevOps Engineer', 'Linux Systems Administrator', 'Kubernetes Operator', 'Incident Responder'];
+  const ROLES = ['DevOps Engineer', 'Linux Systems Administrator', 'Kubernetes Administrator', 'Incident Responder'];
   const ACTIVITY = [
     'Deployed milestone-app',
     'SSL certificate renewed',
@@ -236,7 +254,6 @@ async function typeText(el, text, speed = 40) {
 /* ── LIVE CLOCK ───────────────────────────────────────────────── */
 function initClock() {
   const clockEl = $('#live-clock');
-  const logTs   = $('#log-ts-live');
   if (!clockEl) return;
 
   function tick() {
@@ -245,11 +262,6 @@ function initClock() {
     const mm  = String(now.getMinutes()).padStart(2,'0');
     const ss  = String(now.getSeconds()).padStart(2,'0');
     clockEl.textContent = `${hh}:${mm}:${ss}`;
-    if (logTs) {
-      const mon = now.toLocaleString('en', { month: 'short' });
-      const d   = String(now.getDate()).padStart(2,'0');
-      logTs.textContent = `${mon} ${d} ${hh}:${mm}:${ss}`;
-    }
   }
 
   tick();
@@ -269,6 +281,33 @@ function initUptime() {
     const sec = String(s % 60).padStart(2,'0');
     el.textContent = `${h}:${m}:${sec}`;
   }, 1000);
+}
+
+/* ── RELATIVE TIMES (build-time GitHub stats) ─────────────────────
+   scripts/build_stats.py bakes absolute UTC times into <time data-rel>
+   so they read correctly without JS; here they become "3h ago", with
+   the absolute time kept as a tooltip.
+──────────────────────────────────────────────────────────────── */
+function relTime(date) {
+  const s = Math.round((Date.now() - date) / 1000);
+  if (s < 60)     return 'just now';
+  if (s < 3600)   return `${Math.floor(s / 60)}m ago`;
+  if (s < 86400)  return `${Math.floor(s / 3600)}h ago`;
+  if (s < 2592000) return `${Math.floor(s / 86400)}d ago`;
+  if (s < 31536000) return `${Math.floor(s / 2592000)}mo ago`;
+  return `${Math.floor(s / 31536000)}y ago`;
+}
+
+function initRelativeTimes() {
+  const els = $$('time[data-rel]');
+  if (!els.length) return;
+  els.forEach(el => { if (!el.title) el.title = el.textContent; });
+  const update = () => els.forEach(el => {
+    const d = new Date(el.getAttribute('datetime'));
+    if (!isNaN(d)) el.textContent = relTime(d);
+  });
+  update();
+  setInterval(update, 60000);
 }
 
 /* ── FOOTER YEAR ──────────────────────────────────────────────── */
@@ -578,51 +617,6 @@ function initHeartbeat() {
   if (mEl) mEl.innerHTML = labels.map(m => `<span>${m}</span>`).join('');
 }
 
-/* ── CONTRIBUTION HEATMAP ─────────────────────────────────────── */
-function initHeatmap() {
-  const grid = $('#cs-grid');
-  if (!grid) return;
-
-  const weeks = 52;
-  const days  = 7;
-
-  // Generate semi-realistic activity pattern
-  function genLevel() {
-    const r = Math.random();
-    if (r < 0.28) return 0;
-    if (r < 0.50) return 1;
-    if (r < 0.70) return 2;
-    if (r < 0.85) return 3;
-    return 4;
-  }
-
-  // Busier periods simulation
-  const cells = [];
-  for (let w = 0; w < weeks; w++) {
-    const weekBias = Math.sin(w * 0.3) * 0.3 + 0.3; // wave pattern
-    for (let d = 0; d < days; d++) {
-      const r = Math.random() + weekBias * 0.4;
-      let level;
-      if (r < 0.30) level = 0;
-      else if (r < 0.55) level = 1;
-      else if (r < 0.75) level = 2;
-      else if (r < 0.88) level = 3;
-      else level = 4;
-      cells.push(level);
-    }
-  }
-
-  const frag = document.createDocumentFragment();
-  cells.forEach(level => {
-    const cell = document.createElement('div');
-    cell.className = `cs-cell l${level}`;
-    cell.setAttribute('role', 'img');
-    cell.setAttribute('aria-label', `Activity level ${level}`);
-    frag.appendChild(cell);
-  });
-  grid.appendChild(frag);
-}
-
 /* ── 3D TECH BACKGROUND (Three.js) ───────────────────────────────
    Rotating wireframe "core" node + a drifting 3D graph of server
    nodes with connective edges + traveling "data packet" pulses.
@@ -905,7 +899,7 @@ function initBgCanvas2D() {
 
 /* ── INTERACTIVE INFRA TOPOLOGY MAP ──────────────────────────────
    Builds a layered SVG graph (Edge → Ingress → Services → Pods →
-   Longhorn/DB) and lets visitors click a node to trace the full
+   DB/storage) and lets visitors click a node to trace the full
    request path, dimming everything not on that path.
 ──────────────────────────────────────────────────────────────── */
 function initTopologyMap() {
@@ -938,23 +932,23 @@ function initTopologyMap() {
     { id: 'svc-mail',      layer: 2, type: 'svc', label: 'svc/mail', sub: 'ClusterIP · :80/25/993',
       desc: 'Fronts the mail stack — SMTP/IMAP for docker-mailserver and HTTP for the Roundcube webmail UI.' },
 
-    { id: 'pod-milestone-app',   layer: 3, type: 'pod', label: 'pod/milestone-app', sub: 'd3rroh/milestone:latest',
+    { id: 'pod-milestone-app',   layer: 3, type: 'pod', label: 'pod/milestone-app', sub: 'd3rroh/milestone',
       desc: 'Laravel app pod running php-fpm behind Apache. Handles HTTP requests and dispatches background jobs to the queue.' },
     { id: 'pod-milestone-queue', layer: 3, type: 'pod', label: 'pod/milestone-queue', sub: 'Laravel Queue Worker',
       desc: 'Background worker processing queued jobs (emails, exports, notifications) dispatched by milestone-app.' },
-    { id: 'pod-milestone-db',    layer: 3, type: 'pod', label: 'pod/milestone-db', sub: 'mysql:8.0',
-      desc: "MySQL 8.0 database pod for the milestone app. Its data volume is backed by a Longhorn PersistentVolumeClaim." },
-    { id: 'pod-derroh-web',    layer: 3, type: 'pod', label: 'pod/derroh-web', sub: 'nginx:alpine',
+    { id: 'pod-milestone-db',    layer: 3, type: 'pod', label: 'pod/milestone-db', sub: 'mysql',
+      desc: "MySQL database pod for the milestone app. Its data volume is a PersistentVolumeClaim on k3s's local-path storage." },
+    { id: 'pod-derroh-web',    layer: 3, type: 'pod', label: 'pod/derroh-web', sub: 'nginx',
       desc: 'Static-site pod serving derroh.co.ke.' },
-    { id: 'pod-kimberley-web', layer: 3, type: 'pod', label: 'pod/kimberley-web', sub: 'nginx:alpine',
+    { id: 'pod-kimberley-web', layer: 3, type: 'pod', label: 'pod/kimberley-web', sub: 'nginx',
       desc: 'Static-site pod serving kimberley.name.ng.' },
     { id: 'pod-mailserver', layer: 3, type: 'pod', label: 'pod/docker-mailserver', sub: 'Postfix · Dovecot · rspamd',
       desc: 'Handles inbound/outbound SMTP and IMAP, with rspamd for spam filtering.' },
     { id: 'pod-roundcube',  layer: 3, type: 'pod', label: 'pod/roundcube', sub: 'Webmail UI',
       desc: 'Browser-based mail client — talks to docker-mailserver over IMAP.' },
 
-    { id: 'storage-longhorn', layer: 4, type: 'storage', label: 'Longhorn PVC', sub: 'Replicated Block Storage',
-      desc: "Longhorn provisions replicated block storage across cluster nodes for stateful workloads — here backing milestone-db's data volume." },
+    { id: 'storage-local', layer: 4, type: 'storage', label: 'pvc/milestone-storage', sub: 'StorageClass: local-path',
+      desc: "k3s's built-in local-path provisioner keeps the volume in a directory on the node's own disk. It backs milestone-db's data." },
   ];
 
   const edges = [
@@ -968,11 +962,11 @@ function initTopologyMap() {
     ['pod-milestone-app', 'pod-milestone-db'],
     ['pod-milestone-queue', 'pod-milestone-db', true],
     ['pod-roundcube', 'pod-mailserver', true],
-    ['pod-milestone-db', 'storage-longhorn'],
+    ['pod-milestone-db', 'storage-local'],
   ];
 
   // ── Layout ──────────────────────────────────────────────────
-  const NODE_W = 168, NODE_H = 44, GAP_Y = 16, COL_GAP = 152;
+  const NODE_W = 196, NODE_H = 52, GAP_Y = 14, COL_GAP = 60;
   const byLayer = {};
   nodes.forEach(n => { (byLayer[n.layer] = byLayer[n.layer] || []).push(n); });
   const maxCount = Math.max(...Object.values(byLayer).map(a => a.length));
@@ -1047,13 +1041,13 @@ function initTopologyMap() {
 
     const label = document.createElementNS(NS, 'text');
     label.setAttribute('class', 'tn-label');
-    label.setAttribute('x', 14); label.setAttribute('y', 19);
+    label.setAttribute('x', 14); label.setAttribute('y', 22);
     label.textContent = n.label;
     g.appendChild(label);
 
     const sub = document.createElementNS(NS, 'text');
     sub.setAttribute('class', 'tn-sub');
-    sub.setAttribute('x', 14); sub.setAttribute('y', 33);
+    sub.setAttribute('x', 14); sub.setAttribute('y', 40);
     sub.textContent = n.sub;
     g.appendChild(sub);
 
@@ -1648,6 +1642,93 @@ function initDockNav() {
 // Must match the hamburger breakpoint in home.css.
 const NAV_COLLAPSE_MQ = window.matchMedia('(max-width: 1100px)');
 
+/* ── NAV HOVER: GLIDE INDICATOR + LABEL DECODE ────────────────────
+   A cyan line glides under whichever link is hovered and settles back
+   under the active section's link when the pointer leaves. The hovered
+   label "decodes" from scrambled glyphs, terminal-style. Inline desktop
+   layout only (the line is hidden in the collapsed menu via CSS) and
+   skipped entirely for reduced motion. Works alongside initDockNav —
+   positions come from offsetLeft/offsetWidth, which ignore transforms.
+──────────────────────────────────────────────────────────────── */
+function initNavHover() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const list  = document.getElementById('nav-links');
+  if (!list) return;
+  const links = $$('.nl', list);
+  if (!links.length) return;
+
+  const glide = document.createElement('li');
+  glide.className = 'nl-glide';
+  glide.setAttribute('aria-hidden', 'true');
+  list.appendChild(glide);
+  list.classList.add('has-glide');
+
+  let hovering = false;
+  let hovered  = null;
+
+  function moveTo(link) {
+    if (!link) { glide.classList.remove('is-on'); return; }
+    glide.style.width     = `${link.offsetWidth}px`;
+    glide.style.transform = `translateX(${link.offsetLeft}px)`;
+    glide.classList.add('is-on');
+  }
+  const activeLink = () => links.find(l => l.classList.contains('active'));
+
+  // Place it under the active link without animating in from the left.
+  moveTo(activeLink());
+  requestAnimationFrame(() => glide.classList.add('is-ready'));
+
+  /* Label decode */
+  const GLYPHS = '!<>-_\\/[]{}=+*^?#01';
+  const DECODE_MS = 300;
+  links.forEach(link => {
+    const text = link.textContent.trim();
+    link.dataset.label = text;
+    let raf = null;
+
+    link.addEventListener('mouseenter', () => {
+      hovering = true;
+      hovered  = link;
+      moveTo(link);
+      if (NAV_COLLAPSE_MQ.matches || raf) return;
+
+      let t0 = null;
+      const step = (now) => {
+        // Start the clock on the first frame: rAF timestamps can predate
+        // a performance.now() taken in the event handler.
+        if (t0 === null) t0 = now;
+        const p = Math.min(1, Math.max(0, (now - t0) / DECODE_MS));
+        const solved = Math.floor(p * text.length);
+        let out = text.slice(0, solved);
+        for (let i = solved; i < text.length; i++) {
+          // Keep the leading "_" and spaces stable so the label doesn't jitter
+          out += (text[i] === '_' || text[i] === ' ')
+            ? text[i]
+            : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+        }
+        link.textContent = out;
+        if (p < 1) raf = requestAnimationFrame(step);
+        else { link.textContent = text; raf = null; }
+      };
+      raf = requestAnimationFrame(step);
+    });
+  });
+
+  list.addEventListener('mouseleave', () => {
+    hovering = false;
+    moveTo(activeLink());
+  });
+
+  // Follow the active link as sections scroll by (initActiveNav toggles it).
+  const mo = new MutationObserver(() => { if (!hovering) moveTo(activeLink()); });
+  links.forEach(l => mo.observe(l, { attributes: true, attributeFilter: ['class'] }));
+
+  // Re-measure on resize (and once webfonts settle) — widths change.
+  window.addEventListener('resize', () => moveTo(hovering ? hovered : activeLink()), { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => moveTo(activeLink()));
+}
+
 function initMobileNav() {
   const toggle = $('#nav-toggle');
   const menu   = $('#nav-links');
@@ -1740,24 +1821,90 @@ function initAnchors() {
   });
 }
 
-/* ── PANEL CARD TILT ──────────────────────────────────────────── */
-function initCardTilt() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (window.innerWidth <= 820) return;
+/* ── CARD CURSOR SPOTLIGHT + TILT ─────────────────────────────────
+   Mouse-only (skipped on touch/narrow screens and reduced motion).
+   Each target gets a .cursor-spot layer (home.css → "Cursor spotlight")
+   whose glow follows --mx/--my. `tilt` is the max rotation in degrees
+   either way; 0 means spotlight only. Inline transform/transition exist
+   only while the pointer is over the card; on leave it eases back and
+   the CSS transitions take over again.
+──────────────────────────────────────────────────────────────── */
+function attachCursorSpot(card, { tilt = 0, lift = 0 } = {}) {
+  let raf = null;
+  const spot = document.createElement('span');
+  spot.className = 'cursor-spot';
+  spot.setAttribute('aria-hidden', 'true');
+  card.prepend(spot);
 
-  $$('.project-svc, .gauge-panel').forEach(card => {
-    card.addEventListener('mousemove', e => {
+  card.addEventListener('mousemove', e => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = null;
       const rect = card.getBoundingClientRect();
       const x    = (e.clientX - rect.left) / rect.width  - 0.5;
       const y    = (e.clientY - rect.top)  / rect.height - 0.5;
-      card.style.transform = `translateY(-3px) rotateX(${-y * 3}deg) rotateY(${x * 3}deg)`;
-      card.style.transition = 'transform 0.08s ease';
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-      card.style.transition = 'all 0.28s ease';
+      card.style.setProperty('--mx', `${((x + 0.5) * 100).toFixed(1)}%`);
+      card.style.setProperty('--my', `${((y + 0.5) * 100).toFixed(1)}%`);
+      card.classList.add('is-lit');
+      if (!tilt) return;
+      card.style.transition = 'transform 0.1s ease-out, border-color var(--t-base), box-shadow var(--t-base)';
+      card.style.transform  = `perspective(900px) translateY(${-lift}px) rotateX(${(-y * tilt * 2).toFixed(2)}deg) rotateY(${(x * tilt * 2).toFixed(2)}deg)`;
     });
   });
+  card.addEventListener('mouseleave', () => {
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    card.classList.remove('is-lit');
+    if (!tilt) return;
+    card.style.transition = 'transform 0.35s var(--ease-out), border-color var(--t-base), box-shadow var(--t-base)';
+    card.style.transform  = '';
+    card.addEventListener('transitionend', () => { card.style.transition = ''; }, { once: true });
+  });
+}
+
+function initCardTilt() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (window.innerWidth <= 820) return;
+
+  // Performance metrics
+  $$('.gauge-panel').forEach(card => attachCursorSpot(card, { tilt: 2, lift: 3 }));
+
+  // Live stack: wide namespace cards tilt less; full-width rows just glow
+  $$('.ns-block').forEach(card => attachCursorSpot(card, { tilt: 1, lift: 2 }));
+  $$('.stack-cluster-bar, .stack-ingress-table').forEach(el => attachCursorSpot(el));
+
+  // Traffic topology: spotlight only — the diagram is clicked and the
+  // globe dragged, so the surfaces stay flat under the pointer.
+  $$('.topo-diagram-wrap, .topo-info-panel, .globe-canvas-wrap, .globe-info-panel')
+    .forEach(el => attachCursorSpot(el));
+
+  // CI/CD pipeline: stage cards tilt like the gauges (smaller — they're
+  // narrow), the runs table just glows.
+  $$('.pf-stage').forEach(card => attachCursorSpot(card, { tilt: 1.5, lift: 3 }));
+  $$('.cicd-runs').forEach(el => attachCursorSpot(el));
+
+  // Live sandbox: the screen takes typing, so it stays flat.
+  $$('.term-screen').forEach(el => attachCursorSpot(el));
+
+  // System logs: full-width rows, tinted by severity — glow only.
+  $$('.log-entry').forEach(el => attachCursorSpot(el));
+
+  // Hero: the side panels tilt slightly; the big identity terminal only
+  // glows so the first screen doesn't sway.
+  $$('.hero-metrics-col > .panel').forEach(card => attachCursorSpot(card, { tilt: 1, lift: 2 }));
+  $$('.hero-identity-panel').forEach(el => attachCursorSpot(el));
+
+  // Operator profile: neofetch, bio and capabilities panels
+  $$('.about-section .panel').forEach(card => attachCursorSpot(card, { tilt: 1, lift: 2 }));
+
+  // Commit pulse: one wide panel + the chart area — glow only.
+  $$('.heartbeat-panel, .hb-canvas-wrap').forEach(el => attachCursorSpot(el));
+
+  // Case files: tinted by severity; the big featured card tilts less.
+  $$('.ic').forEach(card => attachCursorSpot(card, {
+    tilt: card.classList.contains('ic--featured') ? 0.5 : 1,
+    lift: 4,
+  }));
 }
 
 /* ── LAZY THREE.JS LOADER ─────────────────────────────────────────
@@ -1794,11 +1941,11 @@ async function initAll() {
   initClock();
   initUptime();
   initFooterYear();
+  initRelativeTimes();
   initMetrics();
   initStatCounters();
   initGauges();
   initHeartbeat();
-  initHeatmap();
   initTopologyMap();
   initTopologyViewTabs();
   initCategoryFilter();
@@ -1806,6 +1953,7 @@ async function initAll() {
   initActiveNav();
   initMobileNav();
   initDockNav();
+  initNavHover();
   initScrollEffects();
   initAnchors();
   initCardTilt();
