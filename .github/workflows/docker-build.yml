@@ -63,5 +63,5 @@ jobs:
           mkdir -p ~/.kube
           echo "$KUBECONFIG_B64" | base64 -d > ~/.kube/config
           chmod 600 ~/.kube/config
-          kubectl -n derroh-web set image deployment/derroh-web derroh-web=d3rroh/derroh-web:${{ github.sha }}
+          kubectl -n derroh-web set image deployment/derroh-web web=d3rroh/derroh-web:${{ github.sha }}
           kubectl -n derroh-web rollout status deployment/derroh-web --timeout=120s
