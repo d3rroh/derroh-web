@@ -552,16 +552,15 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin/>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
 
-  <!-- Fonts & icon font: loaded non-render-blocking (preload, then swap to stylesheet) -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap"
+  <!-- Webfonts: loaded non-render-blocking (preload, then swap to stylesheet).
+       Icons are a self-hosted Font Awesome subset (scripts/build_icons.py). -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;600&display=swap"
         onload="this.onload=null;this.rel='stylesheet'"/>
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        onload="this.onload=null;this.rel='stylesheet'"/>
+  <link rel="stylesheet" href="assets/fa/fa.css"/>
   <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet"/>
   </noscript>
   <!-- three.js is loaded lazily via JS (see loadThreeJS()) so it never
        competes with first paint / LCP, especially on throttled mobile. -->
