@@ -4,6 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/rand"
 	"crypto/sha256"
+	"crypto/tls"
 	"encoding/hex"
 	"encoding/json"
 	"log"
@@ -342,8 +343,67 @@ func deliver(m message) error {
 		"Content-Transfer-Encoding: 8bit\n\n" +
 		body
 
-	addr := host + ":" + port
-	return smtp.SendMail(addr, smtp.PlainAuth("", user, pass, host), from, []string{to}, []byte(msg))
+	return sendMail(host, port, user, pass, from, to, []byte(msg))
+}
+
+// smtpTimeout bounds the whole SMTP exchange so it finishes inside the
+// server's WriteTimeout and nginx's proxy_read_timeout (both 10s).
+const smtpTimeout = 8 * time.Second
+
+// sendMail is smtp.SendMail plus a deadline and support for implicit TLS
+// on port 465 (smtp.SendMail only speaks STARTTLS).
+func sendMail(host, port, user, pass, from, to string, msg []byte) error {
+	addr := net.JoinHostPort(host, port)
+	dialer := &net.Dialer{Timeout: smtpTimeout}
+	tlsCfg := &tls.Config{ServerName: host, MinVersion: tls.VersionTLS12}
+
+	var conn net.Conn
+	var err error
+	if port == "465" {
+		conn, err = tls.DialWithDialer(dialer, "tcp", addr, tlsCfg)
+	} else {
+		conn, err = dialer.Dial("tcp", addr)
+	}
+	if err != nil {
+		return err
+	}
+	conn.SetDeadline(time.Now().Add(smtpTimeout))
+
+	c, err := smtp.NewClient(conn, host)
+	if err != nil {
+		conn.Close()
+		return err
+	}
+	defer c.Close()
+
+	if port != "465" {
+		if ok, _ := c.Extension("STARTTLS"); ok {
+			if err := c.StartTLS(tlsCfg); err != nil {
+				return err
+			}
+		}
+	}
+	// PlainAuth refuses to send credentials over an unencrypted connection.
+	if err := c.Auth(smtp.PlainAuth("", user, pass, host)); err != nil {
+		return err
+	}
+	if err := c.Mail(from); err != nil {
+		return err
+	}
+	if err := c.Rcpt(to); err != nil {
+		return err
+	}
+	wc, err := c.Data()
+	if err != nil {
+		return err
+	}
+	if _, err := wc.Write(msg); err != nil {
+		return err
+	}
+	if err := wc.Close(); err != nil {
+		return err
+	}
+	return c.Quit()
 }
 
 // ── Log Persistence ─────────────────────────────────────────
@@ -386,6 +446,11 @@ func main() {
 		IdleTimeout:       30 * time.Second,
 	}
 
+	if os.Getenv("SMTP_HOST") != "" && os.Getenv("SMTP_USER") != "" {
+		log.Printf("contact: delivering via SMTP %s:%s", os.Getenv("SMTP_HOST"), envOr("SMTP_PORT", "587"))
+	} else {
+		log.Printf("contact: SMTP_HOST/SMTP_USER not set, messages go to /var/log/contact-messages.log only")
+	}
 	log.Printf("contact server listening on %s", addr)
 	log.Fatal(srv.ListenAndServe())
 }
