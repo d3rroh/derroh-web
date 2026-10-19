@@ -8,7 +8,7 @@ RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/contact-server .
 # Minify, version-stamp and pre-gzip the static site (scripts/build_assets.sh).
 FROM node:20-alpine AS assets
 WORKDIR /site
-COPY index.html cv.html llms.txt sitemap.xml robots.txt site.webmanifest ./
+COPY index.html cv.html 404.html llms.txt sitemap.xml robots.txt site.webmanifest ./
 COPY og-image.png favicon.ico favicon-16x16.png favicon-32x32.png favicon-48x48.png apple-touch-icon.png android-chrome-192x192.png android-chrome-512x512.png ./
 COPY assets/ assets/
 COPY blog/ blog/

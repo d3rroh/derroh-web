@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png"/>
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicon-180.png"/>
   <meta name="description" content="Resolving a cascade of Node.js deployment failures on cPanel shared hosting with LiteSpeed — ESM/CJS conflicts, process limits, and Express 5 route syntax changes — through to a clean production Vite build."/>
-  <meta name="author" content="Derrick"/>
+  <meta name="author" content="Derrick Abila"/>
   <link rel="canonical" href="https://derroh.co.ke/case-studies/nodejs-cpanel-litespeed-deployment.html"/>
   <title>Node.js App Deployment on cPanel LiteSpeed: ESM, nproc &amp; Vite Build | Derrick — DevOps Command Center</title>
 
@@ -31,10 +31,11 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Node.js App Deployment on cPanel LiteSpeed: ESM, nproc &amp; Vite Build",
+    "headline": "Node.js App Deployment on cPanel LiteSpeed: ESM, nproc & Vite Build",
     "description": "Resolving a cascade of Node.js deployment failures on cPanel shared hosting with LiteSpeed — ESM/CJS conflicts, process limits, and Express 5 route syntax changes — through to a clean production Vite build.",
-    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
-    "publisher": { "@type": "Person", "name": "Derrick" },
+    "author": { "@type": "Person", "@id": "https://derroh.co.ke/#person", "name": "Derrick Abila", "url": "https://derroh.co.ke/" },
+    "publisher": { "@id": "https://derroh.co.ke/#person" },
+    "image": "https://derroh.co.ke/og-image.png",
     "datePublished": "2025-10-09",
     "dateModified": "2025-10-09",
     "mainEntityOfPage": "https://derroh.co.ke/case-studies/nodejs-cpanel-litespeed-deployment.html"
@@ -69,7 +70,7 @@
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
     <main class="post-wrap">
-    <a href="../index.html#projects" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Case Files</a>
+    <a href="/#projects" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Case Files</a>
     <div class="post-meta">Oct 9, 2025 · PRJ-2025-008 · DEPLOYMENT · PRODUCTION</div>
     <h1 class="post-title">Node.js App Deployment on cPanel LiteSpeed: ESM, nproc &amp; Vite Build</h1>
     <div class="post-tags">
@@ -87,6 +88,18 @@
       <p>The app's ESM imports conflicted with LiteSpeed's default CommonJS expectations, process limits on the shared hosting account were blocking <code>npm install</code> from completing, API URLs were hardcoded to localhost from local development, and route syntax changes introduced in Express 5 broke on the shared environment's Node version.</p>
       <h2>Fix</h2>
       <p>Each issue was resolved in turn — module format alignment, raising process limits within the account's constraints, environment-based API URL configuration, and updating route definitions for Express 5 — culminating in a clean production Vite build now running stably.</p>
+    </div>
+    <aside class="post-related" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="post-related-title">Related</h2>
+      <ul>
+        <li><a href="/case-studies/almalinux-vps-gateway-recovery.html"><span class="post-related-kind">case file</span> AlmaLinux VPS Non-Standard Gateway Recovery</a></li>
+        <li><a href="/blog/cicd-pipeline-github-actions-docker-kubectl.html"><span class="post-related-kind">log</span> GitHub Actions → Docker Hub → kubectl: A Real CI/CD Pipeline</a></li>
+        <li><a href="/case-studies/zoho-to-cpanel-imap-migration.html"><span class="post-related-kind">case file</span> Zero-Loss IMAP Migration: Zoho Mail → cPanel via imapsync</a></li>
+      </ul>
+    </aside>
+    <div class="post-cta">
+      <p>Dealing with something similar on your own servers?</p>
+      <a href="/#contact" class="post-cta-link">Get in touch <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
     </div>
   </main>
 </body>

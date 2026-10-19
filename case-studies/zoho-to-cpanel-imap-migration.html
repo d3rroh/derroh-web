@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png"/>
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicon-180.png"/>
   <meta name="description" content="Orchestrating a complete mailbox migration from Zoho Mail to a cPanel Dovecot mail server using imapsync, with zero message loss and a live DNS MX cutover."/>
-  <meta name="author" content="Derrick"/>
+  <meta name="author" content="Derrick Abila"/>
   <link rel="canonical" href="https://derroh.co.ke/case-studies/zoho-to-cpanel-imap-migration.html"/>
   <title>Zero-Loss IMAP Migration: Zoho Mail → cPanel via imapsync | Derrick — DevOps Command Center</title>
 
@@ -33,8 +33,9 @@
     "@type": "Article",
     "headline": "Zero-Loss IMAP Migration: Zoho Mail → cPanel via imapsync",
     "description": "Orchestrating a complete mailbox migration from Zoho Mail to a cPanel Dovecot mail server using imapsync, with zero message loss and a live DNS MX cutover.",
-    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
-    "publisher": { "@type": "Person", "name": "Derrick" },
+    "author": { "@type": "Person", "@id": "https://derroh.co.ke/#person", "name": "Derrick Abila", "url": "https://derroh.co.ke/" },
+    "publisher": { "@id": "https://derroh.co.ke/#person" },
+    "image": "https://derroh.co.ke/og-image.png",
     "datePublished": "2025-10-25",
     "dateModified": "2025-10-25",
     "mainEntityOfPage": "https://derroh.co.ke/case-studies/zoho-to-cpanel-imap-migration.html"
@@ -69,7 +70,7 @@
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
     <main class="post-wrap">
-    <a href="../index.html#projects" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Case Files</a>
+    <a href="/#projects" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Case Files</a>
     <div class="post-meta">Oct 25, 2025 · PRJ-2025-006 · MIGRATION · COMPLETED</div>
     <h1 class="post-title">Zero-Loss IMAP Migration: Zoho Mail → cPanel via imapsync</h1>
     <div class="post-tags">
@@ -85,6 +86,18 @@
       <div class="post-kpis"><div class="kpi"><span class="kpi-val">0</span><span class="kpi-label">Msgs Lost</span></div><div class="kpi"><span class="kpi-val">100%</span><span class="kpi-label">Folders Synced</span></div><div class="kpi"><span class="kpi-val">Live</span><span class="kpi-label">Cutover</span></div></div>
       <h2>Process</h2>
       <p>Every folder was migrated with message flags (read/unread, flagged, etc.) preserved intact. I validated message counts before and after the sync to confirm nothing was dropped, then coordinated a live DNS MX cutover timed so the end user experienced no interruption to incoming mail during the switch.</p>
+    </div>
+    <aside class="post-related" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="post-related-title">Related</h2>
+      <ul>
+        <li><a href="/blog/zero-downtime-imap-migration-imapsync.html"><span class="post-related-kind">log</span> Zero-Downtime IMAP Migration with imapsync</a></li>
+        <li><a href="/blog/dovecot-disable-plaintext-auth-fix.html"><span class="post-related-kind">log</span> Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts</a></li>
+        <li><a href="/case-studies/nodejs-cpanel-litespeed-deployment.html"><span class="post-related-kind">case file</span> Node.js App Deployment on cPanel LiteSpeed: ESM, nproc &amp; Vite Build</a></li>
+      </ul>
+    </aside>
+    <div class="post-cta">
+      <p>Dealing with something similar on your own servers?</p>
+      <a href="/#contact" class="post-cta-link">Get in touch <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
     </div>
   </main>
 </body>

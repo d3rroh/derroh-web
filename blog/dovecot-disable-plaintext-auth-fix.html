@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png"/>
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicon-180.png"/>
   <meta name="description" content="Why editing dovecot.conf inside a running docker-mailserver container loses the fix on restart, and the correct override mechanism using user-patches.sh to make it stick permanently."/>
-  <meta name="author" content="Derrick"/>
+  <meta name="author" content="Derrick Abila"/>
   <link rel="canonical" href="https://derroh.co.ke/blog/dovecot-disable-plaintext-auth-fix.html"/>
   <title>Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts | Derrick — DevOps Command Center</title>
 
@@ -33,8 +33,9 @@
     "@type": "Article",
     "headline": "Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts",
     "description": "Why editing dovecot.conf inside a running docker-mailserver container loses the fix on restart, and the correct override mechanism using user-patches.sh to make it stick permanently.",
-    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
-    "publisher": { "@type": "Person", "name": "Derrick" },
+    "author": { "@type": "Person", "@id": "https://derroh.co.ke/#person", "name": "Derrick Abila", "url": "https://derroh.co.ke/" },
+    "publisher": { "@id": "https://derroh.co.ke/#person" },
+    "image": "https://derroh.co.ke/og-image.png",
     "datePublished": "2026-03-08",
     "dateModified": "2026-10-03",
     "mainEntityOfPage": "https://derroh.co.ke/blog/dovecot-disable-plaintext-auth-fix.html"
@@ -69,7 +70,7 @@
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
     <main class="post-wrap">
-    <a href="../index.html#blog" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Logs</a>
+    <a href="/#blog" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Logs</a>
     <div class="post-meta">Mar 8, 2026 · dovecot · docker-mailserver · email · containers</div>
     <h1 class="post-title">Dovecot disable_plaintext_auth: Making the Fix Survive Container Restarts</h1>
     <div class="post-tags">
@@ -84,6 +85,18 @@
       <p>Changes to a container's filesystem outside a mounted volume don't survive the container being recreated. On top of that, <code>docker-mailserver</code> regenerates or overwrites parts of its config from the base image at startup. So a hand edit to <code>disable_plaintext_auth</code> is gone the moment the container restarts.</p>
       <h2>The fix that sticks</h2>
       <p>Use the override mechanism <code>docker-mailserver</code> already supports: a <code>user-patches.sh</code> script. It runs on every container start and re-applies the change idempotently. The setting becomes part of how the container starts up, instead of a one-off edit you're hoping will survive.</p>
+    </div>
+    <aside class="post-related" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="post-related-title">Related</h2>
+      <ul>
+        <li><a href="/blog/zero-downtime-imap-migration-imapsync.html"><span class="post-related-kind">log</span> Zero-Downtime IMAP Migration with imapsync</a></li>
+        <li><a href="/case-studies/zoho-to-cpanel-imap-migration.html"><span class="post-related-kind">case file</span> Zero-Loss IMAP Migration: Zoho Mail → cPanel via imapsync</a></li>
+        <li><a href="/blog/migrating-docker-compose-to-k3s.html"><span class="post-related-kind">log</span> Migrating from Docker Compose to k3s: What Actually Breaks</a></li>
+      </ul>
+    </aside>
+    <div class="post-cta">
+      <p>Dealing with something similar on your own servers?</p>
+      <a href="/#contact" class="post-cta-link">Get in touch <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
     </div>
   </main>
 </body>

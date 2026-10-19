@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png"/>
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicon-180.png"/>
   <meta name="description" content="Incident write-up on eradicating CSPUpdate cryptominer binaries with cron.d persistence on a compromised CentOS server, tracing root-level access and hardening against reinfection."/>
-  <meta name="author" content="Derrick"/>
+  <meta name="author" content="Derrick Abila"/>
   <link rel="canonical" href="https://derroh.co.ke/case-studies/centos-cryptominer-eradication.html"/>
   <title>CentOS Cryptominer Eradication &amp; Root Compromise Cleanup | Derrick — DevOps Command Center</title>
 
@@ -31,10 +31,11 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "CentOS Cryptominer Eradication &amp; Root Compromise Cleanup",
+    "headline": "CentOS Cryptominer Eradication & Root Compromise Cleanup",
     "description": "Incident write-up on eradicating CSPUpdate cryptominer binaries with cron.d persistence on a compromised CentOS server, tracing root-level access and hardening against reinfection.",
-    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
-    "publisher": { "@type": "Person", "name": "Derrick" },
+    "author": { "@type": "Person", "@id": "https://derroh.co.ke/#person", "name": "Derrick Abila", "url": "https://derroh.co.ke/" },
+    "publisher": { "@id": "https://derroh.co.ke/#person" },
+    "image": "https://derroh.co.ke/og-image.png",
     "datePublished": "2025-12-19",
     "dateModified": "2025-12-19",
     "mainEntityOfPage": "https://derroh.co.ke/case-studies/centos-cryptominer-eradication.html"
@@ -69,7 +70,7 @@
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
     <main class="post-wrap">
-    <a href="../index.html#projects" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Case Files</a>
+    <a href="/#projects" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Case Files</a>
     <div class="post-meta">Dec 19, 2025 · INC-2025-003 · CRYPTOMINER · RESOLVED</div>
     <h1 class="post-title">CentOS Cryptominer Eradication &amp; Root Compromise Cleanup</h1>
     <div class="post-tags">
@@ -86,6 +87,18 @@
       <p>The compromise had root-level access, so I traced the full scope of what the attacker had touched rather than just killing the visible processes. All four malicious processes and their persistence mechanisms were removed, and I ran <code>rkhunter</code> alongside manual bash forensics to confirm no additional footholds remained.</p>
       <h2>Hardening</h2>
       <p>After cleanup, CPU usage returned to 0% baseline. I hardened the server against reinfection by locking down cron access and auditing for the initial entry point that allowed root compromise in the first place.</p>
+    </div>
+    <aside class="post-related" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="post-related-title">Related</h2>
+      <ul>
+        <li><a href="/case-studies/ssh-compromise-backdoor-removal.html"><span class="post-related-kind">case file</span> Active SSH Compromise &amp; Backdoor Removal</a></li>
+        <li><a href="/case-studies/cpanel-rce-malware-multi-server-breach.html"><span class="post-related-kind">case file</span> cPanel RCE Malware Attack &amp; Multi-Server Breach Response</a></li>
+        <li><a href="/blog/linux-server-hardening-checklist.html"><span class="post-related-kind">log</span> Hardening Your Linux Server: A Practical Checklist</a></li>
+      </ul>
+    </aside>
+    <div class="post-cta">
+      <p>Dealing with something similar on your own servers?</p>
+      <a href="/#contact" class="post-cta-link">Get in touch <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
     </div>
   </main>
 </body>

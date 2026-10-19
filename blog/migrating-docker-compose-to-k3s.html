@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png"/>
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicon-180.png"/>
   <meta name="description" content="A real account of migrating a full production stack to Kubernetes on a bare Contabo VPS — port conflicts, CNI surprises, LoadBalancer gotchas, and why nginx-ingress plus Cloudflare is the clean path."/>
-  <meta name="author" content="Derrick"/>
+  <meta name="author" content="Derrick Abila"/>
   <link rel="canonical" href="https://derroh.co.ke/blog/migrating-docker-compose-to-k3s.html"/>
   <title>Migrating from Docker Compose to k3s: What Actually Breaks | Derrick — DevOps Command Center</title>
 
@@ -33,8 +33,9 @@
     "@type": "Article",
     "headline": "Migrating from Docker Compose to k3s: What Actually Breaks",
     "description": "A real account of migrating a full production stack to Kubernetes on a bare Contabo VPS — port conflicts, CNI surprises, LoadBalancer gotchas, and why nginx-ingress plus Cloudflare is the clean path.",
-    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
-    "publisher": { "@type": "Person", "name": "Derrick" },
+    "author": { "@type": "Person", "@id": "https://derroh.co.ke/#person", "name": "Derrick Abila", "url": "https://derroh.co.ke/" },
+    "publisher": { "@id": "https://derroh.co.ke/#person" },
+    "image": "https://derroh.co.ke/og-image.png",
     "datePublished": "2026-06-10",
     "dateModified": "2026-10-03",
     "mainEntityOfPage": "https://derroh.co.ke/blog/migrating-docker-compose-to-k3s.html"
@@ -69,7 +70,7 @@
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
     <main class="post-wrap">
-    <a href="../index.html#blog" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Logs</a>
+    <a href="/#blog" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Logs</a>
     <div class="post-meta">Jun 10, 2026 · k3s · kubernetes · docker-compose · nginx-ingress</div>
     <h1 class="post-title">Migrating from Docker Compose to k3s: What Actually Breaks</h1>
     <div class="post-tags">
@@ -88,6 +89,18 @@
       <p>A Kubernetes <code>LoadBalancer</code> service expects a cloud provider to hand it an external IP. A bare VPS has no such thing. Rather than fight Kubernetes for load balancing it can't provide here, I routed everything through <code>nginx-ingress</code> and put Cloudflare in front of the VPS's single IP for SSL and CDN.</p>
       <h2>What I'd do again</h2>
       <p>For a single-node, bare-metal-style cluster, nginx-ingress plus Cloudflare is the practical setup. You skip the LoadBalancer problem entirely, and you get SSL termination and a CDN for free.</p>
+    </div>
+    <aside class="post-related" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="post-related-title">Related</h2>
+      <ul>
+        <li><a href="/blog/kubernetes-pvc-permissions-fsgroup.html"><span class="post-related-kind">log</span> Kubernetes PVC Permissions: fsGroup, Init Containers, and www-data</a></li>
+        <li><a href="/blog/cicd-pipeline-github-actions-docker-kubectl.html"><span class="post-related-kind">log</span> GitHub Actions → Docker Hub → kubectl: A Real CI/CD Pipeline</a></li>
+        <li><a href="/case-studies/owncloud-minio-s3-kubernetes-stack.html"><span class="post-related-kind">case file</span> ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes</a></li>
+      </ul>
+    </aside>
+    <div class="post-cta">
+      <p>Dealing with something similar on your own servers?</p>
+      <a href="/#contact" class="post-cta-link">Get in touch <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
     </div>
   </main>
 </body>

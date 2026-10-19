@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en-KE">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>404 — Not Found | Derrick — DevOps Command Center</title>
+  <meta name="robots" content="noindex"/>
+  <link rel="icon" href="/assets/img/favicon.ico" sizes="any"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png"/>
+  <link rel="stylesheet" href="/assets/fa/fa.css"/>
+  <link rel="stylesheet" href="/assets/site.css"/>
+  <style>
+    .nf-wrap { max-width: 720px; margin: 0 auto; padding: 10rem 1.25rem 5rem; }
+    .nf-term {
+      font-family: var(--font-mono); font-size: .95rem; color: var(--text-code);
+      background: var(--bg-panel); border: 1px solid var(--border-2);
+      padding: 1.5rem; margin-bottom: 2rem; overflow-x: auto;
+    }
+    .nf-term p { margin: 0 0 .4rem; white-space: pre-wrap; word-break: break-all; }
+    .nf-prompt { color: var(--green); }
+    .nf-err { color: var(--red-bright); }
+    .nf-code { font-family: var(--font-hud); font-size: clamp(3rem, 12vw, 6rem); color: var(--red); line-height: 1; margin-bottom: 1rem; }
+    .nf-links { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .nf-links a {
+      font-family: var(--font-mono); font-size: .85rem; color: var(--text-1);
+      padding: .6rem 1rem; border: 1px solid var(--border-2); background: var(--bg-panel);
+    }
+    .nf-links a:hover { border-color: var(--red-border); color: var(--red-bright); }
+  </style>
+</head>
+<body>
+  <div class="crt-scanlines" aria-hidden="true"></div>
+  <div class="crt-vignette" aria-hidden="true"></div>
+  <main class="nf-wrap">
+    <h1 class="nf-code">404</h1>
+    <div class="nf-term" role="presentation">
+      <p><span class="nf-prompt">derrick@ops:~$</span> curl -I <span id="nf-path">this-page</span></p>
+      <p class="nf-err">HTTP/2 404 — resource not found</p>
+      <p><span class="nf-prompt">derrick@ops:~$</span> ls ./suggestions</p>
+    </div>
+    <nav class="nf-links" aria-label="Suggested pages">
+      <a href="/"><i class="fas fa-terminal" aria-hidden="true"></i> Home</a>
+      <a href="/#projects"><i class="fas fa-shield-halved" aria-hidden="true"></i> Case Files</a>
+      <a href="/#blog"><i class="fas fa-file-lines" aria-hidden="true"></i> Logs</a>
+      <a href="/#contact"><i class="fas fa-envelope" aria-hidden="true"></i> Contact</a>
+    </nav>
+  </main>
+  <script>document.getElementById('nf-path').textContent = location.pathname;</script>
+</body>
+</html>

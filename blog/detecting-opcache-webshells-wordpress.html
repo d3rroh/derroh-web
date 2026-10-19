@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png"/>
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicon-180.png"/>
   <meta name="description" content="How attackers hide PHP webshells as legitimate OPcache files, the filesystem patterns that give them away, and a complete remediation playbook including permission hardening."/>
-  <meta name="author" content="Derrick"/>
+  <meta name="author" content="Derrick Abila"/>
   <link rel="canonical" href="https://derroh.co.ke/blog/detecting-opcache-webshells-wordpress.html"/>
   <title>Detecting OPcache-Disguised Webshells in WordPress | Derrick — DevOps Command Center</title>
 
@@ -33,8 +33,9 @@
     "@type": "Article",
     "headline": "Detecting OPcache-Disguised Webshells in WordPress",
     "description": "How attackers hide PHP webshells as legitimate OPcache files, the filesystem patterns that give them away, and a complete remediation playbook including permission hardening.",
-    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
-    "publisher": { "@type": "Person", "name": "Derrick" },
+    "author": { "@type": "Person", "@id": "https://derroh.co.ke/#person", "name": "Derrick Abila", "url": "https://derroh.co.ke/" },
+    "publisher": { "@id": "https://derroh.co.ke/#person" },
+    "image": "https://derroh.co.ke/og-image.png",
     "datePublished": "2026-05-12",
     "dateModified": "2026-10-03",
     "mainEntityOfPage": "https://derroh.co.ke/blog/detecting-opcache-webshells-wordpress.html"
@@ -62,8 +63,12 @@
     .post-body ul { color: var(--text-2); margin: 0 0 1.25rem 1.25rem; list-style: disc; }
     .post-kpis { display:flex; gap:1.5rem; margin: 1.5rem 0 2rem; flex-wrap:wrap; }
   </style>
-  <canvas id="bg-canvas" aria-hidden="true"></canvas>
-    <a href="../index.html#blog" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Logs</a>
+  </head>
+  <body>
+    <div class="crt-scanlines" aria-hidden="true"></div>
+    <div class="crt-vignette" aria-hidden="true"></div>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    <a href="/#blog" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Logs</a>
     <div class="post-meta">May 12, 2026 · security · wordpress · malware · opcache</div>
     <h1 class="post-title">Detecting OPcache-Disguised Webshells in WordPress</h1>
     <div class="post-tags">
@@ -80,6 +85,18 @@
       <ul><li>Modification times that don't line up with the last real WordPress core or plugin update</li><li>PHP files in upload directories, which should only ever hold media</li><li>Names that are nearly identical to legitimate system files, but slightly off</li><li>Outbound connections you didn't expect, which the server logs trace back to one specific file</li></ul>
       <h2>Cleaning it up</h2>
       <p>These shells are built specifically to slip past generic scanners, so automated tools alone will miss them. I run a full filesystem audit that pairs signature scanning (ClamAV) with manual review. Once the backdoor is found and removed, tighten upload restrictions and file permissions so the same way in can't be used again.</p>
+    </div>
+    <aside class="post-related" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="post-related-title">Related</h2>
+      <ul>
+        <li><a href="/case-studies/wordpress-opcache-webshell-remediation.html"><span class="post-related-kind">case file</span> WordPress OPcache-Disguised Webshell Remediation</a></li>
+        <li><a href="/case-studies/cpanel-rce-malware-multi-server-breach.html"><span class="post-related-kind">case file</span> cPanel RCE Malware Attack &amp; Multi-Server Breach Response</a></li>
+        <li><a href="/blog/linux-server-hardening-checklist.html"><span class="post-related-kind">log</span> Hardening Your Linux Server: A Practical Checklist</a></li>
+      </ul>
+    </aside>
+    <div class="post-cta">
+      <p>Dealing with something similar on your own servers?</p>
+      <a href="/#contact" class="post-cta-link">Get in touch <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
     </div>
   </main>
 </body>

@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png"/>
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicon-180.png"/>
   <meta name="description" content="Deploying a self-hosted ownCloud instance backed by MinIO S3-compatible storage across Docker Compose and later Kubernetes, and resolving the config and dependency issues along the way."/>
-  <meta name="author" content="Derrick"/>
+  <meta name="author" content="Derrick Abila"/>
   <link rel="canonical" href="https://derroh.co.ke/case-studies/owncloud-minio-s3-kubernetes-stack.html"/>
   <title>ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes | Derrick — DevOps Command Center</title>
 
@@ -31,10 +31,11 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes",
+    "headline": "ownCloud + MinIO S3 Self-Hosted Stack on Docker & Kubernetes",
     "description": "Deploying a self-hosted ownCloud instance backed by MinIO S3-compatible storage across Docker Compose and later Kubernetes, and resolving the config and dependency issues along the way.",
-    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
-    "publisher": { "@type": "Person", "name": "Derrick" },
+    "author": { "@type": "Person", "@id": "https://derroh.co.ke/#person", "name": "Derrick Abila", "url": "https://derroh.co.ke/" },
+    "publisher": { "@id": "https://derroh.co.ke/#person" },
+    "image": "https://derroh.co.ke/og-image.png",
     "datePublished": "2025-09-21",
     "dateModified": "2025-09-21",
     "mainEntityOfPage": "https://derroh.co.ke/case-studies/owncloud-minio-s3-kubernetes-stack.html"
@@ -69,7 +70,7 @@
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
     <main class="post-wrap">
-    <a href="../index.html#projects" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Case Files</a>
+    <a href="/#projects" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Case Files</a>
     <div class="post-meta">Sep 21, 2025 · PRJ-2024-005 · INFRA BUILD · LIVE</div>
     <h1 class="post-title">ownCloud + MinIO S3 Self-Hosted Stack on Docker &amp; Kubernetes</h1>
     <div class="post-tags">
@@ -87,6 +88,18 @@
       <p>ownCloud's Docker entrypoint rewrites <code>config.php</code> on every container restart, which conflicts with any manual configuration for S3 storage. I worked around this with a persistent override strategy rather than editing the generated config directly. The <code>files_primary_s3</code> app also had an incomplete vendor directory, requiring manual dependency resolution for missing GuzzleHttp/PSR-7 classes, plus cleanup of duplicate config key conflicts that surfaced during the migration to Kubernetes.</p>
       <h2>Result</h2>
       <p>The stack now runs live on the k3s cluster, with MinIO handling all object storage behind ownCloud's file layer, fronted by Nginx.</p>
+    </div>
+    <aside class="post-related" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="post-related-title">Related</h2>
+      <ul>
+        <li><a href="/blog/kubernetes-pvc-permissions-fsgroup.html"><span class="post-related-kind">log</span> Kubernetes PVC Permissions: fsGroup, Init Containers, and www-data</a></li>
+        <li><a href="/blog/migrating-docker-compose-to-k3s.html"><span class="post-related-kind">log</span> Migrating from Docker Compose to k3s: What Actually Breaks</a></li>
+        <li><a href="/blog/cicd-pipeline-github-actions-docker-kubectl.html"><span class="post-related-kind">log</span> GitHub Actions → Docker Hub → kubectl: A Real CI/CD Pipeline</a></li>
+      </ul>
+    </aside>
+    <div class="post-cta">
+      <p>Dealing with something similar on your own servers?</p>
+      <a href="/#contact" class="post-cta-link">Get in touch <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
     </div>
   </main>
 </body>

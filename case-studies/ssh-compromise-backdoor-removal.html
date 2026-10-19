@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png"/>
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicon-180.png"/>
   <meta name="description" content="Forensic write-up on discovering unauthorized SSH keys and a backdoored /tmp/.bashrc, evicting the attacker, and hardening SSH configuration afterward."/>
-  <meta name="author" content="Derrick"/>
+  <meta name="author" content="Derrick Abila"/>
   <link rel="canonical" href="https://derroh.co.ke/case-studies/ssh-compromise-backdoor-removal.html"/>
   <title>Active SSH Compromise &amp; Backdoor Removal | Derrick — DevOps Command Center</title>
 
@@ -31,10 +31,11 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Active SSH Compromise &amp; Backdoor Removal",
+    "headline": "Active SSH Compromise & Backdoor Removal",
     "description": "Forensic write-up on discovering unauthorized SSH keys and a backdoored /tmp/.bashrc, evicting the attacker, and hardening SSH configuration afterward.",
-    "author": { "@type": "Person", "name": "Derrick", "url": "https://derroh.co.ke/" },
-    "publisher": { "@type": "Person", "name": "Derrick" },
+    "author": { "@type": "Person", "@id": "https://derroh.co.ke/#person", "name": "Derrick Abila", "url": "https://derroh.co.ke/" },
+    "publisher": { "@id": "https://derroh.co.ke/#person" },
+    "image": "https://derroh.co.ke/og-image.png",
     "datePublished": "2026-01-14",
     "dateModified": "2026-01-14",
     "mainEntityOfPage": "https://derroh.co.ke/case-studies/ssh-compromise-backdoor-removal.html"
@@ -69,7 +70,7 @@
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
     <main class="post-wrap">
-    <a href="../index.html#projects" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Case Files</a>
+    <a href="/#projects" class="post-back"><i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Case Files</a>
     <div class="post-meta">Jan 14, 2026 · INC-2025-004 · INTRUSION · RESOLVED</div>
     <h1 class="post-title">Active SSH Compromise &amp; Backdoor Removal</h1>
     <div class="post-tags">
@@ -84,6 +85,18 @@
       <p>I audited every active and historical SSH session on the box to establish the attacker's timeline and scope of access, checking for lateral movement to other services and confirming no persistence had been planted outside the identified backdoor.</p>
       <h2>Eviction &amp; Hardening</h2>
       <p>The unauthorized keys were removed, the malicious <code>.bashrc</code> was cleaned, and all existing SSH keys were rotated. I then hardened the SSH configuration and layered <code>iptables</code> and <code>fail2ban</code> rules to shut down the brute-force pattern that led to the initial compromise.</p>
+    </div>
+    <aside class="post-related" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="post-related-title">Related</h2>
+      <ul>
+        <li><a href="/blog/linux-server-hardening-checklist.html"><span class="post-related-kind">log</span> Hardening Your Linux Server: A Practical Checklist</a></li>
+        <li><a href="/case-studies/centos-cryptominer-eradication.html"><span class="post-related-kind">case file</span> CentOS Cryptominer Eradication &amp; Root Compromise Cleanup</a></li>
+        <li><a href="/case-studies/cpanel-rce-malware-multi-server-breach.html"><span class="post-related-kind">case file</span> cPanel RCE Malware Attack &amp; Multi-Server Breach Response</a></li>
+      </ul>
+    </aside>
+    <div class="post-cta">
+      <p>Dealing with something similar on your own servers?</p>
+      <a href="/#contact" class="post-cta-link">Get in touch <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
     </div>
   </main>
 </body>
