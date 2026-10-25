@@ -1,3 +1,3 @@
 module derroh.co.ke/contact-server
 
-go 1.22
+go 1.27
