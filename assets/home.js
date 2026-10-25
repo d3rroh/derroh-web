@@ -1921,6 +1921,9 @@ function loadThreeJS() {
     if (typeof THREE !== 'undefined') { resolve(); return; }
     const s = document.createElement('script');
     s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    // SRI: refuse the file if the CDN ever serves something else.
+    s.integrity = 'sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu';
+    s.crossOrigin = 'anonymous';
     s.onload = () => resolve();
     s.onerror = () => reject(new Error('three.js failed to load'));
     document.head.appendChild(s);
